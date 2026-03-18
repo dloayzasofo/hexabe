@@ -1,5 +1,5 @@
 
-<form id="formBrandCreate" data-action="{{ route('brand.save') }}" method="post" enctype="multipart/form-data">
+<form id="formBrandCreate" data-action="{{ route('brand.update', ['brand' => $model->id]) }}" method="post" enctype="multipart/form-data">
     <div class="modal-body">
         @include('brand._form')
     </div>

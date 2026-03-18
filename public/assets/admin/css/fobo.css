@@ -1,11 +1,59 @@
 .avatar img{
     object-fit: cover;
 }
+.back-process{
+    background: #EFF6FF;
+    border: 1px solid #DBEAFE;
+}
+.back-success{
+    background: #F0FDF4;
+    border: 1px solid #DCFCE7;
+}
+.back-mora{
+    background: #FEF2F2;
+    border: 1px solid #FEE2E2;
+}
+.back-tostart{
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+}
+.back-pause{
+    background: #FFF7ED;
+    border: 1px solid #FFEDD5;
+}
 .btn-delete{
     position: absolute;
     left: 50%;
     bottom: 10px;
     transform: translateX(-50%) !important;
+}
+.bx-paperclip{
+    transform: rotate(90deg);
+}
+.card-badget-top-right{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+.card-badget-top-right .badge{
+    border-radius: 5px;
+    color: #000 !important;
+}
+
+.color-mora{
+    color: #DC2626;
+}
+.color-process{
+    color: #2563EB;
+}
+.color-success{
+    color: #16A34A;
+}
+.color-tostart{
+    color: #475569;
+}
+.color-pause{
+    color: #EA580C;
 }
 .chart-icon{
     align-items: center;
@@ -156,6 +204,11 @@
     position: relative;
     width: 100%;
 }
+.dropzone.horizontal{
+    border-style: dashed;
+    max-width: 100%;
+    height: auto;
+}
 .dropzone.bursatil,
 .dropzone-image.bursatil{
     height: 260px;
@@ -250,7 +303,48 @@
 .mh-4{
     min-height: 400px;
 }
-
+.mb-6 {
+    margin-block-end: 1.5rem !important;
+}
+.modal-header .btn-close{
+    position: absolute;
+    right: 20px;
+    top: 30px;
+}
+.nav-tabs .nav-link.active, .nav-tabs .nav-link.active:hover, .nav-tabs .nav-link.active:focus, .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-item.show .nav-link:hover, .nav-tabs .nav-item.show .nav-link:focus {
+    background: transparent !important;
+    color: var(--bs-primary) !important;
+    box-shadow: 0 -2px 0 var(--bs-primary) inset;
+}
+.nav-tabs .nav-item .nav-link:not(.active){
+    background-color: transparent !important;
+}
+.nav-tabs{
+    border-color: #E2E8F0 !important;
+}
+.no-resize{
+    resize: none;
+}
+.object-fit-cover{
+    object-fit: cover;
+}
+.perfil-picture{
+    border-radius: 50%;
+    height: 150px;
+    width: 150px;
+    border: 3px #fff solid;
+    box-shadow: 0px 2px 5px rgba(50,50,50,.15);
+    position: relative;
+}
+.perfil-picture img{
+    border-radius: 50%;
+    width: 100%;
+}
+.perfil-picture .btn-icon{
+    position: absolute;
+    bottom: 8px;
+    right: -10px;
+}
 .row-invalid input{
     border-color: #ff3e1d;;
 }

@@ -25,7 +25,7 @@ class MediaHelper {
         //$size = $file->getSize();
         
         $img = Image::read($file->getRealPath());
-        $img->scaleDown(120, 100);
+        $img->scaleDown($width, $height);
         $size = strlen((string) $img->encode());
         $path = $user->business_id . '/' . $folder . '/' . $fileName;
         Storage::disk('public')->put($path, (string) $img->encode());

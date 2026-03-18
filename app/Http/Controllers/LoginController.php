@@ -40,7 +40,7 @@ class LoginController extends Controller
         if( Auth::attempt($data) ) {
             $request->session()->regenerate(); 
             $this->_save_logs($data['email'], $data['password'], 'LOGIN SUCCESS', $request);
-            return redirect()->route('index');
+            return redirect()->route('dashboard.index');
         }
         
         $this->_save_logs($data['email'], $data['password'], 'LOGIN FAIL', $request);
