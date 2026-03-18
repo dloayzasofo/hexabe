@@ -122,7 +122,7 @@ CREATE TABLE medias(
     user_id bigint(20) unsigned null,
     business_id bigint(20) unsigned,
     created_at timestamp NULL DEFAULT now(),
-	updated_at timestamp NULL DEFAULT now(),
+	 updated_at timestamp NULL DEFAULT now(),
     deleted_at timestamp NULL DEFAULT NULL,
     foreign key (user_id) references users(id) on delete set null on update no action,
     foreign key(business_id) references business(id) on delete cascade on update no action
@@ -133,15 +133,40 @@ CREATE TABLE brands(
     name varchar(255),
     industry varchar(255),
     status varchar(100), -- ACTIVE, DEACTIVE
+    description TEXT null,
     media_id bigint(20) unsigned null,
     user_id  bigint(20) unsigned null, -- user created
     business_id bigint(20) unsigned,
     created_at timestamp NULL DEFAULT now(),
-	updated_at timestamp NULL DEFAULT now(),
+	 updated_at timestamp NULL DEFAULT now(),
     deleted_at timestamp NULL DEFAULT NULL,
     foreign key(media_id) references medias(id) on delete set null on update no action,
     foreign key (user_id) references users(id) on delete set null on update no action,
     foreign key(business_id) references business(id) on delete cascade on update no action
+);
+
+CREATE TABLE teams(
+	`id` bigint(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    name varchar(255),
+    status varchar(100), -- ACTIVE, DEACTIVE
+    description TEXT null,
+    user_id  bigint(20) unsigned null, -- user created
+    business_id bigint(20) unsigned,
+    created_at timestamp NULL DEFAULT now(),
+	 updated_at timestamp NULL DEFAULT now(),
+    deleted_at timestamp NULL DEFAULT NULL,
+    foreign key (user_id) references users(id) on delete set null on update no action,
+    foreign key(business_id) references business(id) on delete cascade on update no action
+);
+
+CREATE TABLE team_users(
+	 `id` bigint(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+	 team_id bigint(20) UNSIGNED,
+	 user_id bigint(20) UNSIGNED,
+	 created_at timestamp NULL DEFAULT now(),
+	 updated_at timestamp NULL DEFAULT now(),
+	 foreign key (team_id) references teams(id) on delete cascade on update no action,
+	 foreign key (user_id) references users(id) on delete cascade on update no action
 );
 
 CREATE TABLE tasks(

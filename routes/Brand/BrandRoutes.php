@@ -8,6 +8,7 @@ Route::prefix('brand')->group(function () {
     Route::get('/', [BrandController::class, 'index'])
         ->middleware(RoleMiddleware::using('ADMIN'))
         ->name('brand.index');
+        
     Route::get('/create', [BrandController::class, 'create'])
         ->middleware(RoleMiddleware::using('ADMIN'))
         ->name('brand.create');
