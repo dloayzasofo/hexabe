@@ -278,6 +278,11 @@
 .hide{
     display: none;
 }
+input,
+select,
+textarea{
+    background: #F8FAFC !important;
+}
 .input-group-item-remove:hover{
     background: #ff3e1d;
     color: #fff;

@@ -71,7 +71,7 @@
                     <div class="row align-items-center">
                         <div class="col-md-10">
                             <div class="d-flex align-items-center w-100">
-                                <span class="badge rounded-pill bg-label-danger">Danger</span> <spam class="fw-bold ps-2">Marca</spam>
+                                <span class="badge rounded-pill bg-label-danger">Danger</span> <spam class="fw-bold ps-2">Equipo</spam>
                             </div>
                             <div class="fw-bold mt-2">
                                 Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -107,7 +107,7 @@
                     <div class="row align-items-center">
                         <div class="col-md-10">
                             <div class="d-flex align-items-center w-100">
-                                <span class="badge rounded-pill bg-label-danger">Danger</span> <spam class="fw-bold ps-2">Marca</spam>
+                                <span class="badge rounded-pill bg-label-danger">Danger</span> <spam class="fw-bold ps-2">Equipo</spam>
                             </div>
                             <div class="fw-bold mt-2">
                                 Lorem ipsum dolor sit amet consectetur adipisicing elit.

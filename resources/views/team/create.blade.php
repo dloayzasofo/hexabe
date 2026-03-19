@@ -1,11 +1,11 @@
 
-<form id="formBrandCreate" data-action="{{ route('brand.save') }}" method="post" enctype="multipart/form-data">
+<form id="formBrandCreate" data-action="{{ route('team.save') }}" method="post" enctype="multipart/form-data">
     <div class="modal-body">
-        @include('brand._form')
+        @include('team._form')
     </div>
 
     <div class="modal-footer">
         <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-warning btnSaveBrand">Agregar marca</button>
+        <button type="button" class="btn btn-warning btnSaveBrand">Agregar equipo</button>
     </div>
 </form>
