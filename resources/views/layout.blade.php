@@ -106,7 +106,7 @@
 						</a>
 					</li>
 					<li id="menu-team" class="menu-item">
-						<a href="{--{ route('admin.team.index') }}" class="menu-link">
+						<a href="{{ route('team.index') }}" class="menu-link">
 							<i class='menu-icon bx bx-group'></i> 
 							<div>Equipos</div>
 						</a>

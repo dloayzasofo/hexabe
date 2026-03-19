@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Helper\MediaHelper;
 use App\Http\Requests\TeamRequest;
 use App\Models\Team;
+use App\Models\TeamUser;
+use App\Models\User;
 use Auth;
 
 class TeamController extends Controller {
@@ -22,7 +24,8 @@ class TeamController extends Controller {
 
     public function create() {
         $params = [
-            'model' => new Team()
+            'model' => new Team(),
+            'users' => []
         ];
 
         return view('team.create', $params);
@@ -40,20 +43,40 @@ class TeamController extends Controller {
 
         $team->name = $request->name;
         $team->description = $request->description;
-        $team->industry = $request->industry;
         $team->status = $request->status == "1" ? "ACTIVE" : "DEACTIVE";
         $team->user_id = $user->id;
         $team->business_id = $user->business_id;
         $team->save();
+
+        $members = $request->members;
+        foreach($members as $member) {
+            $teamUser = new TeamUser();
+            $teamUser->team_id = $team->id;
+            $teamUser->user_id = $member;
+            $teamUser->save();
+        }
         
         $request->session()->flash('team.success', 'Equipo ha sido registrada correctamente.');
         return response()->json(['success' => true]);
-        //return redirect()->route('team.index');
     }
 
     public function edit(Request $request, Team $team) {
+        $teamUsers = TeamUser::with('user')->where('team_id', $team->id)->get();
+        $users = [];
+
+        foreach($teamUsers as $teamuser) {
+            $users[] = [
+                'id' => $teamuser->user->id,
+                'name' => $teamuser->user->name,
+                'email' => $teamuser->user->email,
+                'image' => $teamuser->user->image,
+                'initials' => $teamuser->user->nameInitial
+            ];
+        }
+
         $params = [
-            'model' => $team
+            'model' => $team,
+            'users' => $users
         ];
 
         return view('team.update', $params);
@@ -70,15 +93,26 @@ class TeamController extends Controller {
 
         $team->name = $request->name;
         $team->description = $request->description;
-        $team->industry = $request->industry;
         $team->status = $request->status == "1" ? "ACTIVE" : "DEACTIVE";
         $team->user_id = $user->id;
         $team->business_id = $user->business_id;
         $team->save();
+
+        $members = $request->members;
+        $teamUsers = TeamUser::whereNotIn('user_id', $members)->where('team_id', $team->id)->delete();
+
+        foreach($members as $member) {
+            if( TeamUser::where('team_id', $team->id)->where('user_id', $member)->exists() ) {
+                continue;
+            }
+            $teamUser = new TeamUser();
+            $teamUser->team_id = $team->id;
+            $teamUser->user_id = $member;
+            $teamUser->save();
+        }
         
         $request->session()->flash('team.success', 'Marca ha sido actualizada correctamente.');
         return response()->json(['success' => true]);
-        //return redirect()->route('team.index');
     }
 
     public function view(Request $request, Team $team) {

@@ -8,6 +8,15 @@ Route::prefix('user')->group(function () {
     Route::get('/', [UserController::class, 'index'])
         ->middleware(RoleMiddleware::using('ADMIN'))
         ->name('user.index');
+
+    Route::get('/search-user', [UserController::class, 'search_user'])
+        ->middleware(RoleMiddleware::using('ADMIN'))
+        ->name('user.search-user');
+
+    Route::get('/search-by-key', [UserController::class, 'search_by_key'])
+        ->middleware(RoleMiddleware::using('ADMIN'))
+        ->name('user.search-by-key');
+
         /*
     Route::get('/create', [BrandController::class, 'create'])
         ->middleware(RoleMiddleware::using('ADMIN'))

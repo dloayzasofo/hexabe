@@ -101,6 +101,7 @@ CREATE TABLE `users` (
   `role` varchar(191) DEFAULT NULL,
   `social_id` varchar(191) DEFAULT NULL,
   `parent_id` bigint(20) UNSIGNED null,
+  `media_id` bigint(20) UNSIGNED NULL,  -- avatar
   `status` varchar(191) DEFAULT NULL,
   `remember_token` varchar(100) DEFAULT NULL,
   business_id bigint(20) unsigned null,
@@ -150,6 +151,7 @@ CREATE TABLE teams(
     name varchar(255),
     status varchar(100), -- ACTIVE, DEACTIVE
     description TEXT null,
+    media_id bigint(20) unsigned null,
     user_id  bigint(20) unsigned null, -- user created
     business_id bigint(20) unsigned,
     created_at timestamp NULL DEFAULT now(),

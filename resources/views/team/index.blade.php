@@ -80,35 +80,6 @@
         @endforeach
     </div>
 
-    <script type="module">
-        import { Editor } from 'https://esm.sh/@tiptap/core'
-        import StarterKit from 'https://esm.sh/@tiptap/starter-kit'
-
-        import Document from 'https://esm.sh/@tiptap/extension-document'
-        import Paragraph from 'https://esm.sh/@tiptap/extension-paragraph'
-        import Text from 'https://esm.sh/@tiptap/extension-text'
-
-        new Editor({
-            // bind Tiptap to the `.element`
-            element: document.querySelector('.element'),
-            // register extensions
-            extensions: [Document, Paragraph, Text],
-            // set the initial content
-            content: '<p>Example Text</p>',
-            // place the cursor in the editor after initialization
-            autofocus: true,
-            // make the text editable (default is true)
-            editable: true,
-            // prevent loading the default ProseMirror CSS that comes with Tiptap
-            // should be kept as `true` for most cases as it includes styles
-            // important for Tiptap to work correctly
-            injectCSS: false,
-        })
-
-    </script>
-
-    <div class="element"></div>
-
     <div class="modal fade " id="modalCenter" tabindex="-1" aria-modal="true" role="dialog">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -119,9 +90,7 @@
                         <div id="modalDescription"></div>
                     </div>                    
                 </div>
-                <div id="popup">
-
-                </div>
+                <div id="popup"></div>
             </div>
         </div>
     </div>
@@ -129,14 +98,16 @@
 
 @section('script')
 <script src="{{asset('/assets/admin/js/dropzone.js')}}"></script>
+
 <script>
     let mode = null;
     let urlCreate = "{{ route('team.create') }}";
+
     window.addEventListener('load', () => {
-        document.querySelector('#btnCreate').addEventListener('click', handleCreate);
+        document.querySelector('#btnCreate').addEventListener('click', handleBtnCreate);
         document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('btnSaveteam')) {
-                handleCreateteam();
+            if (e.target.classList.contains('btnSave')) {
+                handleCreateServer();
             }
         });
 
@@ -146,7 +117,7 @@
         });
     });
 
-    function handleCreate(){
+    function handleBtnCreate(){
         fetch(urlCreate)
         .then(response => response.text())
         .then(data => {
@@ -154,28 +125,38 @@
             document.querySelector('#modalTitle').innerHTML = 'Crear nuevo equipo';
             document.querySelector('#modalDescription').innerHTML = 'Define un equipo para centralizar tareas y seguimiento.';
             $('#modalCenter').modal('show');
+            setupMemberSearch();
+            mode = 'CREATE';
             var medropzone = new DropZone({idElement: 'dropzone', idFile: 'image'});
         });
     }
 
-    function handleCreateteam(){
-        let form = document.querySelector('#formteamCreate');
-        let url = form.getAttribute('data-action');
+    function handleCreateServer(){
+        let form = document.querySelector('#formCreate');
 
-        let name = document.querySelector('#name');
+        let url = form.getAttribute('data-action');
         let token = document.getElementsByName("_token")[0];
+        let name = document.querySelector('#name');
         let description = document.querySelector('#description');
         let status = document.querySelector('#status');
-
-        var data = new FormData()
-        data.append('_token', token.value);
-        data.append('name', name.value);
-        data.append('description', description.value);
-        data.append('status', status.value);
 
         if( validateForm() == false ){
             return false;
         }
+
+        var data = new FormData();
+        data.append('_token', token.value);
+        data.append('name', name ? name.value : '');
+        data.append('description', description ? description.value : '');
+        data.append('status', status ? status.value : '0');
+        if( image.files.length > 0 ){
+            data.append('image', image.files[0]);
+        }
+
+        const memberInputs = document.querySelectorAll('input[name="members[]"]');
+        memberInputs.forEach((input) => {
+            data.append('members[]', input.value);
+        });
 
         fetch(url, {
             method: 'POST',
@@ -203,51 +184,66 @@
         if( errors.description ){
             showError('description', errors.description[0]);
         }
+        if( errors.members ){
+            showError('members', errors.members[0]);
+        }
     }
 
     function validateForm(){
         clearErrors();
 
         let name = document.querySelector('#name');
-        let description = document.querySelector('#description');
         let isOk = true;
 
-        if( !name.value ){
+        if( !name || !name.value ){
             showError('name', 'El campo es requerido');
             isOk = false;
         }
 
-        if( !industry.value ){
-            showError('industry', 'El campo es requerido');
+        const memberInputs = document.querySelectorAll('input[name="members[]"]');
+        if( memberInputs.length == 0){
+            document.querySelector('#selectedMembers').classList.add('is-invalid');
+            document.querySelector('#errorMembers').innerHTML = 'Ingresa almenos un miembro al equipo';
             isOk = false;
         }
 
-        //if( !description.value ){
-        //    showError('description', 'El campo es requerido');
-        //    isOk = false;
-        //}
+        if( mode == 'CREATE' && !image.value ){
+            showError('image', 'El campo es requerido');
+            isOk = false;
+        }else{
+            if( image.files.length > 0 ){
+                const sizeInBytes = image.files[0].size;
+                const sizeInMB = (sizeInBytes / (1024 * 1024)).toFixed(2);
+                if( sizeInMB > 1 ){
+                    showError('image', 'El peso del archivo debe ser menor a 1MB');
+                    isOk = false;
+                }
+            }
+        }
 
         return isOk;
     }
 
     function clearErrors(){
-        document.querySelector('#name').classList.remove('is-invalid');
-        document.querySelector('#description').classList.remove('is-invalid');
-
-        document.querySelector('#errorName').innerHTML = '';
-        document.querySelector('#errorDescription').innerHTML = '';
+        const fields = ['name', 'description', 'members'];
+        fields.forEach((field) => {
+            const el = document.querySelector('#' + field);
+            if (el) el.classList.remove('is-invalid');
+            const err = document.querySelector('#error' + field.charAt(0).toUpperCase() + field.slice(1));
+            if (err) err.innerHTML = '';
+        });
     }
 
     function showError(elementName, error){
-        document.querySelector('#' + elementName).classList.add('is-invalid');
-        elementName = elementName.charAt(0).toUpperCase() + elementName.slice(1);
-        document.querySelector('#error' + elementName).innerHTML = error;
+        const el = document.querySelector('#' + elementName);
+        if (el) el.classList.add('is-invalid');
+        const label = elementName.charAt(0).toUpperCase() + elementName.slice(1);
+        const err = document.querySelector('#error' + label);
+        if (err) err.innerHTML = error;
     }
 
     function handleEdit(){
-        console.log("Edit BRnad");
         let url = this.getAttribute('data-href');
-        console.log(url);
         fetch(url)
         .then(response => response.text())
         .then(data => {
@@ -256,8 +252,170 @@
             document.querySelector('#modalDescription').innerHTML = 'Define un equipo para centralizar tareas y seguimiento.';
             $('#modalCenter').modal('show');
             mode = 'EDIT';
+            setupMemberSearch();
             var medropzone = new DropZone({idElement: 'dropzone', idFile: 'image'});
         });
+    }
+</script>
+
+<script>
+    let urlSearchUser = "{{ route('user.search-user') }}";
+    let urlSearchByKey = "{{ route('user.search-by-key') }}";
+
+    window.addEventListener('load', () => {
+        document.addEventListener('keydown', (e) => {
+            if (e.target.classList.contains('input-user-search')) {
+                if( e.target.value.length <= 2){
+                    document.querySelector('.input-search-result').classList.remove('active');
+                    return;
+                }
+                searchByKeyPress(e.target.value);
+            }
+        });
+    });
+
+    function setupMemberSearch(){
+        const searchInput = document.querySelector('#memberSearchInput');
+        const searchButton = document.querySelector('#memberSearchButton');
+        const selectedMembers = document.querySelector('#selectedMembers');
+        const searchError = document.querySelector('#errorMembers');
+
+        if (!searchInput || !searchButton || !selectedMembers) return;
+
+        searchButton.addEventListener('click', () => {
+            const email = searchInput.value.trim();
+            if (!email) {
+                searchError.innerHTML = 'Ingresa un email para buscar.';
+                return;
+            }
+            searchError.innerHTML = '';
+            fetch(urlSearchUser + '?q=' + encodeURIComponent(email), {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    selectedMembers.classList.add('is-invalid');
+                    searchError.innerHTML = data.message || 'Usuario no encontrado';
+                    return;
+                }
+                addSelectedMember(data.user);
+            })
+            .catch(() => {
+                selectedMembers.classList.add('is-invalid');
+                searchError.innerHTML = 'Error al buscar usuario';
+            });
+        });
+
+        searchInput.addEventListener('keydown', (evt) => {
+            if (evt.key === 'Enter') {
+                evt.preventDefault();
+                searchButton.click();
+            }
+
+            document.querySelector('#selectedMembers').classList.remove('is-invalid');
+        });
+
+        selectedMembers.addEventListener('click', (evt) => {
+            const btn = evt.target.closest('.remove-member');
+            if (!btn) return;
+            const pill = btn.closest('.selected-member-pill');
+            if (pill) pill.remove();
+        });
+    }
+
+    function addSelectedMember(user){
+        const selectedMembers = document.querySelector('#selectedMembers');
+        if (!selectedMembers) return;
+
+        const existing = selectedMembers.querySelector('input[value="' + user.id + '"]');
+        if (existing) {
+            document.querySelector('#errorMembers').innerHTML = 'Usuario ya está agregado';
+            return;
+        }
+
+        const pill = document.createElement('span');
+    
+        let avatar = '';
+        if( user.image ) {
+            avatar = '<img src="' + user.image + '" /> ' + user.email;
+        }else{
+            avatar = '<span>' + user.initials + '</span> ' + user.email;
+        }
+
+        pill.className = 'badge rounded-pill selected-member-pill';
+        pill.style.display = 'inline-flex';
+        pill.style.alignItems = 'center';
+        pill.style.gap = '0.3rem';
+        pill.innerHTML = `${avatar} <button type="button" class="btn-close remove-member" aria-label="Remove"></button>`;
+
+        const inputHidden = document.createElement('input');
+        inputHidden.type = 'hidden';
+        inputHidden.name = 'members[]';
+        inputHidden.value = user.id;
+        pill.appendChild(inputHidden);
+
+        selectedMembers.appendChild(pill);
+    }
+
+    function searchByKeyPress(value){
+
+        fetch(urlSearchByKey + '?q=' + value, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.success) {
+                return;
+            }
+            handlerRenderUserByKey(data.data);
+        })
+        .catch((e) => {
+            console.log("Error Catch", e);
+        });
+    }
+
+    function handlerRenderUserByKey(data){
+        let result = document.querySelector('.input-search-result');
+        let inputMemeber = document.querySelector('#memberSearchInput');
+        const selectedMembers = document.querySelector('#selectedMembers');
+
+        result.innerHTML = '';
+        if( data.length == 0 ){
+            result.classList.remove('active');
+            return;
+        }
+
+        data.forEach(user => {
+            const existing = selectedMembers.querySelector('input[value="' + user.id + '"]');
+            if ( existing == null ) {
+                let div = document.createElement('div');
+                
+                if( user.image ) {
+                    div.innerHTML = '<img src="' + user.image + '" /> ' + user.email;
+                }else{
+                    div.innerHTML = '<span>' + user.initials + '</span> ' + user.email;
+                }
+
+                div.classList.add('input-search-result-item');
+                div.addEventListener('click', () => {
+                    addSelectedMember(user);
+                    result.classList.remove('active');
+                    inputMemeber.value = '';
+                });
+                result.appendChild(div);
+            }
+        });
+
+        if( result.innerHTML != '' ){
+            result.classList.add('active');
+        }
     }
 </script>
 @endsection
