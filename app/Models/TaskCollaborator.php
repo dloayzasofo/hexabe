@@ -6,17 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class TaskMedia extends Model
+class TaskCollaborator extends Model
 {
-    protected $table = 'task_medias';
+    protected $table = 'task_collaborators';
 
     public function task(): BelongsTo
     {
         return $this->belongsTo(Task::class, 'task_id');
     }
 
-    public function media(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(Media::class, 'media_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

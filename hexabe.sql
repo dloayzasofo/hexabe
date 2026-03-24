@@ -172,7 +172,7 @@ CREATE TABLE team_users(
 );
 
 CREATE TABLE tasks(
-	id bigint(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+	 id bigint(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     title varchar(255),
     description text,
     date_delivery date,
@@ -183,8 +183,8 @@ CREATE TABLE tasks(
     brand_id bigint(20) UNSIGNED null,
     parent_id bigint(20) UNSIGNED null,
     business_id bigint(20) unsigned,
-	created_at timestamp NULL DEFAULT now(),
-	updated_at timestamp NULL DEFAULT now(),
+	 created_at timestamp NULL DEFAULT now(),
+	 updated_at timestamp NULL DEFAULT now(),
     deleted_at timestamp NULL DEFAULT NULL,
     foreign key(user_id) references users(id) on delete cascade on update no action,
     foreign key(user_assign) references users(id) on delete cascade on update no action,
@@ -193,14 +193,38 @@ CREATE TABLE tasks(
     foreign key(business_id) references business(id) on delete cascade on update no action
 );
 
+CREATE TABLE tasks_info(
+	 id bigint(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+	 task_dependency_id bigint(20) UNSIGNED NULL,
+	 task_id bigint(20) UNSIGNED,
+	 created_at timestamp NULL DEFAULT now(),
+	 updated_at timestamp NULL DEFAULT now(),
+    deleted_at timestamp NULL DEFAULT NULL,
+    foreign key(task_id) references tasks(id) on delete cascade on update no ACTION,
+    foreign key(task_dependency_id) references tasks(id) on delete set null on update no action,
+);
+
 CREATE TABLE task_medias(
-	id bigint(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+	 id bigint(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     task_id bigint(20) UNSIGNED,
     media_id bigint(20) UNSIGNED,
+    created_at timestamp NULL DEFAULT now(),
+	 updated_at timestamp NULL DEFAULT now(),
     foreign key (task_id) references tasks(id) on delete cascade on update no action,
     foreign key (media_id) references medias(id) on delete cascade on update no action
 );
 
+
+CREATE TABLE task_collaborators(
+	 id bigint(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    task_id bigint(20) UNSIGNED,
+    user_id bigint(20) UNSIGNED,
+    created_at timestamp NULL DEFAULT now(),
+	 updated_at timestamp NULL DEFAULT now(),
+    foreign key (task_id) references tasks(id) on delete cascade on update no action,
+    foreign key (user_id) references users(id) on delete cascade on update no action
+);
+-- DROP TABLE task_medias;
 -- INSERT USERS
 insert into users(name, last_name, email, password, role, status) values
 ('deiby', 'loayza', 'dloayza@sofopolis.com', '$2y$12$fX6ExEKahoArXVPFMYhW5uDpTkDv1nW6DxzAocGRis67ZSNM19RiO', 'ADMIN', 'ACTIVE'); -- 123123

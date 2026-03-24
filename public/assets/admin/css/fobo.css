@@ -281,13 +281,13 @@
 input,
 select,
 textarea{
-    background: #F8FAFC !important;
+    background-color: #F8FAFC !important;
 }
 .input-group-item-remove:hover{
     background: #ff3e1d;
     color: #fff;
 }
-
+.result-search,
 .input-search-result{
     position: absolute;
     z-index: 1;
@@ -301,19 +301,26 @@ textarea{
     max-height: 450px;
     overflow-y: auto;
 }
+.result-search.active,
 .input-search-result.active{
     display: block;
 }
+.result-search > div,
 .input-search-result > div{
     padding: 8px 0px;
     border-bottom: 1px solid #E2E8F0;
 }
+.result-search > div:last-child,
 .input-search-result > div:last-child{
     border-bottom: none;
 }
+.result-search-item,
+.task-responsable-result-item,
 .input-search-result-item{
     cursor: pointer;
 }
+.result-search-item span,
+.task-responsable-result-item span,
 .input-search-result-item span{
     display: inline-block;
     color: #fff;

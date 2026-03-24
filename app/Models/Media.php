@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Storage;
 class Media extends Model
 {
     protected $table = 'medias';
-    protected $appends = ['url'];
+    protected $appends = ['url', 'sizeLiteral'];
 
     public function user(): BelongsTo
     {
@@ -19,5 +19,16 @@ class Media extends Model
     public function getUrlAttribute()
     {
         return $this->path ? Storage::url($this->path) : null;
+    }
+
+    public function getSizeLiteralAttribute(){
+        $sizeKb = number_format($this->size / 1024, 2) . ' KB';
+        $sizeMB = number_format($this->size / 1024 / 1024, 2) . ' MB';
+
+        if( $sizeKb < 1 ) {
+            return $sizeMB;
+        }
+
+        return $sizeKb;
     }
 }

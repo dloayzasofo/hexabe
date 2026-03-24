@@ -46,6 +46,10 @@
     <script src="{{asset('/assets/admin/js/config.js')}}"></script>
 
     @yield('header')
+	<script>
+		let urlSearchUser = "{{ route('user.search-user') }}";
+		let urlSearchByKey = "{{ route('user.search-by-key') }}";
+	</script>
 </head>
 <body>
     <!-- Layout wrapper -->
@@ -129,6 +133,30 @@
 						<br>
 					</li>
 				</ul>
+ 
+				<div class="menu-footer-fixed border-top p-2">
+					<div class="d-flex align-items-center py-3 px-4 border rounded-3 bg-label-warning">
+						<div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+							<div class="me-3">
+								<p class="mb-0 text-heading text-warning fw-bold">Vista: Super Admin</p>
+								<small class="text-secondary">Acceso total</small>
+							</div>
+						</div>
+						<div class="avatar flex-shrink-0">
+							<label class="switch switch-warning">
+								<input type="checkbox" class="switch-input" checked="" readonly disabled>
+								<span class="switch-toggle-slider">
+									<span class="switch-on">
+										<i class="icon-base bx bx-check"></i>
+									</span>
+									<span class="switch-off">
+										<i class="icon-base bx bx-x"></i>
+									</span>
+								</span>
+							</label>
+						</div>
+					</div>
+				</div>
 			</aside>
 			<!-- / Menu -->
 

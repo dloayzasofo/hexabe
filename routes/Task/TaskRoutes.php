@@ -1,0 +1,28 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Task\TaskController;
+use \Spatie\Permission\Middleware\RoleMiddleware;
+
+Route::prefix('task')->group(function () {
+    Route::get('/', [TaskController::class, 'index'])
+        //->middleware(RoleMiddleware::using('ADMIN'))
+        ->name('task.index');
+    Route::get('/create', [TaskController::class, 'create'])
+        //->middleware(RoleMiddleware::using('ADMIN'))
+        ->name('task.create');
+    Route::post('/create', [TaskController::class, 'save'])
+        //->middleware(RoleMiddleware::using('ADMIN'))
+        ->name('task.save');
+
+    Route::get('/edit/{task}', [TaskController::class, 'edit'])
+        //->middleware(RoleMiddleware::using('ADMIN'))
+        ->name('task.edit');
+    Route::post('/edit/{task}', [TaskController::class, 'update'])
+        //->middleware(RoleMiddleware::using('ADMIN'))
+        ->name('task.update');
+
+    Route::get('/view/{task}', [TaskController::class, 'view'])
+        //->middleware(RoleMiddleware::using('ADMIN'))
+        ->name('task.view');
+});
