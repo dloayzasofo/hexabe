@@ -441,6 +441,7 @@
                 $('#modalCenter').modal('hide');
                 console.log(data);
                 //location.reload();
+                location.href = "/task/view/" + data.data.id;
             }
             if( data.errors){
                 handleShowErrors(data.errors);

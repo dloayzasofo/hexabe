@@ -337,6 +337,10 @@ textarea{
     min-height: 548px;
     padding: 10px 20px;
 }
+.kanban{
+    width: 100%;
+    overflow-x: auto;
+}
 .list-group-item{
     padding-left: 0px;
     padding-right: 0px;

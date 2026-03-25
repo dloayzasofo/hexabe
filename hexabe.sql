@@ -98,13 +98,14 @@ CREATE TABLE `users` (
   `password` varchar(191) NOT NULL,
   `phone_code` varchar(191) DEFAULT NULL,
   `phone` varchar(191) DEFAULT NULL,
+  `position` varchar(191) DEFAULT NULL,
   `role` varchar(191) DEFAULT NULL,
   `social_id` varchar(191) DEFAULT NULL,
   `parent_id` bigint(20) UNSIGNED null,
   `media_id` bigint(20) UNSIGNED NULL,  -- avatar
   `status` varchar(191) DEFAULT NULL,
   `remember_token` varchar(100) DEFAULT NULL,
-  business_id bigint(20) unsigned null,
+  `business_id` bigint(20) unsigned null,
   `created_at` timestamp NULL DEFAULT now(),
   `updated_at` timestamp NULL DEFAULT now(),
   `deleted_at` timestamp NULL DEFAULT NULL,
@@ -113,6 +114,7 @@ CREATE TABLE `users` (
   foreign key(parent_id) references users(id) on delete cascade on update no action,
   foreign key(business_id) references business(id) on delete cascade on update no action
 );
+
 
 CREATE TABLE medias(
 	`id` bigint(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,

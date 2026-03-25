@@ -6,8 +6,17 @@ use \Spatie\Permission\Middleware\RoleMiddleware;
 
 Route::prefix('setting/perfil')->group(function () {
     Route::get('/', [PerfilController::class, 'index'])
-        //->middleware(RoleMiddleware::using('ADMIN'))
         ->name('setting.perfil.index');
+
+    Route::post('/create', [PerfilController::class, 'save'])
+        ->name('setting.perfil.save');
+
+    Route::post('/image/upload', [PerfilController::class, 'upload_picture'])
+        ->name('setting.perfil.image.upload');
+
+    Route::post('/image/remove', [PerfilController::class, 'remove_picture'])
+        ->name('setting.perfil.image.remove');
+
         /*
     Route::get('/create', [BrandController::class, 'create'])
         ->middleware(RoleMiddleware::using('ADMIN'))

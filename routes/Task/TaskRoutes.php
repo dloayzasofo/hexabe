@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Task\TaskController;
+use App\Http\Controllers\Task\KanbanController;
 use \Spatie\Permission\Middleware\RoleMiddleware;
 
 Route::prefix('task')->group(function () {
@@ -25,4 +26,8 @@ Route::prefix('task')->group(function () {
     Route::get('/view/{task}', [TaskController::class, 'view'])
         //->middleware(RoleMiddleware::using('ADMIN'))
         ->name('task.view');
+
+    Route::get('/kanban', [KanbanController::class, 'index'])
+        //->middleware(RoleMiddleware::using('ADMIN'))
+        ->name('kanban.index');
 });

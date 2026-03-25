@@ -4,7 +4,7 @@
     <div class="row sm-vl-base mb-4">
         <div class="col-sm-8 col-md-6">
             <h4 class="fw-bold"> Equipos </h4>
-            <p>Lorem ipsum dolor sit amet consectetur. Dignissim id purus</p>
+            <p>Define equipos y mejora la forma en que se ejecuta el trabajo.</p>
         </div>
         <div class="col-sm-4 col-md-6">
             <div class="dt-action-buttons text-end pt-md-0">
@@ -98,6 +98,164 @@
 
 @section('script')
 <script src="{{asset('/assets/admin/js/dropzone.js')}}"></script>
+
+<script>
+    window.addEventListener('load', () => {
+        document.addEventListener('keydown', (e) => {
+            if (e.target.classList.contains('input-user-search')) {
+                if( e.target.value.length <= 2){
+                    document.querySelector('.input-search-result').classList.remove('active');
+                    return;
+                }
+                searchByKeyPress(e.target.value);
+            }
+        });
+    });
+
+    function setupMemberSearch(){
+        const searchInput = document.querySelector('#memberSearchInput');
+        const searchButton = document.querySelector('#memberSearchButton');
+        const selectedMembers = document.querySelector('#selectedMembers');
+        const searchError = document.querySelector('#errorMembers');
+
+        if (!searchInput || !searchButton || !selectedMembers) return;
+
+        searchButton.addEventListener('click', () => {
+            const email = searchInput.value.trim();
+            if (!email) {
+                searchError.innerHTML = 'Ingresa un email para buscar.';
+                return;
+            }
+            searchError.innerHTML = '';
+            fetch(urlSearchUser + '?q=' + encodeURIComponent(email), {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    selectedMembers.classList.add('is-invalid');
+                    searchError.innerHTML = data.message || 'Usuario no encontrado';
+                    return;
+                }
+                addSelectedMember(data.user);
+            })
+            .catch(() => {
+                selectedMembers.classList.add('is-invalid');
+                searchError.innerHTML = 'Error al buscar usuario';
+            });
+        });
+
+        searchInput.addEventListener('keydown', (evt) => {
+            if (evt.key === 'Enter') {
+                evt.preventDefault();
+                searchButton.click();
+            }
+
+            document.querySelector('#selectedMembers').classList.remove('is-invalid');
+        });
+
+        selectedMembers.addEventListener('click', (evt) => {
+            const btn = evt.target.closest('.remove-member');
+            if (!btn) return;
+            const pill = btn.closest('.selected-member-pill');
+            if (pill) pill.remove();
+        });
+    }
+
+    function addSelectedMember(user){
+        const selectedMembers = document.querySelector('#selectedMembers');
+        if (!selectedMembers) return;
+
+        const existing = selectedMembers.querySelector('input[value="' + user.id + '"]');
+        if (existing) {
+            document.querySelector('#errorMembers').innerHTML = 'Usuario ya está agregado';
+            return;
+        }
+
+        const pill = document.createElement('span');
+    
+        let avatar = '';
+        if( user.image ) {
+            avatar = '<img src="' + user.image + '" /> ' + user.email;
+        }else{
+            avatar = '<span>' + user.initials + '</span> ' + user.email;
+        }
+
+        pill.className = 'badge rounded-pill selected-member-pill';
+        pill.style.display = 'inline-flex';
+        pill.style.alignItems = 'center';
+        pill.style.gap = '0.3rem';
+        pill.innerHTML = `${avatar} <button type="button" class="btn-close remove-member" aria-label="Remove"></button>`;
+
+        const inputHidden = document.createElement('input');
+        inputHidden.type = 'hidden';
+        inputHidden.name = 'members[]';
+        inputHidden.value = user.id;
+        pill.appendChild(inputHidden);
+
+        selectedMembers.appendChild(pill);
+    }
+
+    function searchByKeyPress(value){
+
+        fetch(urlSearchByKey + '?q=' + value, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.success) {
+                return;
+            }
+            handlerRenderUserByKey(data.data);
+        })
+        .catch((e) => {
+            console.log("Error Catch", e);
+        });
+    }
+
+    function handlerRenderUserByKey(data){
+        let result = document.querySelector('.input-search-result');
+        let inputMemeber = document.querySelector('#memberSearchInput');
+        const selectedMembers = document.querySelector('#selectedMembers');
+
+        result.innerHTML = '';
+        if( data.length == 0 ){
+            result.classList.remove('active');
+            return;
+        }
+
+        data.forEach(user => {
+            const existing = selectedMembers.querySelector('input[value="' + user.id + '"]');
+            if ( existing == null ) {
+                let div = document.createElement('div');
+                
+                if( user.image ) {
+                    div.innerHTML = '<img src="' + user.image + '" /> ' + user.email;
+                }else{
+                    div.innerHTML = '<span>' + user.initials + '</span> ' + user.email;
+                }
+
+                div.classList.add('input-search-result-item');
+                div.addEventListener('click', () => {
+                    addSelectedMember(user);
+                    result.classList.remove('active');
+                    inputMemeber.value = '';
+                });
+                result.appendChild(div);
+            }
+        });
+
+        if( result.innerHTML != '' ){
+            result.classList.add('active');
+        }
+    }
+</script>
 
 <script>
     let mode = null;
@@ -258,164 +416,5 @@
     }
 </script>
 
-<script>
-    let urlSearchUser = "{{ route('user.search-user') }}";
-    let urlSearchByKey = "{{ route('user.search-by-key') }}";
 
-    window.addEventListener('load', () => {
-        document.addEventListener('keydown', (e) => {
-            if (e.target.classList.contains('input-user-search')) {
-                if( e.target.value.length <= 2){
-                    document.querySelector('.input-search-result').classList.remove('active');
-                    return;
-                }
-                searchByKeyPress(e.target.value);
-            }
-        });
-    });
-
-    function setupMemberSearch(){
-        const searchInput = document.querySelector('#memberSearchInput');
-        const searchButton = document.querySelector('#memberSearchButton');
-        const selectedMembers = document.querySelector('#selectedMembers');
-        const searchError = document.querySelector('#errorMembers');
-
-        if (!searchInput || !searchButton || !selectedMembers) return;
-
-        searchButton.addEventListener('click', () => {
-            const email = searchInput.value.trim();
-            if (!email) {
-                searchError.innerHTML = 'Ingresa un email para buscar.';
-                return;
-            }
-            searchError.innerHTML = '';
-            fetch(urlSearchUser + '?q=' + encodeURIComponent(email), {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (!data.success) {
-                    selectedMembers.classList.add('is-invalid');
-                    searchError.innerHTML = data.message || 'Usuario no encontrado';
-                    return;
-                }
-                addSelectedMember(data.user);
-            })
-            .catch(() => {
-                selectedMembers.classList.add('is-invalid');
-                searchError.innerHTML = 'Error al buscar usuario';
-            });
-        });
-
-        searchInput.addEventListener('keydown', (evt) => {
-            if (evt.key === 'Enter') {
-                evt.preventDefault();
-                searchButton.click();
-            }
-
-            document.querySelector('#selectedMembers').classList.remove('is-invalid');
-        });
-
-        selectedMembers.addEventListener('click', (evt) => {
-            const btn = evt.target.closest('.remove-member');
-            if (!btn) return;
-            const pill = btn.closest('.selected-member-pill');
-            if (pill) pill.remove();
-        });
-    }
-
-    function addSelectedMember(user){
-        const selectedMembers = document.querySelector('#selectedMembers');
-        if (!selectedMembers) return;
-
-        const existing = selectedMembers.querySelector('input[value="' + user.id + '"]');
-        if (existing) {
-            document.querySelector('#errorMembers').innerHTML = 'Usuario ya está agregado';
-            return;
-        }
-
-        const pill = document.createElement('span');
-    
-        let avatar = '';
-        if( user.image ) {
-            avatar = '<img src="' + user.image + '" /> ' + user.email;
-        }else{
-            avatar = '<span>' + user.initials + '</span> ' + user.email;
-        }
-
-        pill.className = 'badge rounded-pill selected-member-pill';
-        pill.style.display = 'inline-flex';
-        pill.style.alignItems = 'center';
-        pill.style.gap = '0.3rem';
-        pill.innerHTML = `${avatar} <button type="button" class="btn-close remove-member" aria-label="Remove"></button>`;
-
-        const inputHidden = document.createElement('input');
-        inputHidden.type = 'hidden';
-        inputHidden.name = 'members[]';
-        inputHidden.value = user.id;
-        pill.appendChild(inputHidden);
-
-        selectedMembers.appendChild(pill);
-    }
-
-    function searchByKeyPress(value){
-
-        fetch(urlSearchByKey + '?q=' + value, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (!data.success) {
-                return;
-            }
-            handlerRenderUserByKey(data.data);
-        })
-        .catch((e) => {
-            console.log("Error Catch", e);
-        });
-    }
-
-    function handlerRenderUserByKey(data){
-        let result = document.querySelector('.input-search-result');
-        let inputMemeber = document.querySelector('#memberSearchInput');
-        const selectedMembers = document.querySelector('#selectedMembers');
-
-        result.innerHTML = '';
-        if( data.length == 0 ){
-            result.classList.remove('active');
-            return;
-        }
-
-        data.forEach(user => {
-            const existing = selectedMembers.querySelector('input[value="' + user.id + '"]');
-            if ( existing == null ) {
-                let div = document.createElement('div');
-                
-                if( user.image ) {
-                    div.innerHTML = '<img src="' + user.image + '" /> ' + user.email;
-                }else{
-                    div.innerHTML = '<span>' + user.initials + '</span> ' + user.email;
-                }
-
-                div.classList.add('input-search-result-item');
-                div.addEventListener('click', () => {
-                    addSelectedMember(user);
-                    result.classList.remove('active');
-                    inputMemeber.value = '';
-                });
-                result.appendChild(div);
-            }
-        });
-
-        if( result.innerHTML != '' ){
-            result.classList.add('active');
-        }
-    }
-</script>
 @endsection
