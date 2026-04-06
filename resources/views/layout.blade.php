@@ -75,13 +75,13 @@
 
 				<ul class="menu-inner py-1">
 					
-					<li id="menu-popup" class="menu-item">
+					<li id="menu-dashboard" class="menu-item">
 						<a href="{{ route('dashboard.index') }}" class="menu-link">
 							<svg class="menu-icon" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" transform="" id="injected-svg" xmlns="http://www.w3.org/2000/svg"><!--Boxicons v3.0.8 https://boxicons.com | License  https://docs.boxicons.com/free--><path d="M20 11h-6c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-8c0-.55-.45-1-1-1m-1 8h-4v-6h4zm-9-4H4c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-4c0-.55-.45-1-1-1m-1 4H5v-2h4zM20 3h-6c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1h6c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1m-1 4h-4V5h4zm-9-4H4c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1h6c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1m-1 8H5V5h4z"></path></svg>
 							<div>Panel de control</div>
 						</a>
 					</li>
-					<li id="menu-popup" class="menu-item">
+					<li id="menu-task" class="menu-item">
 						<a href="{--{ route('admin.popup.index') }}" class="menu-link">
 							<i class="menu-icon bx bx-bar-chart-square"></i>
 							<div>Tareas</div>
@@ -103,7 +103,7 @@
 							<div>Bandeja de entrada</div>
 						</a>
 					</li>
-					<li id="menu-job" class="menu-item">
+					<li id="menu-brand" class="menu-item">
 						<a href="{{ route('brand.index') }}" class="menu-link">
 							<i class="menu-icon bx bx-tag"></i>
 							<div>Marcas</div>
@@ -115,7 +115,7 @@
 							<div>Equipos</div>
 						</a>
 					</li>
-					<li id="menu-team" class="menu-item">
+					<li id="menu-setting" class="menu-item">
 						<a href="{{ route('setting.perfil.index') }}" class="menu-link">
 							<i class='menu-icon bx bx-cog'></i> 
 							<div>Ajustes</div>

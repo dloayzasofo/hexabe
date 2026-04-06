@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Helper\MediaHelper;
 use App\Http\Requests\TeamRequest;
+use App\Models\Brand;
 use App\Models\Team;
+use App\Models\TeamBrand;
 use App\Models\TeamUser;
 use App\Models\User;
 use Auth;
@@ -23,9 +25,11 @@ class TeamController extends Controller {
     }
 
     public function create() {
+        $brands = []; //Brand::where('business_id', Auth::user()->business_id)->get();
         $params = [
             'model' => new Team(),
-            'users' => []
+            'users' => [],
+            'brands' => $brands
         ];
 
         return view('team.create', $params);
@@ -43,7 +47,7 @@ class TeamController extends Controller {
 
         $team->name = $request->name;
         $team->description = $request->description;
-        $team->status = $request->status == "1" ? "ACTIVE" : "DEACTIVE";
+        $team->status = "ACTIVE";
         $team->user_id = $user->id;
         $team->business_id = $user->business_id;
         $team->save();
@@ -55,6 +59,14 @@ class TeamController extends Controller {
             $teamUser->user_id = $member;
             $teamUser->save();
         }
+
+        $brands = $request->brands;
+        foreach($brands as $brand) {
+            $teamBrand = new TeamBrand();
+            $teamBrand->team_id = $team->id;
+            $teamBrand->brand_id = $brand;
+            $teamBrand->save();
+        }
         
         $request->session()->flash('team.success', 'Equipo ha sido registrada correctamente.');
         return response()->json(['success' => true]);
@@ -62,8 +74,9 @@ class TeamController extends Controller {
 
     public function edit(Request $request, Team $team) {
         $teamUsers = TeamUser::with('user')->where('team_id', $team->id)->get();
-        $users = [];
+        $teanBrands = TeamBrand::with('brand')->where('team_id', $team->id)->get();
 
+        $users = [];
         foreach($teamUsers as $teamuser) {
             $users[] = [
                 'id' => $teamuser->user->id,
@@ -74,9 +87,20 @@ class TeamController extends Controller {
             ];
         }
 
+        $brands = [];
+        foreach($teanBrands as $teambrand) {
+            $brands[] = [
+                'id' => $teambrand->brand->id,
+                'name' => $teambrand->brand->name,
+                'image' => $teambrand->brand->image,
+                'initials' => $teambrand->brand->nameInitial
+            ];
+        }
+
         $params = [
             'model' => $team,
-            'users' => $users
+            'users' => $users,
+            'brands' => $brands
         ];
 
         return view('team.update', $params);
@@ -93,7 +117,7 @@ class TeamController extends Controller {
 
         $team->name = $request->name;
         $team->description = $request->description;
-        $team->status = $request->status == "1" ? "ACTIVE" : "DEACTIVE";
+        //$team->status = $request->status == "1" ? "ACTIVE" : "DEACTIVE";
         $team->user_id = $user->id;
         $team->business_id = $user->business_id;
         $team->save();
@@ -109,6 +133,19 @@ class TeamController extends Controller {
             $teamUser->team_id = $team->id;
             $teamUser->user_id = $member;
             $teamUser->save();
+        }
+
+        $brands = $request->brands;
+        $teamBrands = TeamBrand::whereNotIn('brand_id', $brands)->where('team_id', $team->id)->delete();
+
+        foreach($brands as $member) {
+            if( TeamBrand::where('team_id', $team->id)->where('brand_id', $member)->exists() ) {
+                continue;
+            }
+            $teamBrand = new TeamBrand();
+            $teamBrand->team_id = $team->id;
+            $teamBrand->brand_id = $member;
+            $teamBrand->save();
         }
         
         $request->session()->flash('team.success', 'Marca ha sido actualizada correctamente.');

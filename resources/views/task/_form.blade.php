@@ -229,7 +229,7 @@
                 let div = document.createElement('div');
                 
                 if( user.image ) {
-                    div.innerHTML = '<img src="' + user.image + '" /> ' + user.email;
+                    div.innerHTML = '<img src="' + user.image + '" class="avatar rounded-circle"/> ' + user.email;
                 }else{
                     div.innerHTML = '<span>' + user.initials + '</span> ' + user.email;
                 }
@@ -262,7 +262,7 @@
         }
     
         if( user.image ) {
-            avatar.innerHTML = '<img src="' + user.image + '" class="class="rounded-circle"/> ';
+            avatar.innerHTML = '<img src="' + user.image + '" class="avatar rounded-circle"/> ';
         }else{
             avatar.innerHTML = '<span>' + user.initials + '</span> ';
         }
@@ -323,7 +323,7 @@
                 let div = document.createElement('div');
                 
                 if( user.image ) {
-                    div.innerHTML = '<img src="' + user.image + '" /> ' + user.email;
+                    div.innerHTML = '<img src="' + user.image + '" class="avatar rounded-circle"/> ' + user.email;
                 }else{
                     div.innerHTML = '<span>' + user.initials + '</span> ' + user.email;
                 }
@@ -358,7 +358,7 @@
 
         let avatar = '';
         if( user.image ) {
-            avatar = '<img src="' + user.image + '" class="class="rounded-circle"/> ';
+            avatar = '<img src="' + user.image + '" class="avatar rounded-circle"/> ';
         }else{
             avatar = '<span class="avatar-initial rounded-circle bg-label-primary">' + user.initials + '</span> ';
         }

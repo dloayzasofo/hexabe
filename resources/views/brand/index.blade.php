@@ -40,10 +40,9 @@
                 </div>
                 <div class="card-body">
                     <h5 class="card-title fw-bold" style="margin-bottom:4px;">
-                        {{--<div data-href="{{ route('brand.view', [$brand]) }}" class="brand-item">--}}
-                        <div data-href="{{ route('brand.edit', [$brand]) }}" class="brand-item">
+                        <a href="{{ route('brand.view', [$brand]) }}" class="brand-item">
                             {{ $brand->name }}
-                        </div>
+                        </a>
                     </h5>
                     <p class="card-text"><small>12 tareas pendientes</small></p>
 
@@ -211,11 +210,6 @@
             isOk = false;
         }
 
-        //if( !description.value ){
-        //    showError('description', 'El campo es requerido');
-        //    isOk = false;
-        //}
-
         if( mode == 'CREATE' && !image.value ){
             showError('image', 'El campo es requerido');
             isOk = false;
@@ -248,22 +242,6 @@
         document.querySelector('#' + elementName).classList.add('is-invalid');
         elementName = elementName.charAt(0).toUpperCase() + elementName.slice(1);
         document.querySelector('#error' + elementName).innerHTML = error;
-    }
-
-    function handleEdit(){
-        console.log("Edit BRnad");
-        let url = this.getAttribute('data-href');
-        console.log(url);
-        fetch(url)
-        .then(response => response.text())
-        .then(data => {
-            document.querySelector('#popup').innerHTML = data;
-            document.querySelector('#modalTitle').innerHTML = 'Actualizar marca';
-            document.querySelector('#modalDescription').innerHTML = 'Define una marca para centralizar tareas y seguimiento.';
-            $('#modalCenter').modal('show');
-            mode = 'EDIT';
-            var medropzone = new DropZone({idElement: 'dropzone', idFile: 'image'});
-        });
     }
 </script>
 @endsection

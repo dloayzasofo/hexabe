@@ -173,6 +173,16 @@ CREATE TABLE team_users(
 	 foreign key (user_id) references users(id) on delete cascade on update no action
 );
 
+CREATE TABLE team_brands(
+	 `id` bigint(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+	 team_id bigint(20) UNSIGNED,
+	 brand_id bigint(20) UNSIGNED,
+	 created_at timestamp NULL DEFAULT now(),
+	 updated_at timestamp NULL DEFAULT now(),
+	 foreign key (brand_id) references brands(id) on delete cascade on update no action,
+	 foreign key (team_id) references teams(id) on delete cascade on update no action
+);
+
 CREATE TABLE tasks(
 	 id bigint(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     title varchar(255),

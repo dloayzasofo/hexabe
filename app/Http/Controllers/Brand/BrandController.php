@@ -41,14 +41,13 @@ class BrandController extends Controller {
         $brand->name = $request->name;
         $brand->description = $request->description;
         $brand->industry = $request->industry;
-        $brand->status = $request->status == "1" ? "ACTIVE" : "DEACTIVE";
+        $brand->status = "ACTIVE";
         $brand->user_id = $user->id;
         $brand->business_id = $user->business_id;
         $brand->save();
         
         $request->session()->flash('brand.success', 'Marca ha sido registrada correctamente.');
         return response()->json(['success' => true]);
-        //return redirect()->route('brand.index');
     }
 
     public function edit(Request $request, Brand $brand) {
@@ -71,14 +70,13 @@ class BrandController extends Controller {
         $brand->name = $request->name;
         $brand->description = $request->description;
         $brand->industry = $request->industry;
-        $brand->status = $request->status == "1" ? "ACTIVE" : "DEACTIVE";
+        //$brand->status = $request->status == "1" ? "ACTIVE" : "DEACTIVE";
         $brand->user_id = $user->id;
         $brand->business_id = $user->business_id;
         $brand->save();
         
         $request->session()->flash('brand.success', 'Marca ha sido actualizada correctamente.');
         return response()->json(['success' => true]);
-        //return redirect()->route('brand.index');
     }
 
     public function view(Request $request, Brand $brand) {
@@ -88,4 +86,28 @@ class BrandController extends Controller {
 
         return view('brand.view', $params);
     }
+
+    public function search_by_key(Request $request) {
+        $user = Auth::user();
+        $business_id = $user->business_id;
+        $query = trim($request->query('q', ''));
+
+        $brands = Brand::where('business_id', $business_id)
+            ->where('name', 'like', '%' . $query. '%')
+            ->get();
+
+        $result = [];
+
+        foreach( $brands as $brand ) {
+            $result[] = [
+                'id' => $brand->id,
+                'name' => $brand->name,
+                'image' => $brand->image,
+                'initials' => $brand->nameInitial
+            ];
+        }
+
+        return response()->json(['success' => true, 'data' => $result]);
+    }
+
 }

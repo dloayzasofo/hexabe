@@ -100,6 +100,7 @@
 <script src="{{asset('/assets/admin/js/dropzone.js')}}"></script>
 
 <script>
+    /*
     window.addEventListener('load', () => {
         document.addEventListener('keydown', (e) => {
             if (e.target.classList.contains('input-user-search')) {
@@ -255,6 +256,7 @@
             result.classList.add('active');
         }
     }
+    */
 </script>
 
 <script>
@@ -283,9 +285,10 @@
             document.querySelector('#modalTitle').innerHTML = 'Crear nuevo equipo';
             document.querySelector('#modalDescription').innerHTML = 'Define un equipo para centralizar tareas y seguimiento.';
             $('#modalCenter').modal('show');
-            setupMemberSearch();
+            //setupMemberSearch();
             mode = 'CREATE';
             var medropzone = new DropZone({idElement: 'dropzone', idFile: 'image'});
+            bindSearchInputAjax();
         });
     }
 
@@ -314,6 +317,10 @@
         const memberInputs = document.querySelectorAll('input[name="members[]"]');
         memberInputs.forEach((input) => {
             data.append('members[]', input.value);
+        });
+        const brandInputs = document.querySelectorAll('input[name="brands[]"]');
+        brandInputs.forEach((input) => {
+            data.append('brands[]', input.value);
         });
 
         fetch(url, {
@@ -410,11 +417,135 @@
             document.querySelector('#modalDescription').innerHTML = 'Define un equipo para centralizar tareas y seguimiento.';
             $('#modalCenter').modal('show');
             mode = 'EDIT';
-            setupMemberSearch();
+            //setupMemberSearch();
             var medropzone = new DropZone({idElement: 'dropzone', idFile: 'image'});
+            bindSearchInputAjax();
         });
     }
 </script>
 
+<script>
+    window.addEventListener('load', () => {
+        let searchServers = document.querySelectorAll('.serverSearch');
+        searchServers.forEach(searchServer => {
+            bindElementeToServerSearch(searchServer);
+        });
+    });
 
+    function bindSearchInputAjax(){
+        let searchServers = document.querySelectorAll('.serverSearch');
+        searchServers.forEach(searchServer => {
+            bindElementeToServerSearch(searchServer);
+        });
+    }
+
+    function bindElementeToServerSearch(element){
+        let preview = element.querySelector('.previewItems');
+        let inputSearch = element.querySelector('.inputSearch');
+        let resultItems = element.querySelector('.resultItems');
+        let urlSearch = element.getAttribute('data-href');
+        let type = element.getAttribute('data-type');
+
+        inputSearch.addEventListener('keydown', (e) => {
+            console.log('urlSearch');
+            if (e.target.value.length < 2){
+                resultItems.classList.remove('active');
+                return;
+            }
+            searchServerByKey(e.target.value);
+        });
+
+        function searchServerByKey(value){
+            fetch(urlSearch + '?q=' + value, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    return;
+                }
+                handlerRenderServerByKey(data.data);
+            })
+            .catch((e) => {
+                console.log("Error Catch", e);
+            });
+        }
+
+        function handlerRenderServerByKey(data){
+            preview.innerHTML = '';
+            if( data.length == 0 ){
+                preview.classList.remove('active');
+                return;
+            }
+
+            data.forEach(model => {
+                const existing = resultItems.querySelector('input[value="' + model.id + '"]');
+                if ( existing == null ) {
+                    let div = document.createElement('div');
+                    
+                    if( model.image ) {
+                        div.innerHTML = '<img src="' + model.image + '" class="avatar avatar-xs rounded-circle"/> ' + model.name;
+                    }else{
+                        div.innerHTML = '<span>' + model.initials + '</span> ' + model.name;
+                    }
+
+                    div.classList.add('input-search-result-item');
+                    div.addEventListener('click', () => {
+                        addSelectedServerItem(model);
+                        preview.classList.remove('active');
+                        inputSearch.value = '';
+                    });
+                    preview.appendChild(div);
+                }
+            });
+
+            if( preview.innerHTML != '' ){
+                preview.classList.add('active');
+            }
+        }
+
+        function addSelectedServerItem(model){
+            if (!resultItems) return;
+
+            const existing = resultItems.querySelector('input[value="' + model.id + '"]');
+            if (existing) {
+                return;
+            }
+
+            const pill = document.createElement('span');
+        
+            let avatar = '';
+            if( model.image ) {
+                avatar = '<img src="' + model.image + '" class="avatar avatar-xs rounded-circle"/> ' + model.name;
+            }else{
+                avatar = '<span>' + model.initials + '</span> ' + model.name;
+            }
+
+            pill.className = 'badge rounded-pill selected-member-pill';
+            pill.style.display = 'inline-flex';
+            pill.style.alignItems = 'center';
+            pill.style.gap = '0.3rem';
+            pill.innerHTML = `${avatar} <button type="button" class="btn-close remove-member" aria-label="Remove"></button>`;
+
+            const inputHidden = document.createElement('input');
+            inputHidden.type = 'hidden';
+            inputHidden.name = type + '[]';
+            inputHidden.value = model.id;
+            pill.appendChild(inputHidden);
+
+            resultItems.appendChild(pill);
+        }
+        
+        resultItems.addEventListener('click', (evt) => {
+            const btn = evt.target.closest('.remove-member');
+            if (!btn) return;
+            const pill = btn.closest('.selected-member-pill');
+            if (pill) pill.remove();
+        });
+    }
+    
+</script>
 @endsection

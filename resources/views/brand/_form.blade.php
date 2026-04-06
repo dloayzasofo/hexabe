@@ -40,7 +40,7 @@
         <div id="errorImage" class="error invalid-feedback text-start"></div>
     </div>
 </div>
-
+{{-- 
 <div class="mb-3">
     <label class="switch switch-warning">
         <input id="status" type="checkbox" class="switch-input" name="status" value="1" @checked($model->status=='ACTIVE')>
@@ -55,3 +55,4 @@
         <span class="switch-label">Activar</span>
     </label>
 </div>
+--}}

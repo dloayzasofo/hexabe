@@ -21,4 +21,9 @@ class Brand extends Model
         return Storage::url($this->media->path);
     }
 
+    public function getNameInitialAttribute(){
+        $name = substr($this->name, 0, 2);
+        return strtoupper($name);
+    }
+
 }

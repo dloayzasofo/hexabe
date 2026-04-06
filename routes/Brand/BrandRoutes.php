@@ -26,4 +26,8 @@ Route::prefix('brand')->group(function () {
     Route::get('/view/{brand}', [BrandController::class, 'view'])
         ->middleware(RoleMiddleware::using('ADMIN'))
         ->name('brand.view');
+
+    Route::get('/search-by-key', [BrandController::class, 'search_by_key'])
+        ->middleware(RoleMiddleware::using('ADMIN'))
+        ->name('brand.search-by-key');
 });

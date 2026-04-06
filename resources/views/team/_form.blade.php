@@ -11,13 +11,45 @@
     <div id="errorDescription" class="error invalid-feedback"></div>
 </div>
 
-<div class="mb-3">
+<div class="mb-3 serverSearch" data-href="{{ route('brand.search-by-key') }}" data-type="brands">
+    <label for="members" class="form-label">Agregar marcas</label>
+    <div class="d-flex">
+        <div class="input-group input-group-merge">
+            <span class="input-group-text" style="background:#F8FAFC;"><i class="icon-base bx bx-tag"></i></span>
+            <div class="result input-search-result previewItems"></div>
+            <input type="text" class="form-control input-user-search2 inputSearch" id="memberSearchInput2" placeholder="Ej: Fobo">
+        </div>
+        <button type="button" id="memberSearchButton" style="background: transparent;border: none;">
+            <div class="avatar">
+                <span class="avatar-initial rounded bg-label-primary">
+                <i class="icon-base bx bx-plus icon-lg"></i>
+                </span>
+            </div>
+        </button>
+    </div>
+    <div class="mt-2 d-flex flex-wrap gap-1 resultItems">
+        @foreach($brands as $brand)
+        <span class="badge rounded-pill selected-member-pill" style="display: inline-flex; align-items: center; gap: 0.3rem;">
+            @if( isset($brand['image']) )
+                <img src="{{ $brand['image'] }}" class="avatar avatar-xs rounded-circle"/> {{ $brand['name'] }}
+            @else
+                <span>{{ $brand['initials'] }}</span> {{ $brand['name'] }}
+            @endif
+            <button type="button" class="btn-close remove-member" aria-label="Remove"></button>
+            <input type="hidden" name="brands[]" value="{{ $brand['id'] }}">
+        </span>
+        @endforeach
+    </div>
+    <div id="errorBrands" class="error invalid-feedback"></div>
+</div>
+
+<div class="mb-3 serverSearch" data-href="{{ route('user.search-by-key') }}" data-type="members">
     <label for="members" class="form-label">Añadir miembro</label>
     <div class="d-flex">
         <div class="input-group input-group-merge">
             <span class="input-group-text" style="background:#F8FAFC;"><i class="icon-base bx bx-envelope"></i></span>
-            <div class="result input-search-result"></div>
-            <input type="text" class="form-control input-user-search" id="memberSearchInput" placeholder="ejemplo@correo.com">
+            <div class="result input-search-result previewItems"></div>
+            <input type="text" class="form-control input-user-search3 inputSearch" id="memberSearchInput3" placeholder="ejemplo@correo.com">
         </div>
         <button type="button" id="memberSearchButton" style="background: transparent;border: none;">
             <div class="avatar">
@@ -27,11 +59,11 @@
             </div>
         </button>
     </div>
-    <div id="selectedMembers" class="mt-2 d-flex flex-wrap gap-1">
+    <div class="mt-2 d-flex flex-wrap gap-1 resultItems">
         @foreach($users as $user)
         <span class="badge rounded-pill selected-member-pill" style="display: inline-flex; align-items: center; gap: 0.3rem;">
             @if( isset($user['image']) )
-                <img src="{{ $user['image'] }}" /> {{ $user['email'] }}
+                <img src="{{ $user['image'] }}" class="avatar avatar-xs rounded-circle"/> {{ $user['email'] }}
             @else
                 <span>{{ $user['initials'] }}</span> {{ $user['email'] }}
             @endif
@@ -66,7 +98,7 @@
         <div id="errorImage" class="error invalid-feedback text-start"></div>
     </div>
 </div>
-
+{{-- 
 <div class="mb-3">
     <label class="switch switch-warning">
         <input id="status" type="checkbox" class="switch-input" name="status" value="1" @checked($model->status=='ACTIVE')>
@@ -81,3 +113,4 @@
         <span class="switch-label">Activar</span>
     </label>
 </div>
+--}}
