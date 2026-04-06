@@ -1,6 +1,7 @@
+{{--
 @extends('layout')
-
 @section('main')
+--}}
 <form id="formCreateTask" data-action="{{ route('task.save') }}" method="post" enctype="multipart/form-data">
     <div class="modal-body">
         @include('task._form')
@@ -11,4 +12,6 @@
         <button type="button" class="btn btn-warning btnSaveTask">Crear tarea</button>
     </div>
 </form>
+{{--
 @endsection
+--}}

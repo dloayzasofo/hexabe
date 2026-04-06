@@ -82,7 +82,7 @@
 						</a>
 					</li>
 					<li id="menu-task" class="menu-item">
-						<a href="{--{ route('admin.popup.index') }}" class="menu-link">
+						<a href="{{ route('task.index') }}" class="menu-link">
 							<i class="menu-icon bx bx-bar-chart-square"></i>
 							<div>Tareas</div>
 						</a>

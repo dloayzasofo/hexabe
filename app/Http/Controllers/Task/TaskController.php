@@ -17,7 +17,9 @@ use Auth;
 class TaskController extends Controller {
  
     public function index() {
-        $tasks = Task::all();
+        $user = Auth::user();
+        $tasks = Task::with('brand', 'assign', 'collaborators')->withCount('medias')->where('user_assign', $user->id)->get();
+        //var_dump($tasks[0]);exit();
         $params = [
             'tasks' => $tasks
         ];

@@ -512,6 +512,47 @@ textarea{
     max-width: 25%;
     white-space: normal;
 }
+.task-list-header{
+    background: transparent !important;
+    margin-bottom: 20px;
+    font-size: 12px;
+}
+.task-list-item{
+    background: #fff;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 2%;
+    padding: 10px 15px;
+    font-size: 12px;
+}
+.task-list-item>div:nth-child(1){
+    flex: 1 1 20%;
+}
+.task-list-item>div:nth-child(2){
+    flex: 0 0 10%;
+    text-align: center;
+}
+.task-list-item>div:nth-child(3){
+    flex: 0 0 15%;
+}
+.task-list-item>div:nth-child(4){
+    flex: 0 0 10%;
+}
+.task-list-item>div:nth-child(5){
+    flex: 0 0 5%;
+    text-align: center;
+}
+.task-list-item>div:nth-child(6){
+    flex: 0 0 5%;
+    text-align: center;
+}
+.task-list-item>div:nth-child(7){
+    flex: 0 0 10%;
+}
+.task-list-item>div:nth-child(8){
+    flex: 0 0 5%;
+    text-align: right;
+}
 .text-normal{
     font-weight: normal;
 }
