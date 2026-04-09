@@ -11,6 +11,7 @@ use App\Models\Task;
 use App\Models\TaskMedia;
 use App\Models\TaskCollaborator;
 use App\Models\TeamUser;
+use App\Models\TaskLink;
 use App\Models\User;
 use Auth;
 
@@ -18,7 +19,7 @@ class TaskController extends Controller {
  
     public function index() {
         $user = Auth::user();
-        $tasks = Task::with('brand', 'assign', 'collaborators')->withCount('medias')->where('user_assign', $user->id)->get();
+        $tasks = Task::with('brand', 'assign', 'collaborators')->withCount('medias')->withCount('childs')->where('user_assign', $user->id)->get();
         //var_dump($tasks[0]);exit();
         $params = [
             'tasks' => $tasks
@@ -29,9 +30,22 @@ class TaskController extends Controller {
 
     public function create(Request $request) {
         $brands = Brand::all();
+        $task = null;
         $params = [
             'model' => new Task(),
-            'brands' => $brands
+            'brands' => $brands,
+            'task' => $task
+        ];
+
+        return view('task.create', $params);
+    }
+
+    public function subtask(Request $request, Task $task) {
+        $brands = Brand::all();
+        $params = [
+            'model' => new Task(),
+            'brands' => $brands,
+            'task' => $task
         ];
 
         return view('task.create', $params);
@@ -49,6 +63,7 @@ class TaskController extends Controller {
         $user_assign = $request->user_assign;
         $medias = $request->medias;
         $members = $request->members;
+        $links = $request->links;
 
         $task = new Task();
         $task->title = $title;
@@ -80,18 +95,36 @@ class TaskController extends Controller {
             }
         }
 
+        if( $links ){
+            foreach($links as $link){
+                $taskLink = new TaskLink();
+                $taskLink->url = $link;
+                $taskLink->task_id = $task->id;
+                $taskLink->save();
+            }
+        }
+
+        if( $request->parent_id != null ){
+            $task->parent_id = $request->parent_id;
+            $task->save();
+        }
+
         return response()->json(['success' => true, 'data' => $task]);
     }
 
     public function view(Request $request, Task $task) {
 
         $taskMedias = TaskMedia::with('media')->where('task_id', $task->id)->get();
+        $taskLinks = TaskLink::where('task_id', $task->id)->get();
         $taskCollaboratos = TaskCollaborator::where('task_id', $task->id)->get();
+        $childs = Task::where('parent_id', $task->id)->orderBy('date_delivery', 'asc')->get();
 
         $params = [
             'task' => $task,
             'taskMedias' => $taskMedias,
-            'taskCollaboratos' => $taskCollaboratos
+            'taskLinks' => $taskLinks,
+            'taskCollaboratos' => $taskCollaboratos,
+            'childs' => $childs
         ];
 
         return view('task.view', $params);

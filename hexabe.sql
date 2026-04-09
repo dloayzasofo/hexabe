@@ -115,7 +115,6 @@ CREATE TABLE `users` (
   foreign key(business_id) references business(id) on delete cascade on update no action
 );
 
-
 CREATE TABLE medias(
 	`id` bigint(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     name varchar(255),
@@ -210,7 +209,7 @@ CREATE TABLE tasks_info(
 	 task_dependency_id bigint(20) UNSIGNED NULL,
 	 task_id bigint(20) UNSIGNED,
 	 created_at timestamp NULL DEFAULT now(),
-	 updated_at timestamp NULL DEFAULT now(),
+	 updated_at timestamp NULL DEFAULT NOW(),
     deleted_at timestamp NULL DEFAULT NULL,
     foreign key(task_id) references tasks(id) on delete cascade on update no ACTION,
     foreign key(task_dependency_id) references tasks(id) on delete set null on update no action,
@@ -226,6 +225,17 @@ CREATE TABLE task_medias(
     foreign key (media_id) references medias(id) on delete cascade on update no action
 );
 
+CREATE TABLE task_links(
+	 id bigint(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+	 url VARCHAR(255),
+    task_id bigint(20) UNSIGNED,
+    user_id bigint(20) UNSIGNED,
+    created_at timestamp NULL DEFAULT now(),
+	 updated_at timestamp NULL DEFAULT now(),
+    foreign key (task_id) references tasks(id) on delete cascade on update no action,
+    foreign key (user_id) references users(id) on delete cascade on update no action
+);
+
 
 CREATE TABLE task_collaborators(
 	 id bigint(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
@@ -236,6 +246,30 @@ CREATE TABLE task_collaborators(
     foreign key (task_id) references tasks(id) on delete cascade on update no action,
     foreign key (user_id) references users(id) on delete cascade on update no action
 );
+
+CREATE TABLE comments(
+	 id bigint(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+	 description text,
+	 task_id bigint(20) UNSIGNED,
+	 user_id bigint(20) UNSIGNED,
+	 created_at timestamp NULL DEFAULT now(),
+	 updated_at timestamp NULL DEFAULT now(),
+    foreign key (task_id) references tasks(id) on delete cascade on update no action,
+    foreign key (user_id) references users(id) on delete cascade on update no action
+);
+
+CREATE TABLE comment_medias(
+	 id bigint(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+	 media_id bigint(20) UNSIGNED,
+	 comment_id bigint(20) UNSIGNED,
+	 task_id bigint(20) UNSIGNED,
+	 created_at timestamp NULL DEFAULT now(),
+	 updated_at timestamp NULL DEFAULT now(),
+	 foreign key (media_id) references medias(id) on delete cascade on update no ACTION,
+    foreign key (comment_id) references comments(id) on delete cascade on update no ACTION,
+    foreign key (task_id) references tasks(id) on delete cascade on update no action
+);
+
 -- DROP TABLE task_medias;
 -- INSERT USERS
 insert into users(name, last_name, email, password, role, status) values

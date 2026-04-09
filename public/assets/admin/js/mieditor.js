@@ -22,9 +22,9 @@ function MeEditor(config){
     this.quill.on('text-change', function() {
         var myEditor = document.querySelector(this.editor);
         var html = myEditor.children[0].innerHTML;
-        console.log(this.textarea);
+        //console.log(this.textarea);
         $(this.textarea).html(html);
-        console.log($(this.textarea).html());
+        //console.log($(this.textarea).html());
     }.bind(this));
 
     this.quill.on('selection-change', function(range, oldRange, source) {
@@ -32,7 +32,7 @@ function MeEditor(config){
             //blur
         } else if (range !== null && oldRange === null){
             //focus
-            console.log(this.quill);
+            //console.log(this.quill);
             var me = this.quill.container;
             var parent = $(me).parent();
             $(parent).removeClass('row-invalid');

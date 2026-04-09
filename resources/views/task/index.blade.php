@@ -1,6 +1,12 @@
 @extends('layout')
 
 @section('main')
+    <div class="btn-add-task"> 
+        <button id="btnCreate" class="btn rounded-pill btn-icon btn-primary" title="Crear nueva tarea">
+            <span><i class="bx bx-plus"></i></span>
+        </button> 
+    </div>
+
     <div class="row sm-vl-base mb-4">
         <div class="col-sm-8 col-md-6">
             <h4 class="fw-bold"> Mis tareas </h4>
@@ -8,11 +14,7 @@
         <div class="col-sm-4 col-md-6">
             <div class="dt-action-buttons text-end pt-md-0">
                 <div class="dt-buttons"> 
-                    <button id="btnCreate" class="dt-button create-new btn btn-primary">
-                        <span><i class="bx bx-plus me-sm-2"></i> 
-                            <span class="d-none d-sm-inline-block">Agregar equipo</span>
-                        </span>
-                    </button> 
+                    
                 </div>
             </div>
         </div>
@@ -81,21 +83,28 @@
 
         <div>
             <div>
+                @if( $task->childs_count > 0 )
                 <div class="d-flex justify-content-between mb-1">
                     <div>
                         Subtareas
                     </div>
                     <div class="text-primary fw-bold">
-                        4/5
+                        {{ $task->childs_done }}/{{ $task->childs_count }}
                     </div>
+                    
                 </div>
                 <div>
                     <div class="progress" style="height: 16px;">
-                        <div class="progress-bar" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
-                            50%
+                        <div class="progress-bar" role="progressbar" style="width: {{ $task->progress }}%;" aria-valuenow="{{ $task->progress }}" aria-valuemin="0" aria-valuemax="100">
+                            {{ $task->progress }}%
                         </div>
                     </div>
                 </div>
+                @else
+                <div>
+                    Sin Subtareas
+                </div>
+                @endif
             </div>
         </div>
 
@@ -166,6 +175,10 @@
 @endsection
 
 @section('script')
+<link href="{{ asset('/assets/admin/js/quilljs/quill.css') }}" rel="stylesheet">
+<script src="{{ asset('/assets/admin/js/quilljs/quill.js') }}"></script>
+<script src="{{asset('/assets/admin/js/mieditor.js')}}"></script>
+
 <script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
 <link href="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css" rel="stylesheet" type="text/css" />
 
@@ -176,32 +189,20 @@
 
     window.addEventListener('load', () => {
         document.querySelector('#btnCreate').addEventListener('click', handleBtnCreate);
-        /*
-        document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('btnSave')) {
-                handleCreateServer();
-            }
-        });
-
-        let teamItems = document.querySelectorAll('.team-item');
-        teamItems.forEach(teamItem => {
-            teamItem.addEventListener('click', handleEdit);
-        });
-        */
     });
 
+    /**
+     * Handle click button create task, load form in popup and open modal
+     */
     function handleBtnCreate(){
         fetch(urlCreate)
         .then(response => response.text())
         .then(data => {
             document.querySelector('#popup').innerHTML = data;
-            document.querySelector('#modalTitle').innerHTML = 'Crear nuevo equipo';
-            document.querySelector('#modalDescription').innerHTML = 'Define un equipo para centralizar tareas y seguimiento.';
+            document.querySelector('#modalTitle').innerHTML = 'Crear nueva tarea';
+            document.querySelector('#modalDescription').innerHTML = 'Todos los campos con  (*) son obligatorios.';
             $('#modalCenter').modal('show');
-            //setupMemberSearch();
             mode = 'CREATE';
-            //var medropzone = new DropZone({idElement: 'dropzone', idFile: 'image'});
-            //bindSearchInputAjax();
 
             myDropzone = new Dropzone("#task-files", { 
                 url: "/media/upload", 
@@ -210,33 +211,36 @@
                 dictRemoveFile: "Eliminar", 
                 init: dropzoneInitHandle
             });
+
+            var editorDescription = new MeEditor({
+                toolbar: '#toolbarDescription',
+                placeholder: 'Añade detalles sobre la tarea...',
+                editor: '#editorDescription',
+                textarea: '#description'
+            });
         });
     }
 </script>
 
 <script>
-    
-
+    /**
+     * Handle remove file in dropzone, send request to server for delete file
+     */
     function dropzoneInitHandle(){
         this.on("removedfile", function(file) {
-            console.log(file); 
-            // Check if the file has been successfully uploaded and has a server-side identifier
-            if (file.id) { // Use the identifier you store in the success callback
-                // Perform an AJAX request to delete the file from the server
+            if (file.id) {
                 $.ajax({
                     type: "POST",
-                    url: "/media/delete", // Replace with your server-side deletion script URL
-                    data: { id: file.id }, // Pass the file identifier
+                    url: "/media/delete",
+                    data: { id: file.id },
                     success: function(response) {
-                        console.log(response); // Log the server response
+                        console.log(response);
                     }
                 });
             }
         });
 
-        // You also need to capture the server file name/ID during the success event
         this.on("success", function(file, responseText) {
-             // Assuming your server returns the file name or ID in the response
              file.serverFileName = responseText.name; 
              file.id = responseText.data.id;
              let attached = document.querySelector('#attach_media');
@@ -254,11 +258,15 @@
 </script>
 
 <script>
-    // let urlSearchUser,urlSearchByKey : define in header layout
+    /**
+     * Eventos del formulario de creacipon de tarea,
+     * para buscar responsable y miembros
+     * crear tarea enviando datos por fetch a controlador y mostrar errores de validacion 
+     */
     window.addEventListener('load', () => {
         document.addEventListener('keydown', (e) => {
             if (e.target.classList.contains('task-input-responsable')) {
-                if( e.target.value.length <= 2){
+                if( e.target.value.length < 2){
                     document.querySelector('.task-responsable-result').classList.remove('active');
                     return;
                 }
@@ -266,7 +274,7 @@
             }
 
             if (e.target.classList.contains('task-input-member')) {
-                if( e.target.value.length <= 2){
+                if( e.target.value.length < 2){
                     document.querySelector('.task-members-result').classList.remove('active');
                     return;
                 }
@@ -277,16 +285,25 @@
 
         document.addEventListener('click', (e) => {
             if( e.target.closest('.add-member') ){
-            //if( e.target.classList.contains('add-member') ){
                 document.querySelector('.memebers-ajax').classList.toggle('hide');
             }
             
             if( e.target.classList.contains('btnSaveTask') ){
                 handleCreateTask();
             }
+            
+            if( e.target.closest('.btnAddLink') ){
+                handleAddLinkInput();
+            }
+            if( e.target.closest('.btnDeleteLink') ){
+                handleDeleteLinkInput(e);
+            }
         });
     });
 
+    /**
+     * Search responsable by key press, send request to server and render result
+     */
     function searchByKeyPress(value){
         fetch(urlSearchByKey + '?q=' + value, {
             method: 'GET',
@@ -306,10 +323,12 @@
         });
     }
 
+    /**
+     * Render result search responsable, if click in result set responsable in form
+     */
     function handlerRenderUserByKey(data){
         let result = document.querySelector('.task-responsable-result');
         let inputMemeber = document.querySelector('#task-input-responsable');
-        //const selectedMembers = document.querySelector('#selectedMembers');
 
         result.innerHTML = '';
         if( data.length == 0 ){
@@ -318,7 +337,7 @@
         }
 
         data.forEach(user => {
-            const existing = null; //selectedMembers.querySelector('input[value="' + user.id + '"]');
+            const existing = null;
             if ( existing == null ) {
                 let div = document.createElement('div');
                 
@@ -342,6 +361,9 @@
         }
     }
 
+    /**
+     * Add responsable en el formulario
+     */
     function addSelectedResponsable(user){
         let avatar = document.querySelector('#task-responsable-avatar');
         let responsable = document.querySelector('#user_assign');
@@ -351,7 +373,6 @@
 
         const existing = responsable.value == user.id;
         if (existing) {
-            //document.querySelector('#errorMembers').innerHTML = 'Usuario ya está agregado';
             return;
         }
     
@@ -380,7 +401,9 @@
         */
     }
 
-
+    /**
+     * Search members by key press, send request to server and render result
+     */
     function searchMemeberKeyPress(value){
         fetch(urlSearchByKey + '?q=' + value, {
             method: 'GET',
@@ -400,6 +423,9 @@
         });
     }
 
+    /**
+     * Render result search members, if click in result set members in form
+     */
     function handlerRenderMemberByKey(data){
         let result = document.querySelector('.task-members-result');
         let inputMemeber = document.querySelector('#task-input-member');
@@ -437,6 +463,9 @@
         }
     }
 
+    /**
+     * Add member en el formulario
+     */
     function addSelectedMember(user){
         let responsable = document.querySelector('#user_assign');
         let selectedMembers = document.querySelector('#selected-members');
@@ -445,7 +474,6 @@
 
         const existing = selectedMembers.querySelector('input[value="' + user.id + '"]');
         if (existing) {
-            //document.querySelector('#errorMembers').innerHTML = 'Usuario ya está agregado';
             return;
         }
 
@@ -456,11 +484,6 @@
         }else{
             avatar = '<span class="avatar-initial rounded-circle bg-label-primary">' + user.initials + '</span> ';
         }
-        /*
-        let html = `<li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar pull-up" aria-label="${ user.name }" data-bs-original-title="${ user.name }">
-                ${avatar}
-            </li>`;
-        */
         
         const pill = document.createElement('li');
         pill.setAttribute('data-bs-toggle', 'tooltip');
@@ -483,8 +506,9 @@
         $('[data-toggle="tooltip"]').tooltip();
     }
 
-   
-    
+    /**
+     * Create task, send data by fetch to server and handle response, if success close modal and redirect to task view, if error show errors in form
+     */     
     function handleCreateTask(){
         let form = document.querySelector('#formCreateTask');
 
@@ -522,6 +546,11 @@
             data.append('members[]', input.value);
         });
 
+        const linkInputs = document.querySelectorAll('input[name="links[]"]');
+        linkInputs.forEach((input) => {
+            data.append('links[]', input.value);
+        });
+
         fetch(url, {
             method: 'POST',
             headers: {
@@ -543,6 +572,9 @@
         });
     }
 
+    /**
+     * Validar el formulario de tarea
+     */
     function validateFormTaskCreate(){
         clearTaskErrors();
 
@@ -558,15 +590,6 @@
             showTaskError('name', 'El campo es requerido');
             isOk = false;
         }
-
-        /*
-        const memberInputs = document.querySelectorAll('input[name="members[]"]');
-        if( memberInputs.length == 0){
-            document.querySelector('#selectedMembers').classList.add('is-invalid');
-            document.querySelector('#errorMembers').innerHTML = 'Ingresa almenos un miembro al equipo';
-            isOk = false;
-        }
-        */
 
         if( !priority.value ){
             showTaskError('priority', 'El campo es requerido');
@@ -591,6 +614,9 @@
         return isOk;
     }
 
+    /**
+     * Limpiar errores del formulario de tarea
+     */
     function clearTaskErrors(){
         const fields = ['name', 'description', 'members'];
         fields.forEach((field) => {
@@ -601,6 +627,9 @@
         });
     }
 
+    /**
+     * Mostrar errores en el formulario de tarea
+     */
     function showTaskError(elementName, error){
         const el = document.querySelector('#' + elementName);
         if (el) el.classList.add('is-invalid');
@@ -610,4 +639,29 @@
     }
 </script>
 
+<script>
+    function handleAddLinkInput(){
+        let wrap = document.querySelector('#links-container');
+        let html = `<div class="input-group input-group-merge mb-2">
+            <span class="input-group-text" style="background:#F8FAFC;">
+                <i class="icon-base bx bx-link icon-lg"></i>
+            </span>
+            <input type="text" name="links[]" class="form-control input-user-search" placeholder="https://ejemplo.com">
+            <span class="input-group-text btnDeleteLink" style="background:#F8FAFC;">
+                <i class="bx bx-x" ></i>
+            </span>
+        </div>`;
+        wrap.innerHTML += html;
+    }
+
+    function handleDeleteLinkInput(e){
+        console.log("E", e.target);
+        let element = e.target.closest('.input-group');
+        if( element ){
+            element.remove();
+        }
+    }
+
+
+</script>
 @endsection

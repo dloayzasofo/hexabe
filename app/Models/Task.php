@@ -59,4 +59,27 @@ class Task extends Model
         return $date->diffForHumans();
 
     }
+
+    /**
+     * Function to get percent advanced of task, based on the number of subtasks finalized and total subtasks
+     * @return int
+     */
+    public function getProgressAttribute()
+    {
+        $total = $this->childs()->count();
+        if ($total == 0) {
+            return 0;
+        }
+        $finalized = $this->childs()->where('status', 'FINALIZED')->count();
+        return round(($finalized / $total) * 100);
+    }
+
+    /**
+     * Function to get the number of completed subtasks
+     * @return int
+     */
+    public function getChildsDoneAttribute()
+    {
+        return $this->childs()->where('status', 'FINALIZED')->count();
+    }
 }

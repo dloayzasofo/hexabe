@@ -16,6 +16,10 @@ Route::prefix('task')->group(function () {
         //->middleware(RoleMiddleware::using('ADMIN'))
         ->name('task.save');
 
+    Route::get('/subtask/{task}', [TaskController::class, 'subtask'])
+        //->middleware(RoleMiddleware::using('ADMIN'))
+        ->name('task.subtask');
+
     Route::get('/edit/{task}', [TaskController::class, 'edit'])
         //->middleware(RoleMiddleware::using('ADMIN'))
         ->name('task.edit');
