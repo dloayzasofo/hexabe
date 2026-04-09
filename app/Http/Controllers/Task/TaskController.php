@@ -51,6 +51,14 @@ class TaskController extends Controller {
         return view('task.create', $params);
     }
 
+    public function finish(Request $request, Task $task) {
+        $task->status = 'FINALIZED';
+        $task->save();
+        
+        $request->session()->flash('task.success', 'La tarea ha sido marcada como finalizada.');
+        return redirect()->route('task.view', ['task' => $task->id]);
+    }
+
     public function save(Request $request) {
         //var_dump($request->all());exit();
         $user = Auth::user();
@@ -97,6 +105,7 @@ class TaskController extends Controller {
 
         if( $links ){
             foreach($links as $link){
+                if( $link == null || trim($link) == '' ) continue;
                 $taskLink = new TaskLink();
                 $taskLink->url = $link;
                 $taskLink->task_id = $task->id;
@@ -118,13 +127,15 @@ class TaskController extends Controller {
         $taskLinks = TaskLink::where('task_id', $task->id)->get();
         $taskCollaboratos = TaskCollaborator::where('task_id', $task->id)->get();
         $childs = Task::where('parent_id', $task->id)->orderBy('date_delivery', 'asc')->get();
+        $comments = $task->comments()->with('user')->with('commentmedias')->orderBy('created_at', 'desc')->get();
 
         $params = [
             'task' => $task,
             'taskMedias' => $taskMedias,
             'taskLinks' => $taskLinks,
             'taskCollaboratos' => $taskCollaboratos,
-            'childs' => $childs
+            'childs' => $childs,
+            'comments' => $comments
         ];
 
         return view('task.view', $params);

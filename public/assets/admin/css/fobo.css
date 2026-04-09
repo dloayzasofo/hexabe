@@ -66,6 +66,10 @@
 .color-pause{
     color: #EA580C;
 }
+.comment-wrapper{
+    max-height: 560px;
+    overflow: auto;
+}
 .chart-icon{
     align-items: center;
     border-radius: 7px;

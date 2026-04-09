@@ -1,6 +1,14 @@
 @extends('layout')
 
 @section('main')
+    @if(Session::has('task.success'))
+    <div class="alert alert-success alert-dismissible" role="alert">
+        {{ Session::get('task.success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+        </button>
+    </div>
+    @endif
+
     <div class="btn-add-task"> 
         <button id="btnCreate" class="btn rounded-pill btn-icon btn-primary" title="Crear sub tarea"
             data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" aria-label="Crear sub tarea" data-bs-original-title="Crear sub tarea">
@@ -150,7 +158,8 @@
 
             <div class="mt-5">
                 <h4 class="fw-bold">Conversación del equipo </h4>
-                <div>
+                <div class="comment-wrapper">
+                    {{--
                     <div class="d-flex overflow-hidden mb-3">
                         <div class="user-avatar flex-shrink-0 me-4">
                             <div class="avatar avatar-md">
@@ -173,7 +182,7 @@
                             </div>
                         </div>
                     </div>
-                
+                    
                     <div class="d-flex overflow-hidden mb-3">
                         <div class="user-avatar flex-shrink-0 me-4">
                             <div class="avatar avatar-md">
@@ -193,9 +202,59 @@
                                 <p class="mb-0">
                                     Lorem ipsum dolor sit amet consectetur. Dignissim id purus suspendisse elementum. Pretium libero eget integer ridiculus.
                                 </p>
+                                <div class="d-flex mt-3 ">
+                                    <a href="" target="_blank" class="text-nowrap mb-0 me-2">
+                                        <i class="icon-base bx bx-file align-bottom"></i> <small style="transform:translateY(2px);display:inline-block;">5 Mb</small>
+                                    </a>
+                                    <a href="" target="_blank" class="text-nowrap mb-0 me-2">
+                                        <i class="icon-base bx bx-image align-bottom"></i> <small style="transform:translateY(2px);display:inline-block;">5 Mb</small>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    --}}
+
+                    @foreach($comments as $comment)
+                        <div class="d-flex overflow-hidden mb-3">
+                            <div class="user-avatar flex-shrink-0 me-4">
+                                <div class="avatar avatar-md">
+                                    @if( $comment->user->image )
+                                        <img src="{{ $comment->user->image }}" alt="Avatar" class="rounded-circle">
+                                    @else
+                                        <span class="avatar-initial rounded-circle bg-label-danger">{{ $comment->user->nameInitial }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="chat-message-wrapper flex-grow-1">
+                                <div class="chat-message-text p-3" style="background:#fff;border-radius:0px 12px 12px 12px;">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <div class="fw-bold">
+                                            {{ $comment->user->name }}
+                                        </div>
+                                        <div>
+                                            {{ $comment->created_at->diffForHumans() }}
+                                        </div>
+                                    </div>
+                                    <p class="mb-0">
+                                        {{ $comment->description }}
+                                    </p>
+                                    <div class="d-flex mt-3 ">
+                                        @foreach( $comment->commentmedias as $commentmedia )
+                                        <a href="{{  $commentmedia->media->url }}" target="_blank" class="text-nowrap mb-0 me-2">
+                                            @if( str_contains($commentmedia->media->mime, 'image') )
+                                                <i class="icon-base bx bx-image align-bottom"></i>        
+                                            @else
+                                                <i class="icon-base bx bx-file align-bottom"></i>        
+                                            @endif
+                                             <small style="transform:translateY(2px);display:inline-block;">{{ $commentmedia->media->size_literal }}</small>
+                                        </a>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
 
                 <div class="mt-5">
@@ -204,30 +263,39 @@
                         <div class="d-flex overflow-hidden mb-3">
                             <div class="user-avatar flex-shrink-0 me-4">
                                 <div class="avatar avatar-md">
-                                <img src="{{ asset('assets/img/4.png') }}" alt="Avatar" class="rounded-circle">
+                                    @if ( Auth::user()->image )
+                                        <img src="{{ Auth::user()->image }}" alt="Avatar" class="rounded-circle">
+                                    @else
+                                        <span class="avatar-initial rounded-circle bg-label-danger">{{ Auth::user()->nameInitial }}</span>
+                                    @endif
                                 </div>
                             </div>
                             <div class="chat-message-wrapper flex-grow-1">
                                 <div class="chat-message-text">
                                     <div class="mb-0">
-                                        <textarea name="" id=""  class="form-control" placeholder="Escribe un comentario"></textarea>
+                                        <textarea name="comment" id="comment" class="form-control" placeholder="Escribe un comentario"></textarea>
                                     </div>
+
+                                    <div id="wrapCommentFiles" class=""></div>
+
                                 </div>
                             </div>
                         </div>
+                        
                         <div class="d-flex justify-content-end">
-                            <button type="button" class="btn btn-outline-warning me-3">
+                            <button id="btnAttach" type="button" class="btn btn-outline-warning me-3">
                                 <span class="icon-base bx bx-paperclip icon-sm me-2"></span>
                                 Adjuntar
                             </button>
-                            <button type="button" class="btn btn-warning">Publicar</button>
+                            <button id="commentSave" type="button" class="btn btn-warning">Publicar</button>
                         </div>
                     </form>
                 </div>
             </div>
 
+            @if( $task->status != 'FINALIZED' )
             <div class="mt-5 mb-4">
-                <form action="">
+                <form action="{{ route('task.finish', ['task' => $task->id]) }}" method="post">
                     @csrf
 
                     <div class="text-center mx-auto">
@@ -237,6 +305,7 @@
                     </div>
                 </form>
             </div>
+            @endif
         </div>
         <div class="col-md-4">
             <div class="card" style="background-color: transparent;">
@@ -264,7 +333,7 @@
 
             <div class="card mt-4">
                 <div class="card-body">
-                    <div class="mb-2"><small>GERENTE DE PROYECTO</small></div>
+                    <div class="mb-2"><small>DUEÑO DEL PROYECTO</small></div>
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="d-flex justify-content-start align-items-center user-name">
                             <div class="avatar-wrapper">
@@ -318,6 +387,12 @@
 
             <div class="mt-4 mb-4">
                 <div class="fw-bold">Archivos adjuntos y enlaces</div>
+
+                @if( count($taskMedias) == 0 && count($taskLinks) == 0 )
+                    <div class="border rounded p-3 text-center mt-2" style="background:#F1F5F9;">
+                        No hay archivos adjuntos ni enlaces relacionados con esta tarea.
+                    </div>
+                @endif
             </div>
 
             @if( count($taskMedias) > 0 )
@@ -870,6 +945,137 @@
         if( element ){
             element.remove();
         }
+    }
+</script>
+
+
+
+{{-- COMMENTS --}}
+<script>
+    window.addEventListener('load', () => {
+        document.addEventListener('click', (e) => {
+            if( e.target.closest('.btnDeleteFileAttach') ){
+                handleDeleteFileAttach(e);
+            }
+    
+            if( e.target.closest('#btnAttach') ){
+                handleBtnAttach();
+            }
+
+            if( e.target.closest('#commentSave') ){
+                handleBtnSaveComment();
+            }
+        });
+    });
+
+    function handleBtnAttach(){
+        let html = `<input class="form-control form-control" name="medias[]" type="file">
+            <button type="button" class="btn btn-icon btn-outline-secondary btnDeleteFileAttach">
+                <span class="icon-base bx bx-x icon-sm"></span>
+            </button>`;
+
+        let elementDiv = document.createElement('div');
+        elementDiv.classList.add('mt-2', 'input-group');
+        elementDiv.innerHTML = html;
+
+        let wrap = document.querySelector('#wrapCommentFiles');
+        wrap.appendChild(elementDiv);
+
+        //wrap.innerHTML += html;
+    }
+
+    function handleDeleteFileAttach(e){
+        let element = e.target.closest('.input-group');
+        if( element ){
+            element.remove();
+        }
+    }
+
+    function handleBtnSaveComment(){
+        let comment = document.querySelector('#comment');
+        let files = document.querySelectorAll('input[name="medias[]"]');
+
+        let formData = new FormData();
+        formData.append('comment', comment.value);
+        files.forEach((file) => {
+            formData.append('medias[]', file.files[0]);
+        });
+
+        let url = "{{ route('comment.save', ['task' => $task->id]) }}";
+        fetch(url, {
+            method: 'POST',
+            body: formData
+        }).then(response => {
+            return response.json();
+        }).then(data => {
+            console.log(data);
+            if( data.success ){
+                //location.reload();
+                console.log("Success");
+                renderComments(data.data);
+            }
+        });
+    }
+    /*
+    let data =  { 
+        medias: [{id:60, mime:"text/plain", name:"htaccess_Backup_for_sofopolis.com.txt", size:553, sizeLiteral:"553 bytes", url: "/storage/1/resources/6e3dfa1e-3f64-4b69-aa38-1e9da61eed55.txt"}],
+        comment: {id: 8, description: "dfas dfasd fasdfasdfa", registerAt: "hace 1 segundo"},
+        user: {id: 1, name: "Deiby", image: "/storage/1/user/3a809c35-f3e7-4664-89f6-c57bada2c409.jpg", nameInitial: "DL"}
+    };
+    */
+    function renderComments( data ){
+        let wrap = document.querySelector('.comment-wrapper');
+        let userImage = `<span class="avatar-initial rounded-circle bg-label-danger">${ data.user.nameInitial }</span>`;
+        
+        if( data.user.image ){
+            userImage = `<img src="${ data.user.image }" alt="Avatar" class="rounded-circle">`;
+        }
+
+        let html = `
+        <div class="d-flex overflow-hidden mb-3">
+            <div class="user-avatar flex-shrink-0 me-4">
+                <div class="avatar avatar-md">
+                    ${ userImage }
+                </div>
+            </div>
+            <div class="chat-message-wrapper flex-grow-1">
+                <div class="chat-message-text p-3" style="background:#fff;border-radius:0px 12px 12px 12px;">
+                    <div class="d-flex justify-content-between mb-2">
+                        <div class="fw-bold">
+                            ${ data.user.name }
+                        </div>
+                        <div>
+                            Ahora
+                        </div>
+                    </div>
+                    <p class="mb-0">
+                        ${ data.comment.description }
+                    </p>
+                    <div class="d-flex mt-3 ">`;
+        
+                    let htmlMedia = '';
+                    for(let i=0; i < data.medias.length; i++){
+                        let media = data.medias[i];
+                        htmlMedia += `<a href="${ media.url }" target="_blank" class="text-nowrap mb-0 me-2">`;
+                            if( media.mime.includes('image') ){
+                                htmlMedia += `<i class="icon-base bx bx-image align-bottom"></i>`;
+                            }else{
+                                htmlMedia += `<i class="icon-base bx bx-file align-bottom"></i>`;
+                            }
+                            htmlMedia += `<small style="transform:translateY(2px);display:inline-block;">${ media.sizeLiteral }</small>
+                        </a>`;
+                    }
+                    html += htmlMedia;
+
+        html +=     `</div>
+                </div>
+            </div>
+        </div>
+        `;
+
+        wrap.insertAdjacentHTML('afterbegin', html);
+        wrap.scrollTop = 0;
+        wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 </script>
 @endsection

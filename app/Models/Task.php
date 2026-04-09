@@ -41,6 +41,11 @@ class Task extends Model
         return $this->hasMany(TaskCollaborator::class);
     }
 
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
+
 
 
     public function medias(): HasMany

@@ -10,6 +10,33 @@ use Illuminate\Support\Facades\Storage;
 class MediaHelper {
 
     /**
+     * Save 
+     * 
+     * @param $file Request file
+     * @param $folder string
+     * @param $user User
+     * @return Media
+     */
+    public static function save($file, $folder, $user): Media {
+        $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension();
+        $mime = $file->getClientMimeType();
+        $size = $file->getSize();
+        
+        $path = $user->business_id . '/' . $folder . '/' . $fileName;
+        Storage::disk('public')->put($path, file_get_contents($file));
+
+        $media = new Media();
+        $media->name = $file->getClientOriginalName();
+        $media->path = $path;
+        $media->mime = $mime;
+        $media->size = $size;
+        $media->user_id = $user->id;
+        $media->business_id = $user->business_id;
+        $media->save();
+        return $media;
+    }
+
+    /**
      * Save Media
      * 
      * @param $file Request file

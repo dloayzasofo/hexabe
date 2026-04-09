@@ -12,9 +12,14 @@ Route::prefix('task')->group(function () {
     Route::get('/create', [TaskController::class, 'create'])
         //->middleware(RoleMiddleware::using('ADMIN'))
         ->name('task.create');
+
     Route::post('/create', [TaskController::class, 'save'])
         //->middleware(RoleMiddleware::using('ADMIN'))
         ->name('task.save');
+
+    Route::post('/finish/{task}', [TaskController::class, 'finish'])
+        //->middleware(RoleMiddleware::using('ADMIN'))
+        ->name('task.finish');
 
     Route::get('/subtask/{task}', [TaskController::class, 'subtask'])
         //->middleware(RoleMiddleware::using('ADMIN'))

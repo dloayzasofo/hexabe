@@ -22,8 +22,13 @@ class Media extends Model
     }
 
     public function getSizeLiteralAttribute(){
+        $sizeBt = $this->size;
         $sizeKb = number_format($this->size / 1024, 2) . ' KB';
         $sizeMB = number_format($this->size / 1024 / 1024, 2) . ' MB';
+
+        if( $sizeBt < 1025 ) {
+            return $sizeBt . ' bytes';
+        }
 
         if( $sizeKb < 1 ) {
             return $sizeMB;
