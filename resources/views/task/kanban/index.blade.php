@@ -1,45 +1,73 @@
 @extends('layout')
 
 @section('main')
-  <div class="row sm-vl-base mb-2">
-    <div class="col-sm-8 col-md-6">
-        <h4 class="fw-bold"> Mis tareas </h4>
-    </div>
-    <div class="col-sm-4 col-md-6">
-        <div class="dt-action-buttons text-end pt-md-0">
-            <div class="dt-buttons"> 
-                
-            </div>
-        </div>
-    </div>
-  </div>
+  	<div class="btn-add-task"> 
+      	<button id="btnCreate" class="btn rounded-pill btn-icon btn-primary" title="Crear nueva tarea">
+          	<span><i class="bx bx-plus"></i></span>
+      	</button> 
+  	</div>
 
-  <div class="wrap-toast"></div>
+	<div class="row sm-vl-base mb-2">
+		<div class="col-sm-8 col-md-6">
+			<h4 class="fw-bold"> Mis tareas </h4>
+		</div>
+		<div class="col-sm-4 col-md-6">
+			<div class="dt-action-buttons text-end pt-md-0">
+				<div class="dt-buttons"> </div>
+			</div>
+		</div>
+	</div>
 
-  @if(Session::has('task.success'))
-  <div class="alert alert-success alert-dismissible" role="alert">
-      {{ Session::get('task.success') }}
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-      </button>
-  </div>
-  @endif
+	<div class="wrap-toast"></div>
 
-  <div class="row sm-vl-base mb-4">
-    <div>
-      <ul class="nav nav-tabs nav-fill rounded-0 timeline-indicator-advanced" role="tablist">
-        <li class="nav-item" role="presentation">
-          <a href="{{ route('task.index') }}" type="button" class="nav-link" aria-selected="false" tabindex="-1">Lista</a>
-        </li>
-        <li class="nav-item" role="presentation">
-          <a href="{{ route('kanban.index') }}" type="button" class="nav-link active" ria-selected="true">Tarjetas</a>
-        </li>
-      </ul>
-    </div>
-    <div id="myKanban" class="kanban"></div>
-  </div>
+	@if(Session::has('task.success'))
+	<div class="alert alert-success alert-dismissible" role="alert">
+		{{ Session::get('task.success') }}
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+		</button>
+	</div>
+	@endif
+
+	<div class="row sm-vl-base mb-4">
+		<div>
+			<ul class="nav nav-tabs nav-fill rounded-0 timeline-indicator-advanced" role="tablist">
+				<li class="nav-item" role="presentation">
+					<a href="{{ route('task.index') }}" type="button" class="nav-link" aria-selected="false" tabindex="-1">Lista</a>
+				</li>
+				<li class="nav-item" role="presentation">
+					<a href="{{ route('kanban.index') }}" type="button" class="nav-link active" ria-selected="true">Tarjetas</a>
+				</li>
+			</ul>
+		</div>
+		<div id="myKanban" class="kanban"></div>
+	</div>
+
+	<div class="modal fade " id="modalCenter" tabindex="-1" aria-modal="true" role="dialog">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						<h5 class="modal-title fw-bold" id="modalTitle"></h5>
+						<div id="modalDescription"></div>
+					</div>                    
+				</div>
+				<div id="popup"></div>
+			</div>
+		</div>
+	</div>
 @endsection
 
 @section('script')
+	<link href="{{ asset('/assets/admin/js/quilljs/quill.css') }}" rel="stylesheet">
+	<link href="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css" rel="stylesheet" type="text/css" />
+
+	<script src="{{ asset('/assets/admin/js/quilljs/quill.js') }}"></script>
+	<script src="{{asset('/assets/admin/js/mieditor.js')}}"></script>
+	<script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
+	<script>let urlCreate = "{{ route('task.create') }}";</script>
+	<script src="{{asset('/assets/admin/js/task.js')}}"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/jkanban@1.3.1/dist/jkanban.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/jkanban@1.3.1/dist/jkanban.min.css" rel="stylesheet">
 
@@ -174,43 +202,12 @@
           console.log(target.parentElement.getAttribute('data-id'));
           console.log(el, target, source, sibling)
         },
-        /*
-        buttonClick: function(el, boardId) {
-          console.log(el);
-          console.log(boardId);
-          // create a form to enter element
-          var formItem = document.createElement("form");
-          formItem.setAttribute("class", "itemform");
-          formItem.innerHTML =
-            '<div class="form-group"><textarea class="form-control" rows="2" autofocus></textarea></div><div class="form-group"><button type="submit" class="btn btn-primary btn-xs pull-right">Submit</button><button type="button" id="CancelBtn" class="btn btn-default btn-xs pull-right">Cancel</button></div>';
-
-          KanbanTest.addForm(boardId, formItem);
-          formItem.addEventListener("submit", function(e) {
-            e.preventDefault();
-            var text = e.target[0].value;
-            KanbanTest.addElement(boardId, {
-              title: text
-            });
-            formItem.parentNode.removeChild(formItem);
-          });
-          document.getElementById("CancelBtn").onclick = function() {
-            formItem.parentNode.removeChild(formItem);
-          };
-        },
-        itemAddOptions: {
-          enabled: true,
-          content: '+ Add New Card',
-          class: 'custom-button',
-          footer: true
-        },
-        */
         dragBoards : false, 
         boards: [
           {
             id: "TOSTART",
             title: "Sin empezar",
             class: "info,good",
-            //dragTo: ["_working"],
             item: boards.TOSTART
           },
           {
@@ -223,27 +220,21 @@
             id: "FINALIZED",
             title: "Finalizado",
             class: "success",
-            //dragTo: ["_working"],
             item: boards.FINALIZED
           },
           {
             id: "DELAY",
             title: "Retrasado",
             class: "success",
-            //dragTo: ["_working"],
             item: boards.DELAY
           },
           {
             id: "PAUSED",
             title: "Pausado",
             class: "success",
-            //dragTo: ["_working"],
             item: boards.PAUSED
           }
         ],
-        dragendEl : function(el){
-          //console.log(el);
-        },
         dropEl : function (el, target, source, sibling) {
           var itemId = el.getAttribute("data-eid");
           var fromBoard = source.parentElement.getAttribute("data-id");
@@ -309,53 +300,6 @@
         }
       }
 
-      /*
-      var toDoButton = document.getElementById("addToDo");
-      toDoButton.addEventListener("click", function() {
-        KanbanTest.addElement("_todo", {
-          title: "Test Add"
-        });
-      });
-
-      var toDoButtonAtPosition = document.getElementById("addToDoAtPosition");
-      toDoButtonAtPosition.addEventListener("click", function() {
-        KanbanTest.addElement("_todo", {
-          title: "Test Add at Pos"
-        }, 1);
-      });
-
-      var addBoardDefault = document.getElementById("addDefault");
-      addBoardDefault.addEventListener("click", function() {
-        KanbanTest.addBoards([
-          {
-            id: "_default",
-            title: "Kanban Default",
-            item: [
-              {
-                title: "Default Item"
-              },
-              {
-                title: "Default Item 2"
-              },
-              {
-                title: "Default Item 3"
-              }
-            ]
-          }
-        ]);
-      });
-
-      var removeBoard = document.getElementById("removeBoard");
-      removeBoard.addEventListener("click", function() {
-        KanbanTest.removeBoard("_done");
-      });
-
-      var removeElement = document.getElementById("removeElement");
-      removeElement.addEventListener("click", function() {
-        KanbanTest.removeElement("_test_delete");
-      });
-      */  
-
       $(document).ready(function () {
           //Refrescar los tooltip de los usuarios en las tarjetas
           new bootstrap.Tooltip("body", {
@@ -371,7 +315,5 @@
             }
           });
       });
-
-
     </script>
 @endsection

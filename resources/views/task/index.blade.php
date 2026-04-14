@@ -13,9 +13,7 @@
         </div>
         <div class="col-sm-4 col-md-6">
             <div class="dt-action-buttons text-end pt-md-0">
-                <div class="dt-buttons"> 
-                    
-                </div>
+                <div class="dt-buttons"> </div>
             </div>
         </div>
     </div>
@@ -39,41 +37,41 @@
         </ul>
 
         <ul class="nav nav-tabs nav-fill" role="tablist">
-          <li class="nav-item" role="presentation">
-            <a href="{{ route('task.index') }}?status=PROCESS" class="nav-link @if( $status == 'PROCESS') active @endif" aria-selected="true">
-              <span class="d-none d-sm-inline-flex align-items-center">
-                En proceso <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-info ms-2">{{ $counters['PROCESS'] }}</span>
-              </span>
-            </a>
-          </li>
-          <li class="nav-item" role="presentation">
-            <a href="{{ route('task.index') }}?status=FINALIZED" class="nav-link @if( $status == 'FINALIZED') active @endif" aria-selected="true">
-              <span class="d-none d-sm-inline-flex align-items-center">
-                Finalizado <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-success ms-2">{{ $counters['FINALIZED'] }}</span>
-              </span>
-            </a>
-          </li>
-          <li class="nav-item" role="presentation">
-            <a href="{{ route('task.index') }}?status=DELAY" class="nav-link @if( $status == 'DELAY') active @endif" aria-selected="true">
-              <span class="d-none d-sm-inline-flex align-items-center">
-                Retraso <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-danger ms-2">{{ $counters['DELAY'] }}</span>
-              </span>
-            </a>
-          </li>
-          <li class="nav-item" role="presentation">
-            <a href="{{ route('task.index') }}?status=TOSTART" class="nav-link @if( $status == 'TOSTART') active @endif" aria-selected="true">
-              <span class="d-none d-sm-inline-flex align-items-center">
-                Sin empezar <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-warning ms-2">{{ $counters['TOSTART'] }}</span>
-              </span>
-            </a>
-          </li>
-          <li class="nav-item" role="presentation">
-            <a href="{{ route('task.index') }}?status=PAUSED" class="nav-link @if( $status == 'PAUSED') active @endif" aria-selected="true">
-              <span class="d-none d-sm-inline-flex align-items-center">
-                Pausado <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-danger ms-2">{{ $counters['PAUSED'] }}</span>
-              </span>
-            </a>
-          </li>
+            <li class="nav-item" role="presentation">
+                <a href="{{ route('task.index') }}?status=TOSTART" class="nav-link @if( $status == 'TOSTART') active @endif" aria-selected="true">
+                <span class="d-none d-sm-inline-flex align-items-center">
+                    Sin empezar <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-warning ms-2">{{ $counters['TOSTART'] }}</span>
+                </span>
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a href="{{ route('task.index') }}?status=PROCESS" class="nav-link @if( $status == 'PROCESS') active @endif" aria-selected="true">
+                <span class="d-none d-sm-inline-flex align-items-center">
+                    En proceso <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-info ms-2">{{ $counters['PROCESS'] }}</span>
+                </span>
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a href="{{ route('task.index') }}?status=FINALIZED" class="nav-link @if( $status == 'FINALIZED') active @endif" aria-selected="true">
+                <span class="d-none d-sm-inline-flex align-items-center">
+                    Finalizado <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-success ms-2">{{ $counters['FINALIZED'] }}</span>
+                </span>
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a href="{{ route('task.index') }}?status=DELAY" class="nav-link @if( $status == 'DELAY') active @endif" aria-selected="true">
+                <span class="d-none d-sm-inline-flex align-items-center">
+                    Retraso <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-danger ms-2">{{ $counters['DELAY'] }}</span>
+                </span>
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a href="{{ route('task.index') }}?status=PAUSED" class="nav-link @if( $status == 'PAUSED') active @endif" aria-selected="true">
+                <span class="d-none d-sm-inline-flex align-items-center">
+                    Pausado <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-danger ms-2">{{ $counters['PAUSED'] }}</span>
+                </span>
+                </a>
+            </li>
         </ul>
     </div>
 
@@ -225,12 +223,15 @@
 
 @section('script')
 <link href="{{ asset('/assets/admin/js/quilljs/quill.css') }}" rel="stylesheet">
-<script src="{{ asset('/assets/admin/js/quilljs/quill.js') }}"></script>
-<script src="{{asset('/assets/admin/js/mieditor.js')}}"></script>
-
-<script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
 <link href="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css" rel="stylesheet" type="text/css" />
 
+<script src="{{ asset('/assets/admin/js/quilljs/quill.js') }}"></script>
+<script src="{{asset('/assets/admin/js/mieditor.js')}}"></script>
+<script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
+<script>let urlCreate = "{{ route('task.create') }}";</script>
+<script src="{{asset('/assets/admin/js/task.js')}}"></script>
+
+{{-- 
 <script>
     let mode = null;
     let urlCreate = "{{ route('task.create') }}";
@@ -301,9 +302,6 @@
              
         });
     }
-    //myDropzone.on("complete", function(file) {
-    //    myDropzone.removeFile(file);
-    //});
 </script>
 
 <script>
@@ -710,7 +708,6 @@
             element.remove();
         }
     }
-
-
 </script>
+--}}
 @endsection

@@ -94,6 +94,10 @@ class TaskController extends Controller {
         $members = $request->members;
         $links = $request->links;
 
+        $position = Task::where('user_assign', $user->id)->where('status', 'TOSTART')->max('position');
+        if( $position == null ) $position = 0;
+        else $position++;
+
         $task = new Task();
         $task->title = $title;
         $task->description = $description;
@@ -104,6 +108,7 @@ class TaskController extends Controller {
         $task->status = 'TOSTART';
         $task->user_id = $user->id;
         $task->business_id = $user->business_id;
+        $task->position = $position;
         $task->save();
 
         if( $medias ){

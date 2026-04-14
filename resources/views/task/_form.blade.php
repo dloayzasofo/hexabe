@@ -130,7 +130,7 @@
         </span>
         <div class="result-search task-responsable-result"></div>
         <input type="hidden" id="user_assign" name="user_assign" value="{{ $model->user_assign }}">
-        <input type="text" class="form-control task-input-responsable" id="task-input-responsable" placeholder="ejemplo@correo.com">
+        <input type="text" class="form-control task-input-responsable" id="task-input-responsable" placeholder="ejemplo@correo.com" autocomplete="do-not-autofill">
         <span class="input-group-text" style="background:#F8FAFC;">
             <i class="icon-base bx bx-search"></i>
         </span>
@@ -142,7 +142,7 @@
     <label for="members" class="form-label">Invitar miembros</label>
     
     <div class="memebers-ajax input-group hide">
-        <input type="text" class="form-control task-input-member" id="task-input-member" name="task-input-member" placeholder="ejemplo@correo.com" value="">
+        <input type="text" class="form-control task-input-member" id="task-input-member" name="task-input-member" placeholder="ejemplo@correo.com" value="" autocomplete="do-not-autofill">
         <div class="result-search task-members-result"></div>
     </div>
 

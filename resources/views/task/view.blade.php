@@ -461,11 +461,17 @@
 
 @section('script')
 <link href="{{ asset('/assets/admin/js/quilljs/quill.css') }}" rel="stylesheet">
+<link href="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css" rel="stylesheet" type="text/css" />
+
 <script src="{{ asset('/assets/admin/js/quilljs/quill.js') }}"></script>
 <script src="{{asset('/assets/admin/js/mieditor.js')}}"></script>
-
 <script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
-<link href="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css" rel="stylesheet" type="text/css" />
+{{-- 
+<script>let urlCreate = "{{ route('task.subtask', ['task' => $task->id]) }}";</script>
+<script src="{{asset('/assets/admin/js/task.js')}}"></script>
+--}}
+
+
 
 <script>
     let mode = null;
@@ -537,9 +543,6 @@
              
         });
     }
-    //myDropzone.on("complete", function(file) {
-    //    myDropzone.removeFile(file);
-    //});
 </script>
 
 <script>
@@ -549,6 +552,14 @@
      * crear tarea enviando datos por fetch a controlador y mostrar errores de validacion 
      */
     window.addEventListener('load', () => {
+        document.addEventListener('input', (e) => {
+            if (e.target.classList.contains('task-input-responsable')) {
+
+                console.log("Input responsable", e.target.value);
+                searchByKeyPress(e.target.value);
+            }
+        });
+
         document.addEventListener('keydown', (e) => {
             if (e.target.classList.contains('task-input-responsable')) {
                 if( e.target.value.length < 2){
@@ -848,8 +859,8 @@
             if( data.success){
                 $('#modalCenter').modal('hide');
                 console.log(data);
-                //location.reload();
-                location.href = "/task/view/" + data.data.id;
+                location.reload();
+                //location.href = "/task/view/" + data.data.id;
             }
             if( data.errors){
                 handleShowErrors(data.errors);
