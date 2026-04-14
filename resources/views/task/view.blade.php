@@ -321,7 +321,7 @@
                                 <a href="app-user-view-account.html" class="text-heading text-truncate">
                                     <span class="fw-medium">{{ $task->brand->name }}</span>
                                 </a>
-                                <small>lorem ipsun</small>
+                                <small>{{ $task->brand->industry }}</small>
                             </div>
                         </div>
                         <div class="text-end">

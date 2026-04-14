@@ -17,7 +17,7 @@
                 </div>
                 <div>
                     <h4 class="fw-bold" style="margin-bottom:4px;"> {{ $brand->name }} </h4>
-                    <small>Lorem ipsum dolor sit amet consectetur. Dignissim id purus</small>
+                    <small>{{ $brand->industry }}</small>
                 </div>
             </div>
         </div>
@@ -34,7 +34,7 @@
             <div class="card h-100">
                 <div class="card-body pb-4">
                 <span class="d-block fw-medium mb-1">Tareas Totales</span>
-                <h4 class="card-title mb-0 fw-bold">1,284</h4>
+                <h4 class="card-title mb-0 fw-bold">{{ $brand->total_tasks }}</h4>
                 </div>
             </div>
         </div>
@@ -45,11 +45,11 @@
                     <span class="d-block fw-medium mb-1">Progreso General</span>
                     <div class="d-flex align-items-center">
                         <div class="pe-2">
-                            <h4 class="card-title mb-0 fw-bold">76%</h4>
+                            <h4 class="card-title mb-0 fw-bold">{{ $brand->progress }}%</h4>
                         </div>
                         <div>
                             <div class="progress" style="height:8px;margin:auto;padding:0px;width:100px;">
-                                <div class="progress-bar" role="progressbar" style="width: 68%;background:#0052CC;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="progress-bar" role="progressbar" style="width: {{ $brand->progress }}%;background:@if($brand->progress >= 85) #22C55E; @elseif ($brand->progress >= 50) #EAB308; @else #EF4444; @endif;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                         </div>
                     </div>
@@ -61,7 +61,7 @@
             <div class="card h-100">
                 <div class="card-body pb-4">
                 <span class="d-block fw-medium mb-1">Miembros Activos</span>
-                <h4 class="card-title mb-0 fw-bold">24</h4>
+                <h4 class="card-title mb-0 fw-bold">{{ count($members) }}</h4>
                 </div>
             </div>
         </div>
@@ -72,6 +72,79 @@
             <div style="margin-bottom:13px;">
                 <h5 class="fw-bold" style="margin-bottom:4px;"> Tareas Recientes </h5>
             </div>
+            @foreach ($lastTasks as $task)
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-10">
+                            <div class="d-flex align-items-center w-100">
+                                <span class="badge rounded-pill @if($task->priority == 'medium') bg-label-warning @elseif($task->priority == 'low') bg-label-primary @elseif($task->priority == 'high') bg-label-danger @endif">
+                                    @switch($task->priority)
+                                        @case('high')
+                                            Alta
+                                            @break
+                                        @case('medium')
+                                            Media
+                                            @break
+                                        @case('low')
+                                            Baja
+                                            @break
+                                        @default
+                                    @endswitch
+                                </span>
+                                <spam class="fw-bold ps-2">{{ $task->brand->name }}</spam>
+                            </div>
+                            <div class="fw-bold mt-2">
+                                {{ $task->title }}
+                            </div>
+                            <div class="mt-2">
+                                <div class="d-flex">
+                                    @if( count($task->collaborators) > 0 )
+                                    <div class="avatar-group d-flex align-items-center assigned-avatar">
+                                        @foreach( $task->collaborators as $collaborator )
+                                        <div class="avatar avatar-xs w-px-26 h-px-26" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="{{ $collaborator->user->name }}" data-bs-original-title="{{ $collaborator->user->name }}">
+                                            <img src="{{ asset('assets/img/2.png') }}" alt="Avatar" class="rounded-circle pull-up">
+                                        </div>
+                                        @endforeach
+                                        {{-- 
+                                        <div class="avatar avatar-xs w-px-26 h-px-26" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Clark" data-bs-original-title="Clark">
+                                            <img src="{{ asset('assets/img/4.png') }}" alt="Avatar" class="rounded-circle pull-up">
+                                        </div>
+                                        --}}
+                                    </div>
+                                    @endif
+                                    <div class="@if( count($task->collaborators) > 0 ) ps-2 @endif">
+                                        <small class="me-2"><i class="icon-base bx bx-calendar"></i> Entrega: {{ $task->register_at }}</small>
+                                        <small><i class="icon-base bx bx-user"></i> Responsable: {{ $task->assign->name }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2 text-end">
+                            <span class="badge rounded-pill bg-label-primary">Primary</span>
+                            <span class="badge rounded-pill @if($task->priority == 'MEDIUM') bg-label-warning @elseif($task->priority == 'LOW') bg-label-primary @elseif($task->priority == 'HIGH') bg-label-danger @endif">
+                                @switch($task->priority)
+                                    @case('HIGH')
+                                        Alta
+                                        @break
+                                    @case('MEDIUM')
+                                        Media
+                                        @break
+                                    @case('LOW')
+                                        Baja
+                                        @break
+                                    @default
+                                @endswitch
+                            </span> 
+                            <div class="progress" style="height:8px;margin-left:auto;margin-right:0px;padding:0px;width:100px;margin-top:8px;">
+                                <div class="progress-bar" role="progressbar" style="width: 68%;background:#0052CC;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+            {{--
             <div class="card mb-3">
                 <div class="card-body">
                     <div class="row align-items-center">
@@ -145,6 +218,7 @@
                     </div>
                 </div>
             </div>
+            --}}
         </div>
 
         <div class="col-md-4">
@@ -153,23 +227,28 @@
                     <h5 class="fw-bold" style="margin-bottom:4px;"> Equipo </h5>
                 </div>
                 <div class="col-md-6 text-end">
-                    <a href="">Gestionar</a>
+                    <a href="{{ route('team.index') }}" class="fw-bold text-warning">Gestionar</a>
                 </div>
             </div>
             <div class="card">
+                @foreach( $brand->members as $member )
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="d-flex justify-content-start align-items-center user-name">
                             <div class="avatar-wrapper">
                                 <div class="avatar avatar-sm me-3">
-                                    <img src="{{ asset('assets/img/4.png') }}" alt="Avatar" class="rounded-circle">
+                                    @if( $member->image )
+                                        <img src="{{ $member->image }}" alt="Avatar" class="rounded-circle">
+                                    @else
+                                        <span class="avatar-initial rounded-circle bg-label-danger">{{ $member->nameInitial }}</span>
+                                    @endif
                                 </div>
                             </div>
                             <div class="d-flex flex-column">
                                 <a href="app-user-view-account.html" class="text-heading text-truncate">
-                                    <span class="fw-medium">Zsazsa McCleverty</span>
+                                    <span class="fw-medium">{{ $member->name }}</span>
                                 </a>
-                                <small>zmcclevertye@soundcloud.com</small>
+                                <small>{{ $member->email }}</small>
                             </div>
                         </div>
                         <div class="text-end">
@@ -178,26 +257,7 @@
                     </div>
                 </div>
                 <hr class="m-0">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="d-flex justify-content-start align-items-center user-name">
-                            <div class="avatar-wrapper">
-                                <div class="avatar avatar-sm me-3">
-                                    <img src="{{ asset('assets/img/4.png') }}" alt="Avatar" class="rounded-circle">
-                                </div>
-                            </div>
-                            <div class="d-flex flex-column">
-                                <a href="app-user-view-account.html" class="text-heading text-truncate">
-                                    <span class="fw-medium">Zsazsa McCleverty</span>
-                                </a>
-                                <small>zmcclevertye@soundcloud.com</small>
-                            </div>
-                        </div>
-                        <div class="text-end">
-                            <span class="email-list-item-label badge badge-dot bg-success d-none d-md-inline-block me-2" data-label="work"></span>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </div>
@@ -208,8 +268,8 @@
                 <div class="modal-header">
                     <div>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        <h5 class="modal-title fw-bold" id="modalTitle">Nueva marca</h5>
-                        <div id="modalDescription">Define una marca para centralizar tareas y seguimiento.</div>
+                        <h5 class="modal-title fw-bold" id="modalTitle">Actualizar marca</h5>
+                        <div id="modalDescription">Actualización de datos.</div>
                     </div>
 
                 </div>
@@ -364,7 +424,7 @@
         .then(data => {
             document.querySelector('#popup').innerHTML = data;
             document.querySelector('#modalTitle').innerHTML = 'Actualizar marca';
-            document.querySelector('#modalDescription').innerHTML = 'Define una marca para centralizar tareas y seguimiento.';
+            document.querySelector('#modalDescription').innerHTML = 'Actualización de datos.';
             $('#modalCenter').modal('show');
             mode = 'EDIT';
             var medropzone = new DropZone({idElement: 'dropzone', idFile: 'image'});

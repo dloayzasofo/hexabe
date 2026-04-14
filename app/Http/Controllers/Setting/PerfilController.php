@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Helper\MediaHelper;
 use Illuminate\Support\Facades\Storage;
 use App\Models\User;
+use App\Models\Media;
 use Auth;
 
 class PerfilController extends Controller {

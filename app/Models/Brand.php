@@ -26,4 +26,36 @@ class Brand extends Model
         return strtoupper($name);
     }
 
+    public function getProgressAttribute(){
+        $progress = -1;
+        
+        $tasksTotal = Task::where('brand_id', $this->id)->count();
+        $tasksCompleted = Task::where('brand_id', $this->id)->where('status', 'FINALIZED')->count();
+
+        if( $tasksTotal > 0 ) {
+            $progress = round(($tasksCompleted / $tasksTotal) * 100);
+        }
+
+        return $progress;
+    }
+
+    public function getPendingCountAttribute(){
+        $pendingCount = 0;
+        
+        $tasksTotal = Task::where('brand_id', $this->id)->count();
+        $tasksCompleted = Task::where('brand_id', $this->id)->where('status', 'FINALIZED')->count();
+
+        $pendingCount = $tasksTotal - $tasksCompleted;
+
+        return $pendingCount;
+    }
+
+    public function getMembersAttribute(){
+        $members = Task::where('brand_id', $this->id)->distinct()->pluck('user_assign');
+        return User::whereIn('id', $members)->get();
+    }
+
+    public function getTotalTasksAttribute(){
+        return Task::where('brand_id', $this->id)->count();
+    }
 }

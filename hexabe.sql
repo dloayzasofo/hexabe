@@ -187,7 +187,7 @@ CREATE TABLE tasks(
     title varchar(255),
     description text,
     date_delivery date,
-    priority varchar(100), -- LOW, MEDIUM, HIGH
+    priority varchar(100), -- low, medium, high
     status varchar(100), -- TOSTART, PROCESS, DELAY, PAUSED, FINALIZED
     user_id bigint(20) UNSIGNED, -- user created
     user_assign bigint(20) UNSIGNED,

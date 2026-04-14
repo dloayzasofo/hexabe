@@ -113,7 +113,7 @@
         let inputPicture = document.querySelector('#input-picture');
         inputPicture.addEventListener('change', handleChangePicture, false);
 
-        let btnRemovePicture = document.querySelector('#remove-picture');
+        let btnRemovePicture = document.querySelector('.remove-picture');
         btnRemovePicture.addEventListener('click', handleRemovePicture);
     });
 
@@ -131,8 +131,8 @@
             const objectURL = URL.createObjectURL(file);
             const token = document.getElementsByName('_token')[0];
             
-            var formData = new FormData()
-            formData.append('image', file)
+            var formData = new FormData();
+            formData.append('image', file);
             formData.append('_token', token.value);
 
             fetch(urlUploadPicture, {
@@ -163,7 +163,21 @@
     }
 
     function handleRemovePicture(){
+        const token = document.getElementsByName('_token')[0];
+        var formData = new FormData();
+        formData.append('_token', token.value);
 
+        fetch(urlRemovePicture, {
+            method: 'POST',
+            body: formData
+        }).then(response => {
+            return response.json();
+        }).then(data => {
+            if( data.success ){
+                let imgPreview = document.querySelector('#user-picture');
+                imgPreview.src = "{{ asset('assets/img/perfil-default.jpg') }}";
+            }
+        });
     }
 </script>
 @endsection

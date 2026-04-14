@@ -7,12 +7,15 @@ use Illuminate\Http\Request;
 use App\Http\Helper\MediaHelper;
 use App\Http\Requests\BrandRequest;
 use App\Models\Brand;
+use App\Models\Task;
 use Auth;
 
 class BrandController extends Controller {
  
     public function index() {
-        $brands = Brand::all();
+        $user = Auth::user();
+        $brands = Brand::where('business_id', $user->business_id)->get();
+
         $params = [
             'brands' => $brands
         ];
@@ -80,8 +83,12 @@ class BrandController extends Controller {
     }
 
     public function view(Request $request, Brand $brand) {
+        $lastTasks = Task::where('brand_id', $brand->id)->orderBy('created_at', 'desc')->take(5)->get();
+        $members = $brand->members;
         $params = [
-            'brand' => $brand
+            'brand' => $brand,
+            'lastTasks' => $lastTasks,
+            'members' => $members
         ];
 
         return view('brand.view', $params);
