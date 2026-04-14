@@ -7,7 +7,7 @@
         </button> 
     </div>
 
-    <div class="row sm-vl-base mb-4">
+    <div class="row sm-vl-base mb-2">
         <div class="col-sm-8 col-md-6">
             <h4 class="fw-bold"> Mis tareas </h4>
         </div>
@@ -27,6 +27,55 @@
         </button>
     </div>
     @endif
+
+    <div>
+        <ul class="nav nav-tabs nav-fill rounded-0 timeline-indicator-advanced mb-3" role="tablist">
+            <li class="nav-item" role="presentation">
+            <a href="{{ route('task.index') }}" class="nav-link active" aria-selected="true">Lista</a>
+            </li>
+            <li class="nav-item" role="presentation">
+            <a href="{{ route('kanban.index') }}" class="nav-link" ria-selected="false" tabindex="-1">Tarjetas</a>
+            </li>
+        </ul>
+
+        <ul class="nav nav-tabs nav-fill" role="tablist">
+          <li class="nav-item" role="presentation">
+            <a href="{{ route('task.index') }}?status=PROCESS" class="nav-link @if( $status == 'PROCESS') active @endif" aria-selected="true">
+              <span class="d-none d-sm-inline-flex align-items-center">
+                En proceso <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-info ms-2">{{ $counters['PROCESS'] }}</span>
+              </span>
+            </a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a href="{{ route('task.index') }}?status=FINALIZED" class="nav-link @if( $status == 'FINALIZED') active @endif" aria-selected="true">
+              <span class="d-none d-sm-inline-flex align-items-center">
+                Finalizado <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-success ms-2">{{ $counters['FINALIZED'] }}</span>
+              </span>
+            </a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a href="{{ route('task.index') }}?status=DELAY" class="nav-link @if( $status == 'DELAY') active @endif" aria-selected="true">
+              <span class="d-none d-sm-inline-flex align-items-center">
+                Retraso <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-danger ms-2">{{ $counters['DELAY'] }}</span>
+              </span>
+            </a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a href="{{ route('task.index') }}?status=TOSTART" class="nav-link @if( $status == 'TOSTART') active @endif" aria-selected="true">
+              <span class="d-none d-sm-inline-flex align-items-center">
+                Sin empezar <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-warning ms-2">{{ $counters['TOSTART'] }}</span>
+              </span>
+            </a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a href="{{ route('task.index') }}?status=PAUSED" class="nav-link @if( $status == 'PAUSED') active @endif" aria-selected="true">
+              <span class="d-none d-sm-inline-flex align-items-center">
+                Pausado <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-danger ms-2">{{ $counters['PAUSED'] }}</span>
+              </span>
+            </a>
+          </li>
+        </ul>
+    </div>
 
     <div class="task-list-item task-list-header d-flex no-wrap">
         <div>

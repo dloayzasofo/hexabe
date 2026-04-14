@@ -1,16 +1,42 @@
 @extends('layout')
 
 @section('main')
+  <div class="row sm-vl-base mb-2">
+    <div class="col-sm-8 col-md-6">
+        <h4 class="fw-bold"> Mis tareas </h4>
+    </div>
+    <div class="col-sm-4 col-md-6">
+        <div class="dt-action-buttons text-end pt-md-0">
+            <div class="dt-buttons"> 
+                
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <div class="wrap-toast"></div>
+
+  @if(Session::has('task.success'))
+  <div class="alert alert-success alert-dismissible" role="alert">
+      {{ Session::get('task.success') }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+      </button>
+  </div>
+  @endif
+
+  <div class="row sm-vl-base mb-4">
+    <div>
+      <ul class="nav nav-tabs nav-fill rounded-0 timeline-indicator-advanced" role="tablist">
+        <li class="nav-item" role="presentation">
+          <a href="{{ route('task.index') }}" type="button" class="nav-link" aria-selected="false" tabindex="-1">Lista</a>
+        </li>
+        <li class="nav-item" role="presentation">
+          <a href="{{ route('kanban.index') }}" type="button" class="nav-link active" ria-selected="true">Tarjetas</a>
+        </li>
+      </ul>
+    </div>
     <div id="myKanban" class="kanban"></div>
-    <button id="addDefault">Add "Default" board</button>
-    <br />
-    <button id="addToDo">Add element in "To Do" Board</button>
-    <br />
-    <button id="addToDoAtPosition">Add element in "To Do" Board at position 2</button>
-    <br />
-    <button id="removeBoard">Remove "Done" Board</button>
-    <br />
-    <button id="removeElement">Remove "My Task Test"</button>
+  </div>
 @endsection
 
 @section('script')
@@ -18,10 +44,123 @@
     <link href="https://cdn.jsdelivr.net/npm/jkanban@1.3.1/dist/jkanban.min.css" rel="stylesheet">
 
     <script>
+      let boards = {
+        "TOSTART": [],
+        "PROCESS": [],
+        "FINALIZED": [],
+        "DELAY": [],
+        "PAUSED": []
+      }
+
+      @foreach($tasks as $task)
+        boards["{{ $task->status }}"].push({
+          id: "{{ $task->id }}",
+          title: `
+            <div>
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex align-items-center">
+                  <img src="{{ $task->brand->image }}" class="rounded me-1" width="30" height="30">
+                    <small class="fw-bold">{{ $task->brand->name }}</small>
+                </div>
+                <div>
+                  <small class="badge rounded-pill @if( $task->priority == 'high' ) bg-label-danger @endif @if( $task->priority == 'medium' ) bg-label-warning @endif @if( $task->priority == 'low' ) bg-label-primary @endif" >
+                    @switch($task->priority)
+                      @case('low')
+                        BAJA
+                        @break
+                      @case('medium')
+                        MEDIA
+                        @break
+                      @case('high')
+                        ALTA
+                        @break
+                    @endswitch
+                  </small>
+                </div>
+              </div>
+              <div>
+                <div class="fw-bold"> 
+                  <a href="{{ route('task.view', $task->id) }}" class="no-drag"> 
+                    {{ $task->title }} 
+                  </a>
+                </div>
+              </div>
+              <div class="mt-2 mb-2 d-flex justify-content-start align-items-center gap-3">
+                @if( $task->medias_count > 0 )
+                <div class="d-flex gap-2">
+                  <i class="bx bx-paperclip"></i>
+                  <span> {{ $task->medias_count }} </span>
+                </div>
+                @endif
+                @if( $task->medias_count > 0 )
+                <div class="d-flex gap-2">
+                  <i class="bx bx-message" style="transform:translateY(3px);"></i>
+                  <span> - </span>
+                </div>
+                @endif
+              </div>
+              <div class="mb-2">
+                @if( $task->childs_count > 0 )
+                <div class="d-flex justify-content-between mb-1">
+                    <div>
+                        <small class="fw-bold">Subtareas</small>
+                    </div>
+                    <div class="text-primary fw-bold">
+                        {{ $task->childs_done }}/{{ $task->childs_count }}
+                    </div>
+                    
+                </div>
+                <div>
+                    <div class="progress" style="height: 16px;">
+                        <div class="progress-bar" role="progressbar" style="width: {{ $task->progress }}%;" aria-valuenow="{{ $task->progress }}" aria-valuemin="0" aria-valuemax="100">
+                            {{ $task->progress }}%
+                        </div>
+                    </div>
+                </div>
+                @endif
+              </div>
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <ul class="list-unstyled users-list d-flex align-items-center avatar-group m-0 me-2">
+                    @foreach($task->collaborators as $index => $collaborator)
+                      @if( $index >= 2)
+                          @break
+                      @endif
+
+                      <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar pull-up avatar-xs" aria-label="{{ $collaborator->user->name }}" data-bs-original-title="{{ $collaborator->user->name }}">
+                          <img class="rounded-circle" src="{{ $collaborator->user->image }}" alt="{{ $collaborator->user->name }}">
+                      </li>
+                    @endforeach
+
+                    @if( $task->collaborators_count >= 3 )
+                      <li class="avatar">
+                          <span class="avatar-initial rounded-circle pull-up text-heading avatar-xs" 
+                              data-bs-toggle="tooltip" 
+                              data-bs-placement="bottom" 
+                              data-bs-original-title="{{ 3 - $task->collaborators_count }} más">
+                              +{{ 3 - $task->collaborators_count }}
+                          </span>
+                      </li>
+                    @endif
+                  </ul>  
+                </div>
+                <div>
+                  <small>{{ $task->register_at }}</small>
+                </div>
+              </div>
+            </div>
+          `
+        });
+      @endforeach
+
       var KanbanTest = new jKanban({
+        //dragBoards: false, // evita mover columnas
+        //dragItems: false ,// evita mover items 
+
+
         element: "#myKanban",
         gutter: "10px",
-        widthBoard: "250px",
+        widthBoard: "280px",
         //itemHandleOptions:{
         //  enabled: true,
         //},
@@ -68,94 +207,109 @@
         dragBoards : false, 
         boards: [
           {
-            id: "_TOSTART",
+            id: "TOSTART",
             title: "Sin empezar",
             class: "info,good",
             //dragTo: ["_working"],
-            item: [
-              {
-                id: "_TOSTART",
-                title: "Sin empezar <div><em>test</em></div> <button class='btn btn-primary'> TEST </button>",
-                drag: function(el, source) {
-                  console.log("START DRAG: " + el.dataset.eid);
-                },
-                dragend: function(el) {
-                  console.log("END DRAG: " + el.dataset.eid);
-                },
-                drop: function(el) {
-                  console.log("DROPPED: " + el.dataset.eid);
-                }
-              },
-              {
-                title: "Try Click This!",
-                click: function(el) {
-                  alert("click");
-                },
-                context: function(el, e){
-                  alert("right-click at (" + `${e.pageX}` + "," + `${e.pageX}` + ")")
-                },
-                class: ["peppe", "bello"]
-              }
-            ]
+            item: boards.TOSTART
           },
           {
-            id: "_PROCESS",
+            id: "PROCESS",
             title: "En proceso",
             class: "warning",
-            item: [
-              {
-                title: "Do Something!"
-              },
-              {
-                title: "Run?"
-              }
-            ]
+            item: boards.PROCESS
           },
           {
-            id: "_FINALIZED",
+            id: "FINALIZED",
             title: "Finalizado",
             class: "success",
             //dragTo: ["_working"],
-            item: [
-              {
-                title: "All right"
-              },
-              {
-                title: "Ok!"
-              }
-            ]
+            item: boards.FINALIZED
           },
           {
-            id: "_DELAY",
+            id: "DELAY",
             title: "Retrasado",
             class: "success",
             //dragTo: ["_working"],
-            item: [
-              {
-                title: "<b>All</b> right"
-              },
-              {
-                title: "Ok!"
-              }
-            ]
+            item: boards.DELAY
           },
           {
-            id: "_PAUSED",
+            id: "PAUSED",
             title: "Pausado",
             class: "success",
             //dragTo: ["_working"],
-            item: [
-              {
-                title: "All right"
-              },
-              {
-                title: "Ok!"
-              }
-            ]
+            item: boards.PAUSED
           }
-        ]
+        ],
+        dragendEl : function(el){
+          //console.log(el);
+        },
+        dropEl : function (el, target, source, sibling) {
+          var itemId = el.getAttribute("data-eid");
+          var fromBoard = source.parentElement.getAttribute("data-id");
+          var toBoard = target.parentElement.getAttribute("data-id");
+
+          var items = Array.from(target.children);
+          var index = items.indexOf(el);
+
+          var boardId = target.parentElement.getAttribute("data-id");
+          var orderedItems = Array.from(target.children).map((item, index) => ({
+            id: item.getAttribute("data-eid"),
+            position: index
+          }));
+
+          fetch("{{ route('kanban.draganddrop') }}", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: JSON.stringify({
+              task_id: itemId,
+              new_status: toBoard,
+              position: index,
+              order: {
+                board: boardId,
+                items: orderedItems
+              }
+            })
+          })
+          .then(response => response.json())
+          .then(data => {
+            handleResponseServerDragDrop(data);
+            console.log("Respuesta del servidor:", data);
+          });
+        },
       });
 
+      function handleResponseServerDragDrop(data) {
+        if( data.success && data.message ) {
+          const wrapToast = document.querySelector('.wrap-toast');
+          let classAlert = data.success ? 'bg-success' : 'bg-danger';
+          let idRandom = Math.random().toString(36).substring(2, 9);
+          let html = `
+            <div id="${idRandom}" class="bs-toast toast fade hide ${classAlert}" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="3000">
+              <div class="toast-header">
+                <i class="icon-base bx bx-bell me-2"></i>
+                <div class="me-auto fw-medium">Tablero</div>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+              </div>
+              <div class="toast-body">${ data.message }</div>
+            </div>
+          `;
+
+          wrapToast.insertAdjacentHTML('beforeend', html);
+          setTimeout(() => {
+            const toastElement = document.getElementById(idRandom);
+            if (toastElement) {
+              const toast = new bootstrap.Toast(toastElement);
+              toast.show();
+            }
+          }, 150);
+        }
+      }
+
+      /*
       var toDoButton = document.getElementById("addToDo");
       toDoButton.addEventListener("click", function() {
         KanbanTest.addElement("_todo", {
@@ -200,10 +354,24 @@
       removeElement.addEventListener("click", function() {
         KanbanTest.removeElement("_test_delete");
       });
+      */  
 
-      var allEle = KanbanTest.getBoardElements("_todo");
-      allEle.forEach(function(item, index) {
-        //console.log(item);
+      $(document).ready(function () {
+          //Refrescar los tooltip de los usuarios en las tarjetas
+          new bootstrap.Tooltip("body", {
+              selector: "[data-bs-toggle='tooltip']"
+          });
+
+          //Preven click en la tarea para que pueda abrir la vista de detalle de tarea
+          document.addEventListener("click", function(e) {
+            if (e.target.closest(".no-drag")) {
+              e.stopPropagation();
+              const href = e.target.getAttribute('href');
+              window.open(href, "_blank");
+            }
+          });
       });
+
+
     </script>
 @endsection

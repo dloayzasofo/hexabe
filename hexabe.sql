@@ -188,12 +188,13 @@ CREATE TABLE tasks(
     description text,
     date_delivery date,
     priority varchar(100), -- LOW, MEDIUM, HIGH
-    status varchar(100), -- TOSTART, PROCCESS, DELAY, PAUSED, FINALIZED
+    status varchar(100), -- TOSTART, PROCESS, DELAY, PAUSED, FINALIZED
     user_id bigint(20) UNSIGNED, -- user created
     user_assign bigint(20) UNSIGNED,
     brand_id bigint(20) UNSIGNED null,
     parent_id bigint(20) UNSIGNED null,
     business_id bigint(20) unsigned,
+    position INT NULL,
 	 created_at timestamp NULL DEFAULT now(),
 	 updated_at timestamp NULL DEFAULT now(),
     deleted_at timestamp NULL DEFAULT NULL,
@@ -203,6 +204,7 @@ CREATE TABLE tasks(
     foreign key(parent_id) references tasks(id) on delete cascade on update no action,
     foreign key(business_id) references business(id) on delete cascade on update no action
 );
+ALTER TABLE tasks ADD COLUMN position INT NULL AFTER business_id;
 
 CREATE TABLE tasks_info(
 	 id bigint(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,

@@ -17,12 +17,33 @@ use Auth;
 
 class TaskController extends Controller {
  
-    public function index() {
+    public function index(Request $request) {
+        $status = $request->query('status');
+        if( $status == null OR !in_array($status, ['TOSTART', 'PROCESS', 'FINALIZED', 'DELAY', 'PAUSED']) ){
+            $status = 'TOSTART';
+        }
+
+        $counters = [
+            "TOSTART" => Task::where('user_assign', Auth::id())->where('status', 'TOSTART')->count(),
+            "PROCESS" => Task::where('user_assign', Auth::id())->where('status', 'PROCESS')->count(),
+            "FINALIZED" => Task::where('user_assign', Auth::id())->where('status', 'FINALIZED')->count(),
+            "DELAY" => Task::where('user_assign', Auth::id())->where('status', 'DELAY')->count(),
+            "PAUSED" => Task::where('user_assign', Auth::id())->where('status', 'PAUSED')->count(),
+        ];
+
+
         $user = Auth::user();
-        $tasks = Task::with('brand', 'assign', 'collaborators')->withCount('medias')->withCount('childs')->where('user_assign', $user->id)->get();
-        //var_dump($tasks[0]);exit();
+        $tasks = Task::with('brand', 'assign', 'collaborators')
+            ->withCount('medias')
+            ->withCount('childs')
+            ->where('user_assign', $user->id)
+            ->where('status', $status)
+            ->get();
+        
         $params = [
-            'tasks' => $tasks
+            'tasks' => $tasks,
+            'status' => $status,
+            'counters' => $counters
         ];
 
         return view('task.index', $params);

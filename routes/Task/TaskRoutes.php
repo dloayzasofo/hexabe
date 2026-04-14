@@ -39,4 +39,7 @@ Route::prefix('task')->group(function () {
     Route::get('/kanban', [KanbanController::class, 'index'])
         //->middleware(RoleMiddleware::using('ADMIN'))
         ->name('kanban.index');
+    Route::post('/kanban/draganddrop', [KanbanController::class, 'draganddrop'])
+        //->middleware(RoleMiddleware::using('ADMIN'))
+        ->name('kanban.draganddrop');
 });

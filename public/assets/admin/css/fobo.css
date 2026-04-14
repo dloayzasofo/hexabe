@@ -356,6 +356,27 @@ textarea{
     width: 100%;
     overflow-x: auto;
 }
+.kanban-board{
+    background: transparent !important;
+    border-right: 1px dashed rgba(33,33,33,.1);
+    margin: 0px !important;
+}
+.kanban-container{
+    display: flex;
+    align-items: stretch;
+    width: 1400px !important;
+}
+.kanban-drag{
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    max-height: 83vh;
+    overflow-y: auto;
+}
+.kanban-item{
+    border-radius: 12px;
+    border: 1px solid #1414B81A;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+}
 .list-group-item{
     padding-left: 0px;
     padding-right: 0px;
@@ -587,6 +608,16 @@ textarea{
 }
 .tt-menu .tt-suggestion:hover{
     background: #f1f1f1;
+}
+.wrap-toast{
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1050;
+    max-width: 320px;
+}
+.wrap-toast>div{
+    margin-bottom: 15px;
 }
 @media (min-width: 1200px){
     .layout-navbar{
