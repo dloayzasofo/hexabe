@@ -73,7 +73,7 @@ class Task extends Model
     {
         $total = $this->childs()->count();
         if ($total == 0) {
-            return 0;
+            return -1;
         }
         $finalized = $this->childs()->where('status', 'FINALIZED')->count();
         return round(($finalized / $total) * 100);

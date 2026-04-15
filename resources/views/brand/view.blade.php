@@ -45,7 +45,7 @@
                     <span class="d-block fw-medium mb-1">Progreso General</span>
                     <div class="d-flex align-items-center">
                         <div class="pe-2">
-                            <h4 class="card-title mb-0 fw-bold">{{ $brand->progress }}%</h4>
+                            <h4 class="card-title mb-0 fw-bold">{{ $brand->progress == -1 ? 0 : $brand->progress }}%</h4>
                         </div>
                         <div>
                             <div class="progress" style="height:8px;margin:auto;padding:0px;width:100px;">
@@ -95,7 +95,7 @@
                                 <spam class="fw-bold ps-2">{{ $task->brand->name }}</spam>
                             </div>
                             <div class="fw-bold mt-2">
-                                {{ $task->title }}
+                                <a href="{{ route('task.view', [$task]) }}"> {{ $task->title }} </a>
                             </div>
                             <div class="mt-2">
                                 <div class="d-flex">
@@ -103,7 +103,11 @@
                                     <div class="avatar-group d-flex align-items-center assigned-avatar">
                                         @foreach( $task->collaborators as $collaborator )
                                         <div class="avatar avatar-xs w-px-26 h-px-26" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="{{ $collaborator->user->name }}" data-bs-original-title="{{ $collaborator->user->name }}">
-                                            <img src="{{ asset('assets/img/2.png') }}" alt="Avatar" class="rounded-circle pull-up">
+                                            @if( $collaborator->user->image )
+                                                <img src="{{ $collaborator->user->image }}" alt="Avatar" class="rounded-circle pull-up">
+                                            @else
+                                                 <span class="avatar-initial rounded-circle bg-label-danger">{{ $collaborator->user->nameInitial }}</span>
+                                            @endif
                                         </div>
                                         @endforeach
                                         {{-- 
@@ -121,29 +125,44 @@
                             </div>
                         </div>
                         <div class="col-md-2 text-end">
-                            <span class="badge rounded-pill bg-label-primary">Primary</span>
-                            <span class="badge rounded-pill @if($task->priority == 'MEDIUM') bg-label-warning @elseif($task->priority == 'LOW') bg-label-primary @elseif($task->priority == 'HIGH') bg-label-danger @endif">
-                                @switch($task->priority)
-                                    @case('HIGH')
-                                        Alta
+                            {{--<span class="badge rounded-pill bg-label-primary">Primary</span>--}}
+                            <span class="badge rounded-pill @if($task->status == 'TOSTART') bg-label-warning @elseif($task->status == 'PROCESS') bg-label-info @elseif($task->status == 'FINALIZED') bg-label-success @elseif($task->status == 'DELAY') bg-label-danger @elseif($task->status == 'PAUSED') bg-label-danger @endif">
+                                @switch($task->status)
+                                    @case('TOSTART')
+                                        Sin empezar
                                         @break
-                                    @case('MEDIUM')
-                                        Media
+                                    @case('PROCESS')
+                                        En proceso
                                         @break
-                                    @case('LOW')
-                                        Baja
+                                    @case('FINALIZED')
+                                        Finalizado
+                                        @break
+                                    @case('DELAY')
+                                        Retrasado
+                                        @break
+                                    @case('PAUSED')
+                                        Pausado
                                         @break
                                     @default
                                 @endswitch
-                            </span> 
+                            </span>
+                            @if( $task->progress >= 0 )
                             <div class="progress" style="height:8px;margin-left:auto;margin-right:0px;padding:0px;width:100px;margin-top:8px;">
-                                <div class="progress-bar" role="progressbar" style="width: 68%;background:#0052CC;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="progress-bar" role="progressbar" style="width:{{ $task->progress }}%;background:@if($task->progress >= 85) #22C55E; @elseif ($task->progress >= 50) #EAB308; @else #EF4444; @endif" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
+                            @endif
                         </div>
                     </div>
                 </div>
             </div>
             @endforeach
+
+            @if( count($lastTasks) == 0 )
+                <div class="card-body">
+                    <p class="text-center">No hay tareas recientes.</p>
+                </div>
+            @endif
+
             {{--
             <div class="card mb-3">
                 <div class="card-body">
@@ -258,6 +277,12 @@
                 </div>
                 <hr class="m-0">
                 @endforeach
+
+                @if( count($brand->members) == 0 )
+                    <div class="card-body">
+                        <p class="text-center">No hay miembros en esta marca.</p>
+                    </div>
+                @endif
             </div>
         </div>
     </div>

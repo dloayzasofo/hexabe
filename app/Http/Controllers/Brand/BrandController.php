@@ -83,7 +83,11 @@ class BrandController extends Controller {
     }
 
     public function view(Request $request, Brand $brand) {
-        $lastTasks = Task::where('brand_id', $brand->id)->orderBy('created_at', 'desc')->take(5)->get();
+        $lastTasks = Task::where('brand_id', $brand->id)
+            ->whereNull('parent_id')
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
         $members = $brand->members;
         $params = [
             'brand' => $brand,

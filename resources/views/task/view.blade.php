@@ -49,10 +49,12 @@
 
     <div class="row">
         <div class="col-md-8">
-            <div class="mb-2"><b>Descripción</b></div>
+            @if( trim($task->description) !== '' )
+            <div class="mb-2"><b>Descripción:</b> </div>
             <div class="border rounded p-3">
                 <div>{!! $task->description !!}</div>
             </div>
+            @endif
 
             @if( count($childs) > 0 )
             <div class="mt-3">

@@ -44,7 +44,7 @@
                             {{ $brand->name }}
                         </a>
                     </h5>
-                    <p class="card-text"><small>{{ $brand->pending_count }} tareas pendientes</small></p>
+                    <p class="card-text"><small>{{ $brand->pending_count == 0 ? "Sin" : $brand->pending_count }} tareas pendientes</small></p>
 
                     @if( $brand->progress >= 0 )
                         <div class="row mb-1">
