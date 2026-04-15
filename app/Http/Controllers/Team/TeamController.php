@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Helper\MediaHelper;
 use App\Http\Requests\TeamRequest;
 use App\Models\Brand;
+use App\Models\Task;
 use App\Models\Team;
 use App\Models\TeamBrand;
 use App\Models\TeamUser;
@@ -153,10 +154,39 @@ class TeamController extends Controller {
     }
 
     public function view(Request $request, Team $team) {
+        $users = $team->teamuser()->pluck('user_id');
+        $lastTasks = Task::whereNull('parent_id')
+            ->whereIn('user_assign', $users)
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
+        $members = $team->members;
+        $brands = $team->teambrand()->pluck('brand_id');
+        $brands = Brand::whereIn('id', $brands)->get();
+
         $params = [
-            'team' => $team
+            'team' => $team,
+            'lastTasks' => $lastTasks,
+            'members' => $members,
+            'brands' => $brands
         ];
 
         return view('team.view', $params);
+    }
+
+    public function removeBrand(Request $request, Team $team, Brand $brand) {
+        $name = $brand->name;
+        TeamBrand::where('team_id', $team->id)->where('brand_id', $brand->id)->delete();
+        
+        $request->session()->flash('team.success', 'Marca '.$name.' ha sido removida del equipo correctamente.');
+        return redirect()->route('team.view', [$team]);
+    }
+
+    public function removeUser(Request $request, Team $team, User $user) {
+        $name = $user->name;
+        TeamUser::where('team_id', $team->id)->where('user_id', $user->id)->delete();
+        
+        $request->session()->flash('team.success', 'Usuario '.$name.' ha sido removido del equipo correctamente.');
+        return redirect()->route('team.view', [$team]);
     }
 }

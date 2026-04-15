@@ -42,21 +42,45 @@
                             {{ $team->name }}
                         </div>
                     </h5>
-                    <p class="card-text"><small>12 tareas pendientes</small></p>
+                    <p class="card-text"><small>{{ $team->pending_count == 0 ? "Sin" : $team->pending_count }} tareas pendientes </small></p>
 
-                    <div class="row mb-1">
-                        <div class="col-md-6">
-                            <small>Progreso</small>
+                    @if( $team->progress >= 0 )
+                        <div class="row mb-1">
+                            <div class="col-md-6">
+                                <small>Progreso</small>
+                            </div>
+                            <div class="col-md-6 fw-bold text-end">
+                                <small style="color:@if($team->progress >= 85) #22C55E; @elseif ($team->progress >= 50) #EAB308; @else #EF4444; @endif">{{ $team->progress == -1 ? "0" : $team->progress }}%</small>
+                            </div>
                         </div>
-                        <div class="col-md-6 fw-bold text-end">
-                            <small style="color:#0052CC;">68%</small>
+                        
+                        <div class="progress" style="height: 8px;margin: auto;padding:0px;">
+                            <div class="progress-bar" role="progressbar" style="width:{{ $team->progress }}%;background:@if($team->progress >= 85) #22C55E; @elseif ($team->progress >= 50) #EAB308; @else #EF4444; @endif" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
-                    </div>
+                    @endif
 
-                    <div class="progress" style="height: 8px;margin: auto;padding:0px;">
-                        <div class="progress-bar" role="progressbar" style="width: 68%;background:#0052CC;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
+                    <ul class="list-unstyled m-0 avatar-group d-flex align-items-center mt-4">
+                        @foreach( $team->members as $index => $member )
+                            @if( $index >= 3 )
+                                @break;
+                            @endif
 
+                            <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-s pull-up" aria-label="{{ $member->name }}" data-bs-original-title="{{ $member->name }}">
+                                @if( $member->image )
+                                    <img src="{{ asset($member->image) }}" alt="Avatar" class="rounded-circle">
+                                @else
+                                    <span class="avatar-initial rounded-circle">{{ $member->nameInitial }}</span>
+                                @endif
+                            </li>
+                        @endforeach
+
+                        @if( $team->members->count() > 3 )
+                            <li class="avatar">
+                                <span class="avatar-initial rounded-circle pull-up" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{ $team->members->count() - 3 }} more">+{{ $team->members->count() - 3 }}</span>
+                            </li>
+                        @endif
+                    </ul>
+                    {{-- 
                     <ul class="list-unstyled m-0 avatar-group d-flex align-items-center mt-4">
                         <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-s pull-up" aria-label="Lilian Fuller" data-bs-original-title="Lilian Fuller">
                             <img src="{{ asset('/assets/img/2.png') }}" alt="Avatar" class="rounded-circle">
@@ -74,6 +98,7 @@
                             <span class="avatar-initial rounded-circle pull-up" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="3 more">0</span>
                         </li>
                     </ul>
+                    --}}
                 </div>
             </div>
         </div>
@@ -260,7 +285,7 @@
 </script>
 
 <script>
-    let mode = null;
+    let mode = 'CREATE';
     let urlCreate = "{{ route('team.create') }}";
 
     window.addEventListener('load', () => {
@@ -283,7 +308,7 @@
         .then(data => {
             document.querySelector('#popup').innerHTML = data;
             document.querySelector('#modalTitle').innerHTML = 'Crear nuevo equipo';
-            document.querySelector('#modalDescription').innerHTML = 'Define un equipo para centralizar tareas y seguimiento.';
+            document.querySelector('#modalDescription').innerHTML = 'Agrupa personas para trabajar de forma organizada en diferentes tareas y proyectos.';
             $('#modalCenter').modal('show');
             //setupMemberSearch();
             mode = 'CREATE';

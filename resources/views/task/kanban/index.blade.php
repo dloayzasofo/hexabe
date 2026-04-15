@@ -156,7 +156,11 @@
                       @endif
 
                       <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar pull-up avatar-xs" aria-label="{{ $collaborator->user->name }}" data-bs-original-title="{{ $collaborator->user->name }}">
+                        @if( $collaborator->user->image )
                           <img class="rounded-circle" src="{{ $collaborator->user->image }}" alt="{{ $collaborator->user->name }}">
+                        @else
+                          <span class="avatar-initial rounded-circle">{{ $collaborator->user->nameInitial }}</span>
+                        @endif
                       </li>
                     @endforeach
 

@@ -26,6 +26,9 @@ class Brand extends Model
         return strtoupper($name);
     }
 
+    /**
+     * Obtiene el progreso de las tareas asociadas a esta marca, calculado como el porcentaje de tareas finalizadas respecto al total de tareas.
+     */
     public function getProgressAttribute(){
         $progress = -1;
         
@@ -39,6 +42,9 @@ class Brand extends Model
         return $progress;
     }
 
+    /**
+     * Obtiene el total de tareas pendientes o estado distinto a finalizado
+     */
     public function getPendingCountAttribute(){
         $pendingCount = 0;
         
@@ -50,11 +56,17 @@ class Brand extends Model
         return $pendingCount;
     }
 
+    /**
+     * Obtiene los miembros asociados a esta marca.
+     */
     public function getMembersAttribute(){
         $members = Task::where('brand_id', $this->id)->distinct()->pluck('user_assign');
         return User::whereIn('id', $members)->get();
     }
 
+    /**
+     * Obtiene el total de tareas asociadas a esta marca.
+     */
     public function getTotalTasksAttribute(){
         return Task::where('brand_id', $this->id)->count();
     }

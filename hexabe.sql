@@ -99,7 +99,7 @@ CREATE TABLE `users` (
   `phone_code` varchar(191) DEFAULT NULL,
   `phone` varchar(191) DEFAULT NULL,
   `position` varchar(191) DEFAULT NULL,
-  `role` varchar(191) DEFAULT NULL,
+  `role` varchar(191) DEFAULT NULL, -- SUPER, ADMIN, USER, EXTERNAL
   `social_id` varchar(191) DEFAULT NULL,
   `parent_id` bigint(20) UNSIGNED null,
   `media_id` bigint(20) UNSIGNED NULL,  -- avatar
@@ -182,6 +182,20 @@ CREATE TABLE team_brands(
 	 foreign key (team_id) references teams(id) on delete cascade on update no action
 );
 
+CREATE TABLE team_invitations(
+	 `id` bigint(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+	 team_id bigint(20) UNSIGNED,
+	 email VARCHAR(255),
+	 role VARCHAR(100),
+	 token VARCHAR(255),
+	 user_id bigint(20) UNSIGNED,
+	 accepted_at timestamp NULL,
+	 created_at timestamp NULL DEFAULT now(),
+	 updated_at timestamp NULL DEFAULT now(),
+	 foreign key (user_id) references users(id) on delete cascade on update no action,
+	 foreign key (team_id)  references teams(id) on delete cascade on update no action
+);
+
 CREATE TABLE tasks(
 	 id bigint(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     title varchar(255),
@@ -194,6 +208,7 @@ CREATE TABLE tasks(
     brand_id bigint(20) UNSIGNED null,
     parent_id bigint(20) UNSIGNED null,
     business_id bigint(20) unsigned,
+    color VARCHAR(10) NULL,
     position INT NULL,
 	 created_at timestamp NULL DEFAULT now(),
 	 updated_at timestamp NULL DEFAULT now(),
@@ -205,6 +220,7 @@ CREATE TABLE tasks(
     foreign key(business_id) references business(id) on delete cascade on update no action
 );
 ALTER TABLE tasks ADD COLUMN position INT NULL AFTER business_id;
+ALTER TABLE tasks ADD COLUMN color VARCHAR(10) NULL AFTER business_id;
 
 CREATE TABLE tasks_info(
 	 id bigint(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,

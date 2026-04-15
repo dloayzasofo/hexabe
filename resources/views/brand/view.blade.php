@@ -159,85 +159,9 @@
 
             @if( count($lastTasks) == 0 )
                 <div class="card-body">
-                    <p class="text-center">No hay tareas recientes.</p>
+                    <p class="text-center mb-0">No hay tareas recientes.</p>
                 </div>
             @endif
-
-            {{--
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col-md-10">
-                            <div class="d-flex align-items-center w-100">
-                                <span class="badge rounded-pill bg-label-danger">Danger</span> <spam class="fw-bold ps-2">Marca</spam>
-                            </div>
-                            <div class="fw-bold mt-2">
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                            </div>
-                            <div class="mt-2">
-                                <div class="d-flex">
-                                    <div class="avatar-group d-flex align-items-center assigned-avatar">
-                                        <div class="avatar avatar-xs w-px-26 h-px-26" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Bruce" data-bs-original-title="Bruce">
-                                            <img src="{{ asset('assets/img/2.png') }}" alt="Avatar" class="rounded-circle pull-up">
-                                        </div>
-                                        <div class="avatar avatar-xs w-px-26 h-px-26" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Clark" data-bs-original-title="Clark">
-                                            <img src="{{ asset('assets/img/4.png') }}" alt="Avatar" class="rounded-circle pull-up">
-                                        </div>
-                                    </div>
-                                    <div class="ps-2">
-                                        <small class="me-2"><i class="icon-base bx bx-calendar"></i> Entrega: 24 Oct</small>
-                                        <small><i class="icon-base bx bx-user"></i> Responsable: Andres</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-2 text-end">
-                            <span class="badge rounded-pill bg-label-primary">Primary</span>
-                            <div class="progress" style="height:8px;margin-left:auto;margin-right:0px;padding:0px;width:100px;margin-top:8px;">
-                                <div class="progress-bar" role="progressbar" style="width: 68%;background:#0052CC;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col-md-10">
-                            <div class="d-flex align-items-center w-100">
-                                <span class="badge rounded-pill bg-label-danger">Danger</span> <spam class="fw-bold ps-2">Marca</spam>
-                            </div>
-                            <div class="fw-bold mt-2">
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                            </div>
-                            <div class="mt-2">
-                                <div class="d-flex">
-                                    <div class="avatar-group d-flex align-items-center assigned-avatar">
-                                        <div class="avatar avatar-xs w-px-26 h-px-26" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Bruce" data-bs-original-title="Bruce">
-                                            <img src="{{ asset('assets/img/2.png') }}" alt="Avatar" class="rounded-circle pull-up">
-                                        </div>
-                                        <div class="avatar avatar-xs w-px-26 h-px-26" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Clark" data-bs-original-title="Clark">
-                                            <img src="{{ asset('assets/img/4.png') }}" alt="Avatar" class="rounded-circle pull-up">
-                                        </div>
-                                    </div>
-                                    <div class="ps-2">
-                                        <small class="me-2"><i class="icon-base bx bx-calendar"></i> Entrega: 24 Oct</small>
-                                        <small><i class="icon-base bx bx-user"></i> Responsable: Andres</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-2 text-end">
-                            <span class="badge rounded-pill bg-label-primary">Primary</span>
-                            <div class="progress" style="height:8px;margin-left:auto;margin-right:0px;padding:0px;width:100px;margin-top:8px;">
-                                <div class="progress-bar" role="progressbar" style="width: 68%;background:#0052CC;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            --}}
         </div>
 
         <div class="col-md-4">
@@ -280,7 +204,7 @@
 
                 @if( count($brand->members) == 0 )
                     <div class="card-body">
-                        <p class="text-center">No hay miembros en esta marca.</p>
+                        <p class="text-center mb-0">No hay miembros en esta marca.</p>
                     </div>
                 @endif
             </div>
@@ -441,7 +365,6 @@
     }
 
     function handleEdit(){
-        console.log("Edit BRnad");
         let url = this.getAttribute('data-href');
         console.log(url);
         fetch(url)
