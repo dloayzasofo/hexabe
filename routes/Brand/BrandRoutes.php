@@ -4,9 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Brand\BrandController;
 use \Spatie\Permission\Middleware\RoleMiddleware;
 
-Route::prefix('brand')->group(function () {
+Route::middleware(['auth'])->prefix('brand')->group(function () {
     Route::get('/', [BrandController::class, 'index'])
-        ->middleware(RoleMiddleware::using('ADMIN'))
+        //->middleware(RoleMiddleware::using('ADMIN'))
         ->name('brand.index');
         
     Route::get('/create', [BrandController::class, 'create'])
@@ -24,10 +24,10 @@ Route::prefix('brand')->group(function () {
         ->name('brand.update');
 
     Route::get('/view/{brand}', [BrandController::class, 'view'])
-        ->middleware(RoleMiddleware::using('ADMIN'))
+        //->middleware(RoleMiddleware::using('ADMIN'))
         ->name('brand.view');
 
     Route::get('/search-by-key', [BrandController::class, 'search_by_key'])
-        ->middleware(RoleMiddleware::using('ADMIN'))
+        //->middleware(RoleMiddleware::using('ADMIN'))
         ->name('brand.search-by-key');
 });

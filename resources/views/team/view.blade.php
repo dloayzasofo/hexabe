@@ -14,11 +14,13 @@
             </div>
         </div>
         <div class="col-md-6 text-end">
+            @hasanyrole('SUPER|ADMIN')
             <button id="btnEdit" data-href="{{ route('team.edit', [$team]) }}" class="dt-button create-new btn btn-primary team-item">
                 <span><i class="bx bx-edit me-sm-2"></i> 
                     <span class="d-none d-sm-inline-block">Editar equipo</span>
                 </span>
             </button>
+            @endhasanyrole
         </div>
     </div>
 
@@ -113,7 +115,9 @@
                     <h5 class="fw-bold" style="margin-bottom:4px;"> Miembros ({{ $team->members->count() }})</h5>
                 </div>
                 <div class="col-md-6 text-end">
+                    @hasanyrole('SUPER|ADMIN')
                     <button class="btn btn-text-dark fw-semibold" data-bs-toggle="modal" data-bs-target="#modalInvite" style="padding-right:0px;padding-top:0px;">+ Invitar</button>
+                    @endhasanyrole
                 </div>
             </div>
             <div class="card">
@@ -138,10 +142,12 @@
                             </div>
                         </div>
                         <div class="text-end">
+                            @hasanyrole('SUPER|ADMIN')
                             <button data-href="{{ route('team.remove.user', ['team'=> $team, 'user'=> $member]) }}" class="btn btn-sm confirmDelete"
                                 data-message="al usuario <b>{{$member->name}}</b> de este equipo.">
                                 <i class="bx bx-trash"></i>
                             </button>
+                            @endhasanyrole
                         </div>
                     </div>
                 </div>
@@ -162,7 +168,9 @@
                     <h5 class="fw-bold" style="margin-bottom:4px;"> Marcas ({{ $team->teambrand->count() }})</h5>
                 </div>
                 <div class="col-md-6 text-end">
+                    @hasanyrole('SUPER|ADMIN')
                     <button data-href="{{ route('team.edit', [$team]) }}" class="btn btn-text-dark fw-semibold team-item" style="padding-right:0px;padding-top:0px;">+ Agregar</button>
+                    @endhasanyrole
                 </div>
             </div>
             <div class="card">
@@ -361,6 +369,7 @@
 @endsection
 
 @section('script')
+@hasanyrole('SUPER|ADMIN')
 <script src="{{asset('/assets/admin/js/dropzone.js')}}"></script>
 <script>
     let mode = 'EDIT';
@@ -676,7 +685,6 @@
             //$('#modalCenter').modal('show');
         });
     }
-
-
 </script>
+@endhasanyrole
 @endsection

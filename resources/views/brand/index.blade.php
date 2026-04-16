@@ -9,11 +9,13 @@
         <div class="col-sm-4 col-md-6">
             <div class="dt-action-buttons text-end pt-md-0">
                 <div class="dt-buttons"> 
+                    @hasanyrole('SUPER|ADMIN')
                     <button id="btnCreate" class="dt-button create-new btn btn-primary">
                         <span><i class="bx bx-plus me-sm-2"></i> 
                             <span class="d-none d-sm-inline-block">Agregar marca</span>
                         </span>
                     </button> 
+                    @endhasanyrole
                 </div>
             </div>
         </div>
@@ -124,6 +126,7 @@
 @endsection
 
 @section('script')
+@hasanyrole('SUPER|ADMIN')
 <script src="{{asset('/assets/admin/js/dropzone.js')}}"></script>
 <script>
     let mode = 'CREATE';
@@ -135,11 +138,6 @@
                 handleCreateBrand();
             }
         });
-
-        //let brandItems = document.querySelectorAll('.brand-item');
-        //brandItems.forEach(brandItem => {
-        //    brandItem.addEventListener('click', handleEdit);
-        //});
     });
 
     function handleCreate(){
@@ -163,14 +161,12 @@
         let industry = document.querySelector('#industry');
         let description = document.querySelector('#description');
         let image = document.querySelector('#image');
-        //let status = document.querySelector('#status');
 
         var data = new FormData()
         data.append('_token', token.value);
         data.append('name', name.value);
         data.append('industry', industry.value);
         data.append('description', description.value);
-        //data.append('status', status.value);
         if( image.files.length > 0 ){
             data.append('image', image.files[0]);
         }
@@ -266,4 +262,5 @@
         document.querySelector('#error' + elementName).innerHTML = error;
     }
 </script>
+@endhasanyrole
 @endsection

@@ -15,7 +15,7 @@
 	/>
 	<link rel="icon" type="image/png" href="{{ asset('assets/img/favicon.png') }}" />
     
-	<title>Hexabe - Login</title>
+	<title>Hexabe - Invitación de usuario</title>
 
 	<link rel="stylesheet" href="{{asset('/assets/admin/fonts/style.css')}}" />
     <link rel="stylesheet" href="{{asset('/assets/admin/vendor/fonts/boxicons.css')}}" />
@@ -40,28 +40,43 @@
           	<!-- Register -->
           	<div class="card">
             	<div class="card-body">
-              		<div class="app-brand justify-content-center">
-                		<div class="app-brand-link gap-2 fw-bold">
-							<span style='color:#243C78;font-size:32px;font-family:"Poppins",sans-serif;'>Hexa</span>
-							<span style='color:#FE7531;font-size:32px;font-family:"Poppins",sans-serif;margin-left:-7px;'>Be</span>
-						</div>
-              		</div>
+              		
+              		<h4 class="mb-2 text-center fw-bold">Crear cuenta! 👋</h4>
+              		<p class="mb-4 text-center">Has recibido una invitación para formar parte de un equipo. Por favor ingresa los datos a continuación</p>
 
-              		<!-- /Logo -->
-              		<h4 class="mb-2">Bienvenido! 👋</h4>
-              		<p class="mb-4">Por favor ingresa los datos a continuación</p>
-
-					<form id="formAuthentication" class="mb-3" action="{{ route('login.signup') }}" method="POST">
+					<form class="mb-3" action="{{ route('team.invitation.save', ['token' => $token]) }}" method="POST">
 						@if(Session::has('login.fail'))
 							<p class="error text-center" >
 								{{ Session::get('login.fail') }}
 							</p>
 						@endif
 						@csrf
+                        <div class="mb-3">
+							<label for="name" class="form-label">Nombre</label>
+							<input type="text" class="form-control" id="name" name="name" placeholder="Introduzca su nombre" autofocus required/>
+							@error('name')<p class="error">{{ $message }}</p> @enderror
+						</div>
+
+                        <div class="mb-3">
+							<label for="lastname" class="form-label">Apellidos</label>
+							<input type="text" class="form-control" id="lastname" name="lastname" placeholder="Introduzca sus apellidos"/>
+							@error('lastname')<p class="error">{{ $message }}</p> @enderror
+						</div>
+
 						<div class="mb-3">
 							<label for="email" class="form-label">Email</label>
-							<input type="text" class="form-control" id="email" name="email" placeholder="Introduzca su email" autofocus required/>
-							@error('email')<p class="error">{{ $message }}</p> @enderror
+							<input type="text" class="form-control" id="email" name="email" placeholder="Introduzca su email" readonly value="{{ $email }}"/>
+						</div>
+
+                        <div class="mb-3">
+							<label for="phone" class="form-label">Teléfono</label>
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text" style="padding:5px 6px;">
+                                    <img src="{{ asset('assets/img/flags/flag-bo.svg') }}" style="width:26px;"> <small class="ms-1">+591</small>
+                                </span>
+                                <input type="text" class="form-control" id="phone" name="phone" placeholder="Introduzca su teléfono"/>
+                            </div>
+							@error('phone')<p class="error">{{ $message }}</p> @enderror
 						</div>
 
 						<div class="mb-3 form-password-toggle">
@@ -73,10 +88,20 @@
 							</div>
 							@error('password')<p class="error">{{ $message }}</p> @enderror
 						</div>
+
+						<div class="mb-3 form-password-toggle">
+							<div class="d-flex justify-content-between">
+								<label class="form-label" for="password_confirmation">Confirmar contraseña</label>
+							</div>
+							<div class="input-group input-group-merge">
+								<input type="password" id="password_confirmation" class="form-control" name="password_confirmation" placeholder="······" autocomplete="off" minlength="4" maxlength="20" required/>
+							</div>
+							@error('password_confirmation')<p class="error">{{ $message }}</p> @enderror
+						</div>
 						
 						<div class="mb-3">
 							<br>
-							<button class="btn btn-primary d-grid w-100" type="submit"> Ingresar </button>
+							<button class="btn btn-primary d-grid w-100" type="submit"> Crear cuenta </button>
 						</div>
 					</form>
             	</div>

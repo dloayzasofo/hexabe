@@ -4,17 +4,17 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\UserController;
 use \Spatie\Permission\Middleware\RoleMiddleware;
 
-Route::prefix('user')->group(function () {
+Route::middleware(['auth'])->prefix('user')->group(function () {
     Route::get('/', [UserController::class, 'index'])
         ->middleware(RoleMiddleware::using('ADMIN'))
         ->name('user.index');
 
     Route::get('/search-user', [UserController::class, 'search_user'])
-        ->middleware(RoleMiddleware::using('ADMIN'))
+        //->middleware(RoleMiddleware::using('ADMIN'))
         ->name('user.search-user');
 
     Route::get('/search-by-key', [UserController::class, 'search_by_key'])
-        ->middleware(RoleMiddleware::using('ADMIN'))
+        //->middleware(RoleMiddleware::using('ADMIN'))
         ->name('user.search-by-key');
 
         /*

@@ -47,6 +47,7 @@ class KanbanController extends Controller {
             switch ($newStatus) {
                 case 'TOSTART':
                     $status = "Sin empezar";
+                    break;
                 case 'PROCESS':
                     $status = "En proceso";
                     break;

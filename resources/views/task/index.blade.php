@@ -160,7 +160,7 @@
                 <ul class="list-unstyled users-list d-flex align-items-center avatar-group m-0 me-2">
 
                     <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar pull-up" aria-label="{{ $task->assign->name }}" data-bs-original-title="{{ $task->assign->name }}">
-                        @if( $task->assign->image )
+                        @if( isset($task->assign->image) )
                             <img class="rounded-circle" src="{{ $task->assign->image }}" alt="{{ $task->assign->name }}">
                         @else
                             <span class="avatar-initial rounded-circle bg-label-primary">{{ $task->assign->nameInitial }}</span>
@@ -173,7 +173,11 @@
                         @endif
 
                         <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar pull-up" aria-label="{{ $collaborator->user->name }}" data-bs-original-title="{{ $collaborator->user->name }}">
-                            <img class="rounded-circle" src="{{ $collaborator->user->image }}" alt="{{ $collaborator->user->name }}">
+                            @if( isset($collaborator->user->image) )
+                                <img class="rounded-circle" src="{{ $collaborator->user->image }}" alt="{{ $collaborator->user->name }}">
+                            @else
+                                <span class="avatar-initial rounded-circle bg-label-primary">{{ $collaborator->user->nameInitial }}</span>
+                            @endif
                         </li>
                     @endforeach
 

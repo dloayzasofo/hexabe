@@ -57,4 +57,59 @@ class TeamInvitationController extends Controller {
         
         return response()->json(['success' => true, 'message' => 'Invitación enviada correctamente']);
     }
+
+    public function invitationaccept(Request $request, $token) {
+        $teamInvitation = TeamInvitation::where('token', $token)
+            ->whereNull('accepted_at')
+            ->firstOrFail();
+
+        $params = [
+            'token' => $token,
+            'email' => $teamInvitation->email
+        ];
+
+        return view('register.invitation', $params);
+
+    }
+
+    public function invitationaccept_save(Request $request, $token) {
+        $teamInvitation = TeamInvitation::where('token', $token)
+            ->whereNull('accepted_at')
+            ->firstOrFail();
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'lastname' => 'nullable|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'phone' => 'required|string|max:20',
+            'password' => 'required|string|min:4|max:20|confirmed',
+        ]);
+
+        $user = new User();
+        $user->name = $request->input('name');
+        $user->last_name = $request->input('lastname');
+        $user->email = $request->input('email');
+        $user->phone_code = '591';
+        $user->phone = $request->input('phone');
+        $user->password = bcrypt($request->input('password'));
+
+        $user->business_id = $teamInvitation->team->business_id;
+        $user->role = $teamInvitation->role;
+        $user->parent_id = $teamInvitation->user_id;
+        $user->save();
+
+        // Add user to team
+        $teamUser = new TeamUser();
+        $teamUser->team_id = $teamInvitation->team_id;
+        $teamUser->user_id = $user->id;
+        $teamUser->save();
+
+        // Mark invitation as accepted
+        $teamInvitation->accepted_at = now();
+        $teamInvitation->save();
+
+        return redirect()->route('login')->with('success', 'Cuenta creada exitosamente. Por favor, inicia sesión.');
+
+    }
+
 }

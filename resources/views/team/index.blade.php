@@ -9,11 +9,13 @@
         <div class="col-sm-4 col-md-6">
             <div class="dt-action-buttons text-end pt-md-0">
                 <div class="dt-buttons"> 
+                    @hasanyrole('SUPER|ADMIN')
                     <button id="btnCreate" class="dt-button create-new btn btn-primary">
-                        <span><i class="bx bx-plus me-sm-2"></i> 
+                        <span><i class="bx bx-plus me-sm-2"></i>
                             <span class="d-none d-sm-inline-block">Agregar equipo</span>
                         </span>
-                    </button> 
+                    </button>
+                    @endhasanyrole
                 </div>
             </div>
         </div>
@@ -37,10 +39,9 @@
 
                 <div class="card-body">
                     <h5 class="card-title fw-bold" style="margin-bottom:4px;">
-                        {{--<div data-href="{{ route('team.view', [$team]) }}" class="team-item">--}}
-                        <div data-href="{{ route('team.edit', [$team]) }}" class="team-item">
+                        <a href="{{ route('team.view', [$team]) }}" class="team-item">
                             {{ $team->name }}
-                        </div>
+                        </a>
                     </h5>
                     <p class="card-text"><small>{{ $team->pending_count == 0 ? "Sin" : $team->pending_count }} tareas pendientes </small></p>
 
@@ -122,8 +123,8 @@
 @endsection
 
 @section('script')
+@hasanyrole('SUPER|ADMIN')
 <script src="{{asset('/assets/admin/js/dropzone.js')}}"></script>
-
 <script>
     /*
     window.addEventListener('load', () => {
@@ -573,4 +574,5 @@
     }
     
 </script>
+@endhasanyrole
 @endsection

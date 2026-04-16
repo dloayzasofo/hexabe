@@ -22,11 +22,13 @@
             </div>
         </div>
         <div class="col-md-6 text-end">
+            @hasanyrole('SUPER|ADMIN')
             <button id="btnEdit" data-href="{{ route('brand.edit', [$brand]) }}" class="dt-button create-new btn btn-primary brand-item">
                 <span><i class="bx bx-edit me-sm-2"></i> 
                     <span class="d-none d-sm-inline-block">Editar marca</span>
                 </span>
             </button>
+            @endhasanyrole
         </div>
     </div>
     <div class="row">
@@ -230,8 +232,8 @@
     </div>
 @endsection
 
-
 @section('script')
+@hasanyrole('SUPER|ADMIN')
 <script src="{{asset('/assets/admin/js/dropzone.js')}}"></script>
 <script>
     let mode = 'EDIT';
@@ -379,4 +381,5 @@
         });
     }
 </script>
+@endhasanyrole
 @endsection

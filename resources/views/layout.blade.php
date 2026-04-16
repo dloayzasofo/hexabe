@@ -122,13 +122,11 @@
 						</a>
 					</li>
 					<li id="menu-logout" class="menu-item">
-						<a href="{--{ route('admin.login.exit') }}" class="menu-link" style="color:#ff3e1d;">
+						<a href="{{ route('login.exit') }}" class="menu-link" style="color:#ff3e1d;">
 							<i class="menu-icon tf-icons bx bx-log-out"></i>
 							<div>Salir</div>
 						</a>
 					</li>
-
-					
 					<li>
 						<br>
 					</li>

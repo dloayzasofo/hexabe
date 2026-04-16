@@ -4,9 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Dashboard\DashboardController;
 use \Spatie\Permission\Middleware\RoleMiddleware;
 
-Route::prefix('dashboard')->group(function () {
+Route::middleware(['auth'])->prefix('dashboard')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])
-        ->middleware(RoleMiddleware::using('ADMIN'))
+        //->middleware(RoleMiddleware::using('ADMIN'))
         ->name('dashboard.index');
         /*
     Route::get('/create', [BrandController::class, 'create'])
