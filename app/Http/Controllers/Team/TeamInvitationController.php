@@ -36,11 +36,25 @@ class TeamInvitationController extends Controller {
         $teamInivitation->user_id = $user->id;
         $teamInivitation->save();
 
-        $teamIniviteMail = new TeamInviteMail($teamInivitation);
-        $mailer = Mail::to($email);
-        $mailer->send($teamIniviteMail);
+        try{
+            $teamIniviteMail = new TeamInviteMail($teamInivitation);
+            $mailer = Mail::to($email);
+            $mailer->send($teamIniviteMail);
+            $request->session()->flash('team.success', 'Invitación a ' . $email . '  enviada correctamente');
+        } catch (TransportExceptionInterface $e) {
+            // Catch SMTP or transport-specific errors (e.g., connection failed)
+            $teamInivitation->error = $e->getMessage();
+            $teamInivitation->save();
+            Log::error('Mail transport error: ' . $e->getMessage());
+            $request->session()->flash('team.error', 'Error al enviar la invitación a ' . $email . '. Por favor, inténtalo de nuevo más tarde.');
+        } catch (Exception $e) {
+            // Catch any other general exceptions
+            $teamInivitation->error = $e->getMessage();
+            $teamInivitation->save();
+            Log::error('General mail error: ' . $e->getMessage());
+            $request->session()->flash('team.error', 'Error al enviar la invitación a ' . $email . '. Por favor, inténtalo de nuevo más tarde.');
+        }
         
-        $request->session()->flash('team.success', 'Invitación a ' . $email . '  enviada correctamente');
         return response()->json(['success' => true, 'message' => 'Invitación enviada correctamente']);
     }
 }

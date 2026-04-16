@@ -106,7 +106,7 @@
                                             </tr>
                                             <tr>
                                                 <td>
-                                                    <a href="{{ env('APP_URL') }}/team-invitations/accept/{{ $teamInvitation->token }}" style="display: inline-block; padding: 10px 20px; background-color: #007BFF; color: #FFFFFF; text-decoration: none; border-radius: 5px;">Aceptar Invitación</a>
+                                                    <a href="{{ env('APP_URL') }}/team/invitation/accept/{{ $teamInvitation->token }}" style="display: inline-block; padding: 10px 20px; background-color: #007BFF; color: #FFFFFF; text-decoration: none; border-radius: 5px;">Aceptar Invitación</a>
                                                 </td>
                                             </tr>
                                             <tr>

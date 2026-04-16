@@ -14,9 +14,19 @@ use App\Models\TeamUser;
 use App\Models\User;
 use Auth;
 
+//use Illuminate\Support\Facades\Mail;
+//use App\Models\TeamInvitation;
+//use App\Mail\TeamInviteMail;
+
 class TeamController extends Controller {
  
     public function index() {
+
+        //$teamIniviteMail = new TeamInviteMail(TeamInvitation::first());
+        //$mailer = Mail::to('lf.deiby@gmail.com');
+        //$mailer->send($teamIniviteMail);
+        //exit();
+
         $teams = Team::all();
         $params = [
             'teams' => $teams

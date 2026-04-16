@@ -113,7 +113,7 @@
                     <h5 class="fw-bold" style="margin-bottom:4px;"> Miembros ({{ $team->members->count() }})</h5>
                 </div>
                 <div class="col-md-6 text-end">
-                    <button class="btn btn-text-dark fw-semibold" data-bs-toggle="modal" data-bs-target="#modalInvite" style="padding-right:0px;">+ Invitar</button>
+                    <button class="btn btn-text-dark fw-semibold" data-bs-toggle="modal" data-bs-target="#modalInvite" style="padding-right:0px;padding-top:0px;">+ Invitar</button>
                 </div>
             </div>
             <div class="card">
@@ -162,7 +162,7 @@
                     <h5 class="fw-bold" style="margin-bottom:4px;"> Marcas ({{ $team->teambrand->count() }})</h5>
                 </div>
                 <div class="col-md-6 text-end">
-                    <button data-href="{{ route('team.edit', [$team]) }}" class="btn btn-text-dark fw-semibold team-item" style="padding-right:0px;">+ Agregar</button>
+                    <button data-href="{{ route('team.edit', [$team]) }}" class="btn btn-text-dark fw-semibold team-item" style="padding-right:0px;padding-top:0px;">+ Agregar</button>
                 </div>
             </div>
             <div class="card">
@@ -667,8 +667,8 @@
         })
         .then(response => response.text())
         .then(data => {
-            console.log(data);
-            //location.reload();
+            //console.log(data);
+            location.reload();
 
             //document.querySelector('#popup').innerHTML = data;
             //document.querySelector('#modalTitle').innerHTML = 'Invitar equipo';

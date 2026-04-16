@@ -37,4 +37,7 @@ Route::prefix('team')->group(function () {
     Route::post('/invitation', [TeamInvitationController::class, 'invitation'])
         ->middleware(RoleMiddleware::using('ADMIN'))
         ->name('team.invitation');
+    Route::post('/invitation/accept/{token}', [TeamInvitationController::class, 'invitationaccept'])
+        //->middleware(RoleMiddleware::using('ADMIN'))
+        ->name('team.invitation.accept');
 });

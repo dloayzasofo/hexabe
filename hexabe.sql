@@ -189,6 +189,7 @@ CREATE TABLE team_invitations(
 	 role VARCHAR(100),
 	 token VARCHAR(255),
 	 user_id bigint(20) UNSIGNED,
+	 error TEXT NULL,
 	 accepted_at timestamp NULL,
 	 created_at timestamp NULL DEFAULT now(),
 	 updated_at timestamp NULL DEFAULT now(),
