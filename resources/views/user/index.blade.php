@@ -2,158 +2,110 @@
 
 @section('main')
     <div class="row sm-vl-base mb-4">
-        <div class="">
-            <h4 class="fw-bold"> Usuarios </h4>
-            <div>Lorem ipsum dolor sit amet consectetur. Dignissim id purus.</div>
+        <div class="col-sm-8 col-md-6">
+            <h4 class="fw-bold">
+                <span class="text-muted fw-light">Miembros
+            </h4>
+        </div>
+        <div class="col-sm-4 col-md-6">
+            <div class="dt-action-buttons text-end pt-md-0">
+                <div class="dt-buttons"> 
+                    <a href="{{route('user.create')}}" class="dt-button create-new btn btn-primary">
+                        <span><i class="bx bx-plus me-sm-2"></i> 
+                            <span class="d-none d-sm-inline-block">Agregar</span>
+                        </span>
+                    </a> 
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="">
-        <div class="card">
-            <div class="table-responsive text-nowrap">
-                <div class="dt-container dt-bootstrap5 dt-empty-footer  ">
-                    <div class="justify-content-between dt-layout-table">
-                        <div class="d-md-flex justify-content-between align-items-center dt-layout-full table-responsive">
-                            <table class="datatables-users table border-top dataTable dtr-column">
-                                <thead>
-                                    <tr>
-                                        
-                                        <th data-dt-column="2" rowspan="1" colspan="1" class="dt-orderable-asc dt-orderable-desc dt-ordering-desc" aria-sort="descending" aria-label="User: Activate to remove sorting" tabindex="0">
-                                            <span class="dt-column-title" role="button">Nombre</span>
-                                            <span class="dt-column-order"></span>
-                                        </th>
-                                        <th data-dt-column="3" rowspan="1" colspan="1" class="dt-orderable-asc dt-orderable-desc" aria-label="Role: Activate to sort" tabindex="0">
-                                            <span class="dt-column-title" role="button">Rol</span>
-                                            <span class="dt-column-order"></span>
-                                        </th>
-                                        <th data-dt-column="4" rowspan="1" colspan="1" class="dt-orderable-asc dt-orderable-desc" aria-label="Plan: Activate to sort" tabindex="0">
-                                            <span class="dt-column-title" role="button">Área</span>
-                                            <span class="dt-column-order"></span>
-                                        </th>
-                                        <th data-dt-column="5" rowspan="1" colspan="1" class="dt-orderable-asc dt-orderable-desc" aria-label="Billing: Activate to sort" tabindex="0">
-                                            <span class="dt-column-title" role="button">Marcas Asignadas</span>
-                                            <span class="dt-column-order"></span>
-                                        </th>
-                                        <th data-dt-column="6" rowspan="1" colspan="1" class="dt-orderable-asc dt-orderable-desc" aria-label="Status: Activate to sort" tabindex="0">
-                                            <span class="dt-column-title" role="button">Estado</span>
-                                            <span class="dt-column-order"></span>
-                                        </th>
-                                        <th data-dt-column="7" rowspan="1" colspan="1" class="dt-orderable-none text-end" aria-label="Actions">
-                                            <span class="dt-column-title">Acciones</span>
-                                            <span class="dt-column-order"></span>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="sorting_1">
-                                            <div class="d-flex justify-content-start align-items-center user-name">
-                                                <div class="avatar-wrapper">
-                                                    <div class="avatar avatar-sm me-2">
-                                                        <img src="{{ asset('assets/img/3.png') }}" alt="Avatar" class="rounded-circle">
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex flex-column">
-                                                    <a href="app-user-view-account.html" class="text-heading text-truncate">
-                                                        <span class="fw-medium">Zsazsa McCleverty</span>
-                                                    </a>
-                                                    <small>zmcclevertye@soundcloud.com</small>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-label-secondary">Super Admin</span>
-                                        </td>
-                                        <td>
-                                            <span class="text-heading">Dirección General</span>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-label-dark">Marca 1</span> <span class="badge bg-label-dark">Marca 2</span> <span class="badge bg-label-dark">Marca 3</span>
-                                        </td>
-                                        <td>
-                                            <div class="d-flex align-items-center lh-1 me-4 mb-4 mb-sm-0">
-                                                <span class="email-list-item-label badge badge-dot bg-success d-none d-md-inline-block me-2" data-label="work"></span>
-                                                Activo 
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="d-flex align-items-center justify-content-end">
-                                                <a href="app-user-view-account.html" class="btn btn-icon">
-                                                    <i class="icon-base bx bx-pencil icon-md"></i>
-                                                </a>
-                                                <a href="javascript:;" class="btn btn-icon delete-record">
-                                                    <i class="icon-base bx bx-trash icon-md"></i>
-                                                </a>
-                                                <!-- 
-                                                <a href="javascript:;" class="btn btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                                    <i class="icon-base bx bx-dots-vertical-rounded icon-md"></i>
-                                                </a>
-                                                <div class="dropdown-menu dropdown-menu-end m-0">
-                                                    <a href="javascript:;" class="dropdown-item">Edit</a>
-                                                    <a href="javascript:;" class="dropdown-item">Suspend</a>
-                                                </div>
-                                                -->
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="sorting_1">
-                                            <div class="d-flex justify-content-start align-items-center user-name">
-                                                <div class="avatar-wrapper">
-                                                    <div class="avatar avatar-sm me-2">
-                                                        <img src="{{ asset('assets/img/2.png') }}" alt="Avatar" class="rounded-circle">
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex flex-column">
-                                                    <a href="app-user-view-account.html" class="text-heading text-truncate">
-                                                        <span class="fw-medium">Zsazsa McCleverty</span>
-                                                    </a>
-                                                    <small>zmcclevertye@soundcloud.com</small>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-label-secondary">Admin</span>
-                                        </td>
-                                        <td>
-                                            <span class="text-heading">Dirección General</span>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-label-dark">Marca 1</span> <span class="badge bg-label-dark">Marca 2</span> <span class="badge bg-label-dark">Marca 3</span>
-                                        </td>
-                                        <td>
-                                            <div class="d-flex align-items-center lh-1 me-4 mb-4 mb-sm-0">
-                                                <span class="email-list-item-label badge badge-dot bg-secondary d-none d-md-inline-block me-2" data-label="work"></span>
-                                                Inactivo
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="d-flex align-items-center justify-content-end">
-                                                <a href="app-user-view-account.html" class="btn btn-icon">
-                                                    <i class="icon-base bx bx-pencil icon-md"></i>
-                                                </a>
-                                                <a href="javascript:;" class="btn btn-icon delete-record">
-                                                    <i class="icon-base bx bx-trash icon-md"></i>
-                                                </a>
-                                                <!-- 
-                                                <a href="javascript:;" class="btn btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                                    <i class="icon-base bx bx-dots-vertical-rounded icon-md"></i>
-                                                </a>
-                                                <div class="dropdown-menu dropdown-menu-end m-0">
-                                                    <a href="javascript:;" class="dropdown-item">Edit</a>
-                                                    <a href="javascript:;" class="dropdown-item">Suspend</a>
-                                                </div>
-                                                -->
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+    @if(Session::has('user.delete'))
+    <div class="alert alert-success alert-dismissible" role="alert">
+        {{ Session::get('user.delete') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+        </button>
+    </div>
+    @endif
+
+    <div class="card">
+        <div class="card-datatable table-responsive">
+            <div class="dataTables_wrapper dt-bootstrap5 no-footer">
+                <div class="card-header">
+                   
+                </div>
+                <div class="card-datatable text-nowrap">
+                    <div class="fobo-datatable table-responsive text-nowrap">
+                        <table id="datatable" class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Rol</th>
+                                    <th>Área</th>
+                                    <th>Equipos</th>
+                                    <th>Creado</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    @include('user._modal_delete')
+@endsection
+
+@section('script')
+<link rel="stylesheet" href="{{ asset('/assets/admin/js/datatable/datatable.min.css') }}">
+<script src="{{ asset('/assets/admin/js/datatable/datatable.min.js') }}"></script>
+
+<script>
+    var meDataTable = null;
+    $(document).ready(function(){
+        var url = "{{ route('user.list') }}";
+
+        meDataTable = $('#datatable').DataTable({
+            processing: true,
+            serverSide: true,
+            //aaStoring: [
+            order: [
+                [4, 'desc']
+            ],
+            columnDefs: [
+                { orderable: false, targets: [3,4,5]}
+            ],
+            ajax: {
+                url: url,
+                type: 'POST',
+            },
+            columns: [
+                { data: 'name' },
+                { data: 'role' },
+                { data: 'position' },
+                { data: 'teams' },
+                { data: 'created_at' },
+                { data: 'actions' },
+            ],
+        });
+
+        $(document).on('click', '.userActionToggle', userActionToggle);
+    });
+
+    function userActionToggle(){
+        var url = $(this).attr('data-href');
+        $.ajax({
+            url: url,
+            type: 'get',
+            success: function(data){
+                meDataTable.ajax.reload();
+            },
+            error: function(err){
+                alert("ERROR: De conexión\nOcurrió un error al intentar conectarse al servidor.\n" + err.message);
+            }
+        });
+    }
+</script>
 @endsection

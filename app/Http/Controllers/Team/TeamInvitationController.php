@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Helper\MediaHelper;
 use App\Http\Requests\TeamRequest;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\Brand;
 use App\Models\Task;
@@ -91,7 +92,8 @@ class TeamInvitationController extends Controller {
         $user->email = $request->input('email');
         $user->phone_code = '591';
         $user->phone = $request->input('phone');
-        $user->password = bcrypt($request->input('password'));
+        $user->status = 'ACTIVE';
+        $user->password =  Hash::make($request->input('password'));
 
         $user->business_id = $teamInvitation->team->business_id;
         $user->role = $teamInvitation->role;

@@ -430,12 +430,14 @@ textarea{
     width: 150px;
     border: 3px #fff solid;
     box-shadow: 0px 2px 5px rgba(50,50,50,.15);
-    overflow: hidden;
+    /*overflow: hidden;*/
     position: relative;
 }
 .perfil-picture img{
     border-radius: 50%;
+    height: 100%;
     width: 100%;
+    object-fit: cover;
 }
 .perfil-picture .btn-icon{
     position: absolute;
@@ -614,6 +616,11 @@ textarea{
 }
 .tt-menu .tt-suggestion:hover{
     background: #f1f1f1;
+}
+.wrap-user-picture{
+    height: 150px;
+    width: 150px;
+    overflow: hidden;
 }
 .wrap-toast{
     position: fixed;

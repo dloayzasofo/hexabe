@@ -34,11 +34,13 @@
                     <div class="d-flex">
                         <div class="pe-4">
                             <div class="perfil-picture">
-                                @if( $user->image != null )
-                                    <img id="user-picture" src="{{ $user->image }}">
-                                @else
-                                    <img id="user-picture" src="{{ asset('assets/img/perfil-default.jpg') }}">
-                                @endif
+                                <div class="wrap-user-picture">
+                                    @if( $user->image != null )
+                                        <img id="user-picture" src="{{ $user->image }}">
+                                    @else
+                                        <img id="user-picture" src="{{ asset('assets/img/perfil-default.jpg') }}">
+                                    @endif
+                                </div>
                                 <input id="input-picture" type="file" accept="image/*" class="hide">
                                 <button type="button" class="btn rounded-pill btn-icon btn-warning upload-picture">
                                     <i class="bx bx-camera"></i>

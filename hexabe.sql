@@ -83,8 +83,8 @@ CREATE TABLE `sessions` (
 
 CREATE TABLE business(
 	`id` bigint(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    name varchar(255),
-    `created_at` timestamp NULL DEFAULT now(),
+   name varchar(255),
+   `created_at` timestamp NULL DEFAULT now(),
 	`updated_at` timestamp NULL DEFAULT now(),
 	`deleted_at` timestamp NULL DEFAULT NULL
 );
@@ -299,8 +299,8 @@ update users set business_id = 1 where id=1;
 insert into roles(name, guard_name, created_at, updated_at) values 
 ('SUPER', 'web', NOW(), NOW()),
 ('ADMIN', 'web', NOW(), NOW()),
-('STAFF', 'web', NOW(), NOW()),
-('VISIT', 'web', NOW(), NOW());
+('USER', 'web', NOW(), NOW()),
+('EXTERNAL', 'web', NOW(), NOW());
 
 insert into model_has_roles(role_id, model_type, model_id) values
 (2, 'App\Models\User', 1);

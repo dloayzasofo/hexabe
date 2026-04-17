@@ -26,8 +26,8 @@ class TeamController extends Controller {
         //$mailer = Mail::to('lf.deiby@gmail.com');
         //$mailer->send($teamIniviteMail);
         //exit();
-
-        $teams = Team::all();
+        $user = Auth::user();
+        $teams = Team::where('business_id', $user->business_id)->get();
         $params = [
             'teams' => $teams
         ];
@@ -146,6 +146,10 @@ class TeamController extends Controller {
             $teamUser->save();
         }
 
+        if( $request->brands == null ) {
+            $request->brands = [];
+        }
+        
         $brands = $request->brands;
         $teamBrands = TeamBrand::whereNotIn('brand_id', $brands)->where('team_id', $team->id)->delete();
 

@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->validateCsrfTokens(except: [
             'media/*',
             'comment/*',
+            'user/*',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

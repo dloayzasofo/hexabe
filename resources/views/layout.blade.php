@@ -81,6 +81,9 @@
 							<div>Panel de control</div>
 						</a>
 					</li>
+					<li class="menu-header small text-uppercase">
+						<span class="menu-header-text">Menú</span>
+					</li>
 					<li id="menu-task" class="menu-item">
 						<a href="{{ route('task.index') }}" class="menu-link">
 							<i class="menu-icon bx bx-bar-chart-square"></i>
@@ -115,12 +118,23 @@
 							<div>Equipos</div>
 						</a>
 					</li>
+					<li class="menu-header small text-uppercase">
+						<span class="menu-header-text">Configuración</span>
+					</li>
 					<li id="menu-setting" class="menu-item">
 						<a href="{{ route('setting.perfil.index') }}" class="menu-link">
 							<i class='menu-icon bx bx-cog'></i> 
 							<div>Ajustes</div>
 						</a>
 					</li>
+                	@hasanyrole('SUPER|ADMIN')
+					<li id="menu-user" class="menu-item">
+						<a href="{{ route('user.index') }}" class="menu-link">
+							<i class='menu-icon bx bx-user'></i> 
+							<div>Usuarios</div>
+						</a>
+					</li>
+					@endhasanyrole
 					<li id="menu-logout" class="menu-item">
 						<a href="{{ route('login.exit') }}" class="menu-link" style="color:#ff3e1d;">
 							<i class="menu-icon tf-icons bx bx-log-out"></i>
@@ -134,10 +148,43 @@
  
 				<div class="menu-footer-fixed border-top p-2">
 					<div class="d-flex align-items-center py-3 px-4 border rounded-3 bg-label-warning">
-						<div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+						<div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2 align-items-center">
 							<div class="me-3">
-								<p class="mb-0 text-heading text-warning fw-bold">Vista: Super Admin</p>
-								<small class="text-secondary">Acceso total</small>
+								<p class="mb-0 text-heading text-warning fw-bold">
+									Vista: 
+									@switch(Auth::user()->role)
+										@case('SUPER')
+											Super Admin
+											@break
+										@case('ADMIN')
+											Admin
+											@break
+										@case('USER')
+											Usuario
+											@break
+										@case('EXTERNAL')
+											Invitado
+											@break
+										@default
+									@endswitch
+								</p>
+								<small class="text-secondary">
+									@switch(Auth::user()->role)
+										@case('SUPER')
+											Acceso total
+											@break
+										@case('ADMIN')
+											Acceso total
+											@break
+										@case('USER')
+											Acceso limitado
+											@break
+										@case('EXTERNAL')
+											Acceso limitado
+											@break
+										@default
+									@endswitch	
+								</small>
 							</div>
 						</div>
 						<div class="avatar flex-shrink-0">
