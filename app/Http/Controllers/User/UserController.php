@@ -184,7 +184,7 @@ class UserController extends Controller {
                                 </div>
                             </div>
                             <div class="d-flex flex-column">
-                                <a href="app-user-view-account.html" class="text-heading text-truncate">
+                                <a href="' . route('task.user.list', [$model]) . '" class="text-heading text-truncate" target="_blank">
                                     <span class="fw-medium">' . $model->name . ' ' . $model->last_name . '</span>
                                 </a>
                                 <small>' . $model->email . '</small>

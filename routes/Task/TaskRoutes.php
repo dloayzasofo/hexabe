@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Task\TaskController;
+use App\Http\Controllers\Task\TaskUserController;
 use App\Http\Controllers\Task\KanbanController;
 use \Spatie\Permission\Middleware\RoleMiddleware;
 
@@ -42,4 +43,11 @@ Route::prefix('task')->group(function () {
     Route::post('/kanban/draganddrop', [KanbanController::class, 'draganddrop'])
         //->middleware(RoleMiddleware::using('ADMIN'))
         ->name('kanban.draganddrop');
+
+    Route::get('/staff/list/{user}', [TaskUserController::class, 'list'])
+        //->middleware(RoleMiddleware::using('ADMIN'))
+        ->name('task.user.list');
+    Route::get('/staff/kanban/{user}', [TaskUserController::class, 'kanban'])
+        //->middleware(RoleMiddleware::using('ADMIN'))
+        ->name('task.user.kanban');
 });

@@ -190,7 +190,7 @@
                                 </div>
                             </div>
                             <div class="d-flex flex-column">
-                                <a href="app-user-view-account.html" class="text-heading text-truncate">
+                                <a href="{{ route('task.user.list', [$member]) }}" class="text-heading text-truncate">
                                     <span class="fw-medium">{{ $member->name }}</span>
                                 </a>
                                 <small>{{ $member->email }}</small>

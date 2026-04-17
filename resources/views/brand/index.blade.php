@@ -72,11 +72,13 @@
                             @endif
 
                             <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-s pull-up" aria-label="{{ $member->name }}" data-bs-original-title="{{ $member->name }}">
-                                @if( $member->image )
-                                    <img src="{{ asset($member->image) }}" alt="Avatar" class="rounded-circle">
-                                @else
-                                    <span class="avatar-initial rounded-circle">{{ $member->nameInitial }}</span>
-                                @endif
+                                <a href="{{ route('task.user.list', [$member]) }}">
+                                    @if( $member->image )
+                                        <img src="{{ asset($member->image) }}" alt="Avatar" class="rounded-circle">
+                                    @else
+                                        <span class="avatar-initial rounded-circle">{{ $member->nameInitial }}</span>
+                                    @endif
+                                </a>
                             </li>
                         @endforeach
 

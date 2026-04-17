@@ -320,7 +320,7 @@
                                 </div>
                             </div>
                             <div class="d-flex flex-column">
-                                <a href="app-user-view-account.html" class="text-heading text-truncate">
+                                <a href="{{ route('brand.view', ['brand' => $task->brand]) }}" class="text-heading text-truncate">
                                     <span class="fw-medium">{{ $task->brand->name }}</span>
                                 </a>
                                 <small>{{ $task->brand->industry }}</small>
@@ -348,7 +348,7 @@
                                 </div>
                             </div>
                             <div class="d-flex flex-column">
-                                <a href="app-user-view-account.html" class="text-heading text-truncate">
+                                <a href="{{ route('task.user.list', [$task->user]) }}" class="text-heading text-truncate">
                                     <span class="fw-medium">{{ $task->user->name }}</span>
                                 </a>
                             </div>
@@ -368,7 +368,7 @@
                                 </div>
                             </div>
                             <div class="d-flex flex-column">
-                                <a href="app-user-view-account.html" class="text-heading text-truncate">
+                                <a href="{{ route('task.user.list', [$task->assign]) }}" class="text-heading text-truncate">
                                     <span class="fw-medium">{{ $task->assign->name }}</span>
                                 </a>
                             </div>
