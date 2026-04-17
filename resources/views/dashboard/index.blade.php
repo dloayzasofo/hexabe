@@ -10,31 +10,31 @@
     <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
         <div class="col">
             <div class="p-3 rounded back-process color-process">
-                <div class="fw-bold display-6">12</div>
+                <div class="fw-bold display-6">{{ $taskCategories['PROCESS'] }}</div>
                 <div>En proceso</div>
             </div>
         </div>
         <div class="col">
             <div class="p-3 rounded back-success color-success">
-                <div class="fw-bold display-6">45</div>
+                <div class="fw-bold display-6">{{ $taskCategories['FINALIZED'] }}</div>
                 <div>Finalizado</div>
             </div>
         </div>
         <div class="col">
             <div class="p-3 rounded back-mora color-mora">
-                <div class="fw-bold display-6">03</div>
+                <div class="fw-bold display-6">{{ $taskCategories['DELAY'] }}</div>
                 <div>Retrasado</div>
             </div>
         </div>
         <div class="col">
             <div class="p-3 rounded back-tostart color-tostart">
-                <div class="fw-bold display-6">08</div>
+                <div class="fw-bold display-6">{{ $taskCategories['TOSTART'] }}</div>
                 <div>Sin empezar</div>
             </div>
         </div>
         <div class="col">
             <div class="p-3 rounded back-pause color-pause">
-                <div class="fw-bold display-6">05</div>
+                <div class="fw-bold display-6">{{ $taskCategories['PAUSED'] }}</div>
                 <div>Pausado</div>
             </div>
         </div>
@@ -45,113 +45,86 @@
             <h5 class="fw-bold">Mis próximas tareas</h5>
         </div>
         <div class="col-md-6 text-end">
-            <a href="">Ver todas</a>
+            <a href="{{ route('task.index') }}">Ver todas</a>
         </div>
 
         <div>
             <div class="row">
+                @foreach($tasks as $task)
                 <div class="col-md-4">
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex justify-content-between">
                                 <div>
-                                    <span class="badge bg-label-secondary">Marca</span>
-                                    
+                                    <span class="badge bg-label-secondary">{{ $task->brand->name }}</span>
                                 </div>
                                 <div>
-                                    <span class="badge rounded-pill bg-label-danger">Alta</span>
+                                    <span class="badge rounded-pill @if($task->status == 'TOSTART') bg-label-warning @elseif($task->status == 'PROCESS') bg-label-info @elseif($task->status == 'FINALIZED') bg-label-success @elseif($task->status == 'DELAY') bg-label-danger @elseif($task->status == 'PAUSED') bg-label-danger @endif">
+                                        @switch($task->status)
+                                            @case('TOSTART')
+                                                Sin empezar
+                                                @break
+                                            @case('PROCESS')
+                                                En proceso
+                                                @break
+                                            @case('FINALIZED')
+                                                Finalizado
+                                                @break
+                                            @case('DELAY')
+                                                Retrasado
+                                                @break
+                                            @case('PAUSED')
+                                                Pausado
+                                                @break
+                                            @default
+                                        @endswitch
+                                    </span>
+
+                                    <span class="badge rounded-pill @if($task->priority == 'medium') bg-label-warning @elseif($task->priority == 'low') bg-label-primary @elseif($task->priority == 'high') bg-label-danger @endif">
+                                        @switch($task->priority)
+                                            @case('low')
+                                                Baja
+                                                @break
+                                            @case('medium')
+                                                Media
+                                                @break
+                                            @case('high')
+                                                Alta
+                                                @break
+                                            @default
+                                        @endswitch
+                                    </span>
                                 </div>
                             </div>
                             <div class="mt-3">
-                                <h5 class="fw-bold">Lorem ipsum dolor sit amet consectetur adipisicing elit.</h5>
+                                <a href="{{ route('task.view', $task->id) }}">
+                                    <h5 class="fw-bold">{{ $task->title }}</h5>
+                                </a>
                             </div>
                             <hr class="border-primary opacity-50">
                             <div class="d-flex justify-content-start">
                                 <div>
                                     <i class="bx bx-calendar" style="margin-top:-4px;"></i>
-                                    <span class="fw-semibold">Jueves, 14 Sept</span>
+                                    <span class="fw-semibold">{{ $task->register_at }}</span>
                                 </div>
+                                @if( count($task->medias) > 0 )
                                 <div class="ps-3">
                                     <i class="bx bx-paperclip"></i>
-                                    4
+                                    {{ count($task->medias) }}
                                 </div>
+                                @endif
+
+                                @if( count($task->comments) > 0 )
                                 <div class="ps-3">
                                     <i class="bx bx-message"></i>
-                                    12
+                                    {{ count($task->comments) }}
                                 </div>
+                                @endif
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <span class="badge bg-label-secondary">Marca</span>
-                                    
-                                </div>
-                                <div>
-                                    <span class="badge rounded-pill bg-label-warning">Media</span>
-                                </div>
-                            </div>
-                            <div class="mt-3">
-                                <h5 class="fw-bold">Lorem ipsum dolor sit amet consectetur adipisicing elit.</h5>
-                            </div>
-                            <hr class="border-primary opacity-50">
-                            <div class="d-flex justify-content-start">
-                                <div>
-                                    <i class="bx bx-calendar" style="margin-top:-4px;"></i>
-                                    <span class="fw-semibold">Jueves, 14 Sept</span>
-                                </div>
-                                <div class="ps-3">
-                                    <i class="bx bx-paperclip"></i>
-                                    4
-                                </div>
-                                <div class="ps-3">
-                                    <i class="bx bx-message"></i>
-                                    12
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <span class="badge bg-label-secondary">Marca</span>
-                                    
-                                </div>
-                                <div>
-                                    <span class="badge rounded-pill bg-label-danger">Alta</span>
-                                </div>
-                            </div>
-                            <div class="mt-3">
-                                <h5 class="fw-bold">Lorem ipsum dolor sit amet consectetur adipisicing elit.</h5>
-                            </div>
-                            <hr class="border-primary opacity-50">
-                            <div class="d-flex justify-content-start">
-                                <div>
-                                    <i class="bx bx-calendar" style="margin-top:-4px;"></i>
-                                    <span class="fw-semibold">Jueves, 14 Sept</span>
-                                </div>
-                                <div class="ps-3">
-                                    <i class="bx bx-paperclip"></i>
-                                    4
-                                </div>
-                                <div class="ps-3">
-                                    <i class="bx bx-message"></i>
-                                    12
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+                @endforeach
             </div>
         </div>
     </div>
@@ -163,14 +136,15 @@
                     <h5 class="fw-bold">Marcas</h5>
                 </div>
                 <div class="col-md-6 text-end">
-                    <a href="">Ver todas</a>
+                    <a href="{{ route('brand.index') }}">Ver todas</a>
                 </div>
             </div>
 
             <div class="card" style="min-height:350px;">
                 <div class="card-body">
+                    @hasanyrole('SUPER|ADMIN')
                     <div>
-                        <a href="">
+                        <a href="{{ route('brand.index') }}">
                             <div class="d-flex justify-content-start align-items-center user-name">
                                 <div class="avatar-wrapper">
                                     <div class="avatar avatar-md me-4">
@@ -183,21 +157,24 @@
                             </div>
                         </a>
                     </div>
+                    @endhasanyrole
 
+                    @foreach($brands as $brand)
                     <div class="mt-3">
-                        <a href="">
+                        <a href="{{ route('brand.view', $brand->id) }}">
                             <div class="d-flex justify-content-start align-items-center user-name">
                                 <div class="avatar-wrapper">
                                     <div class="avatar avatar-md me-4">
-                                        <img src="{{ asset('assets/img/2.png') }}" class="rounded">
+                                        <img src="{{ $brand->image }}" class="rounded">
                                     </div>
                                 </div>
                                 <div class="d-flex flex-column">
-                                    <span class="fw-medium">Marca 1</span>
+                                    <span class="fw-medium">{{ $brand->name }}</span>
                                 </div>
                             </div>
                         </a>
                     </div>
+                    @endforeach
 
                     <div class="mt-3">
                         <a href="">
@@ -237,7 +214,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <button type="button" class="btn btn-warning" style="background:#EC5B13;">Invitar</button>
+                                    <a type="button" class="btn btn-warning" style="background:#EC5B13;" href="{{ route('team.index') }}">Invitar</a>
                                 </div>
                             </div>
                         </div>
@@ -245,6 +222,12 @@
 
                     <div class="mt-3">Colaboradores frecuentes</div>
                     <div>
+                        <div class="mt-3 d-flex justify-content-between">
+                            <div class="d-flex justify-content-start align-items-center text-center">
+                                <small>Próximamente podrás ver aquí a tus colaboradores frecuentes para acceder rápidamente a sus perfiles y tareas compartidas.</small>
+                            </div>
+                        </div>
+                        {{-- 
                         <div class="mt-3 d-flex justify-content-between">
                             <div class="d-flex justify-content-start align-items-center user-name">
                                 <div class="avatar-wrapper">
@@ -282,8 +265,8 @@
                                 <span class="email-list-item-label badge badge-dot bg-secondary d-none d-md-inline-block me-2" data-label="work"></span>
                             </div>
                         </div>
+                        --}}
                     </div>
-
                 </div>
             </div>
         </div>
