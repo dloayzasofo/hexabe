@@ -74,8 +74,6 @@ function dropzoneInitHandle(){
 window.addEventListener('load', () => {
     document.addEventListener('input', (e) => {
         if (e.target.classList.contains('task-input-responsable')) {
-
-            console.log("Input responsable", e.target.value);
             searchByKeyPress(e.target.value);
         }
     });
@@ -326,9 +324,11 @@ function addSelectedMember(user){
  * Create task, send data by fetch to server and handle response, if success close modal and redirect to task view, if error show errors in form
  */     
 function handleCreateTask(){
+    document.querySelector('.btnSaveTask').disabled = true;
     let form = document.querySelector('#formCreateTask');
 
     if( validateFormTaskCreate() == false ){
+        document.querySelector('.btnSaveTask').disabled = false;
         return false;
     }
 
@@ -366,7 +366,7 @@ function handleCreateTask(){
     linkInputs.forEach((input) => {
         data.append('links[]', input.value);
     });
-
+    
     fetch(url, {
         method: 'POST',
         headers: {
@@ -378,7 +378,6 @@ function handleCreateTask(){
     .then(data => {
         if( data.success){
             $('#modalCenter').modal('hide');
-            console.log(data);
             location.reload();
             //location.href = "/task/view/" + data.data.id;
         }
@@ -470,7 +469,6 @@ function handleAddLinkInput(){
 }
 
 function handleDeleteLinkInput(e){
-    console.log("E", e.target);
     let element = e.target.closest('.input-group');
     if( element ){
         element.remove();

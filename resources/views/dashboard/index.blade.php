@@ -175,21 +175,6 @@
                         </a>
                     </div>
                     @endforeach
-
-                    <div class="mt-3">
-                        <a href="">
-                            <div class="d-flex justify-content-start align-items-center user-name">
-                                <div class="avatar-wrapper">
-                                    <div class="avatar avatar-md me-4">
-                                        <img src="{{ asset('assets/img/4.png') }}" class="rounded">
-                                    </div>
-                                </div>
-                                <div class="d-flex flex-column">
-                                    <span class="fw-medium">Marca 2</span>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
                 </div>
             </div>
         </div>

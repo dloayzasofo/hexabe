@@ -81,6 +81,39 @@ CREATE TABLE `sessions` (
   KEY `sessions_last_activity_index` (`last_activity`)
 );
 
+CREATE TABLE `model_has_permissions` (
+  `permission_id` bigint UNSIGNED NOT NULL,
+  `model_type` varchar(191) NOT NULL,
+  `model_id` bigint UNSIGNED NOT NULL,
+  PRIMARY KEY (`permission_id`,`model_id`,`model_type`),
+  KEY `model_has_permissions_model_id_model_type_index` (`model_id`,`model_type`)
+);
+
+CREATE TABLE `model_has_roles` (
+  `role_id` bigint UNSIGNED NOT NULL,
+  `model_type` varchar(191) NOT NULL,
+  `model_id` bigint UNSIGNED NOT NULL,
+  PRIMARY KEY (`role_id`,`model_id`,`model_type`),
+  KEY `model_has_roles_model_id_model_type_index` (`model_id`,`model_type`)
+);
+
+CREATE TABLE `role_has_permissions` (
+  `permission_id` bigint UNSIGNED NOT NULL,
+  `role_id` bigint UNSIGNED NOT NULL,
+  PRIMARY KEY (`permission_id`,`role_id`),
+  KEY `role_has_permissions_role_id_foreign` (`role_id`)
+);
+
+CREATE TABLE `roles` (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(125) NOT NULL,
+  `guard_name` varchar(125) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `roles_name_guard_name_unique` (`name`,`guard_name`)
+);
+
 CREATE TABLE business(
 	`id` bigint(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
    name varchar(255),
@@ -220,8 +253,6 @@ CREATE TABLE tasks(
     foreign key(parent_id) references tasks(id) on delete cascade on update no action,
     foreign key(business_id) references business(id) on delete cascade on update no action
 );
-ALTER TABLE tasks ADD COLUMN position INT NULL AFTER business_id;
-ALTER TABLE tasks ADD COLUMN color VARCHAR(10) NULL AFTER business_id;
 
 CREATE TABLE tasks_info(
 	 id bigint(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
@@ -231,7 +262,7 @@ CREATE TABLE tasks_info(
 	 updated_at timestamp NULL DEFAULT NOW(),
     deleted_at timestamp NULL DEFAULT NULL,
     foreign key(task_id) references tasks(id) on delete cascade on update no ACTION,
-    foreign key(task_dependency_id) references tasks(id) on delete set null on update no action,
+    foreign key(task_dependency_id) references tasks(id) on delete set null on update no action
 );
 
 CREATE TABLE task_medias(
@@ -254,7 +285,6 @@ CREATE TABLE task_links(
     foreign key (task_id) references tasks(id) on delete cascade on update no action,
     foreign key (user_id) references users(id) on delete cascade on update no action
 );
-
 
 CREATE TABLE task_collaborators(
 	 id bigint(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
@@ -289,7 +319,24 @@ CREATE TABLE comment_medias(
     foreign key (task_id) references tasks(id) on delete cascade on update no action
 );
 
--- DROP TABLE task_medias;
+CREATE TABLE notifications(
+	id bigint(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+	title VARCHAR(255),
+	message TEXT,
+	priority VARCHAR(255), -- low, medium, high
+	type VARCHAR(255), -- MENTION, TASK
+	link VARCHAR(255) NULL,
+	user_origin_id bigint(20) UNSIGNED null,
+	user_id bigint(20) UNSIGNED,
+	read_at timestamp NULL DEFAULT NULL,
+	created_at timestamp NULL DEFAULT now(),
+	updated_at timestamp NULL DEFAULT NOW(),
+   deleted_at timestamp NULL DEFAULT NULL,
+   foreign key (user_id) references users(id) on delete cascade on update no ACTION,
+   foreign key (user_origin_id) references users(id) on delete SET null on update no action
+);
+
+-- DROP TABLE notifications;
 -- INSERT USERS
 insert into users(name, last_name, email, password, role, status) values
 ('deiby', 'loayza', 'dloayza@sofopolis.com', '$2y$12$fX6ExEKahoArXVPFMYhW5uDpTkDv1nW6DxzAocGRis67ZSNM19RiO', 'ADMIN', 'ACTIVE'); -- 123123

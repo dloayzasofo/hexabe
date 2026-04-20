@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Task;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Helper\MediaHelper;
+use App\Http\Helper\NotificationHelper;
 use App\Http\Requests\TeamRequest;
 use App\Models\Brand;
 use App\Models\Task;
@@ -81,7 +82,6 @@ class TaskController extends Controller {
     }
 
     public function save(Request $request) {
-        //var_dump($request->all());exit();
         $user = Auth::user();
 
         $title = $request->name;
@@ -144,6 +144,15 @@ class TaskController extends Controller {
             $task->save();
         }
 
+        NotificationHelper::send(
+            $task->assign, 
+            'Tienes una tarea por realizar', 
+            $task->title, 
+            'TASK',
+            $user,
+            route('task.view', ['task' => $task->id]),
+            $task->priority
+        );
         return response()->json(['success' => true, 'data' => $task]);
     }
 
