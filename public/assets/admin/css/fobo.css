@@ -450,6 +450,17 @@ textarea{
 .row-invalid input{
     border-color: #ff3e1d;;
 }
+#selected-members li{
+    position: relative;
+}
+#selected-members .colaborator-close{
+    position: absolute;
+    padding: 5px !important;
+    font-size: 10px !important;
+    transform: none !important; /*translate(23px, -5px) !important;*/
+    top: -5px;
+    right: -5px;
+}
 .selected-member-pill{
     border: 1px solid #E2E8F0;
     background: #F1F5F9;

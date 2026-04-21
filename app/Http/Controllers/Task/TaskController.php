@@ -38,7 +38,11 @@ class TaskController extends Controller {
         $tasks = Task::with('brand', 'assign', 'collaborators')
             ->withCount('medias')
             ->withCount('childs')
-            ->where('user_assign', $user->id)
+            ->where(function($query)use($user){
+                $query->where('user_assign', $user->id)
+                      ->orWhere('user_id', $user->id);
+            })
+            //->where('user_assign', $user->id)
             ->where('status', $status)
             ->get();
         

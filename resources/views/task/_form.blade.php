@@ -4,7 +4,7 @@
 @endif
 
 <div class="mb-3">
-    <label for="name" class="form-label">Nombre del equipo *</label>
+    <label for="name" class="form-label">Título *</label>
     <input type="text" class="form-control" id="name" name="name" placeholder="Ej: Equipo de Diseño UX" value="{{ $model->name }}">
     <div id="errorName" class="error invalid-feedback"></div>
 </div>
@@ -142,7 +142,10 @@
     <label for="members" class="form-label">Invitar miembros</label>
     
     <div class="memebers-ajax input-group hide">
-        <input type="text" class="form-control task-input-member" id="task-input-member" name="task-input-member" placeholder="ejemplo@correo.com" value="" autocomplete="do-not-autofill">
+        <input type="text" class="form-control task-input-member" id="task-input-member" name="task-input-member" 
+            placeholder="ejemplo@correo.com" value="" 
+            autocomplete="do-not-autofill"
+            readonly onfocus="this.removeAttribute('readonly');">
         <div class="result-search task-members-result"></div>
     </div>
 

@@ -175,7 +175,7 @@
                         @endif
 
                         <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar pull-up" aria-label="{{ $collaborator->user->name }}" data-bs-original-title="{{ $collaborator->user->name }}">
-                            <a href="{{ route('task.user.list', [$member]) }}">
+                            <a href="{{ route('task.user.list', [$collaborator->user]) }}">
                                 @if( isset($collaborator->user->image) )
                                     <img class="rounded-circle" src="{{ $collaborator->user->image }}" alt="{{ $collaborator->user->name }}">
                                 @else
@@ -217,7 +217,7 @@
     @endforeach
 
 
-    <div class="modal fade " id="modalCenter" tabindex="-1" aria-modal="true" role="dialog">
+    <div class="modal fade " id="modalCenter" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" aria-modal="true" role="dialog">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">

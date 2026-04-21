@@ -296,17 +296,19 @@
             </div>
 
             @if( $task->status != 'FINALIZED' )
-            <div class="mt-5 mb-4">
-                <form action="{{ route('task.finish', ['task' => $task->id]) }}" method="post">
-                    @csrf
+                @if( Auth::user()->id == $task->user_assign OR Auth::user()->id == $task->user_id )
+                    <div class="mt-5 mb-4">
+                        <form action="{{ route('task.finish', ['task' => $task->id]) }}" method="post">
+                            @csrf
 
-                    <div class="text-center mx-auto">
-                        <button class="btn btn-primary btn-lg" style="width:50%;">
-                            Marcar como terminada
-                        </button>
+                            <div class="text-center mx-auto">
+                                <button class="btn btn-primary btn-lg" style="width:50%;">
+                                    Marcar como terminada
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                </form>
-            </div>
+                @endif
             @endif
         </div>
         <div class="col-md-4">
@@ -445,7 +447,7 @@
     </div>
 
 
-    <div class="modal fade " id="modalCenter" tabindex="-1" aria-modal="true" role="dialog">
+    <div class="modal fade " id="modalCenter" tabindex="-1" aria-modal="true" role="dialog" data-bs-keyboard="false" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -468,13 +470,13 @@
 <script src="{{ asset('/assets/admin/js/quilljs/quill.js') }}"></script>
 <script src="{{asset('/assets/admin/js/mieditor.js')}}"></script>
 <script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
-{{-- 
+{{-- --}} 
 <script>let urlCreate = "{{ route('task.subtask', ['task' => $task->id]) }}";</script>
 <script src="{{asset('/assets/admin/js/task.js')}}"></script>
---}}
+{{-- --}}
 
 
-
+{{-- 
 <script>
     let mode = null;
     let urlCreate = "{{ route('task.subtask', ['task' => $task->id]) }}";
@@ -960,6 +962,7 @@
         }
     }
 </script>
+--}}
 
 
 

@@ -105,6 +105,9 @@ window.addEventListener('load', () => {
         if( e.target.classList.contains('btnSaveTask') ){
             handleCreateTask();
         }
+        if( e.target.classList.contains('colaborator-close') ){
+            handleRemoveColaborator(e);
+        }
         
         if( e.target.closest('.btnAddLink') ){
             handleAddLinkInput();
@@ -241,6 +244,7 @@ function searchMemeberKeyPress(value){
  * Render result search members, if click in result set members in form
  */
 function handlerRenderMemberByKey(data){
+    console.log(data);
     let result = document.querySelector('.task-members-result');
     let inputMemeber = document.querySelector('#task-input-member');
     const selectedMembers = document.querySelector('#selected-members');
@@ -298,6 +302,7 @@ function addSelectedMember(user){
     }else{
         avatar = '<span class="avatar-initial rounded-circle bg-label-primary">' + user.initials + '</span> ';
     }
+    avatar += '<button type="button" class="btn-close remove-member colaborator-close" aria-label="Remove"></button>';
     
     const pill = document.createElement('li');
     pill.setAttribute('data-bs-toggle', 'tooltip');
@@ -340,7 +345,6 @@ function handleCreateTask(){
     let date_delivery = document.querySelector('#date_delivery');
     let brand = document.querySelector('#brand');
     let user_assign = document.querySelector('#user_assign');
-    //let status = document.querySelector('#status');
 
     var data = new FormData();
     data.append('_token', token.value);
@@ -350,7 +354,11 @@ function handleCreateTask(){
     data.append('date_delivery', date_delivery.value);
     data.append('brand', brand.value);
     data.append('user_assign', user_assign.value);
-    //data.append('status', status.value);
+
+    let parent_id = document.querySelector('#parent_id');
+    if( parent_id){
+        data.append('parent_id', parent_id.value);
+    }
     
     const mediaInputs = document.querySelectorAll('input[name="medias[]"]');
     mediaInputs.forEach((input) => {
@@ -469,8 +477,26 @@ function handleAddLinkInput(){
 }
 
 function handleDeleteLinkInput(e){
-    let element = e.target.closest('.input-group');
+    let element = e.target.closest('.avatar');
     if( element ){
         element.remove();
     }
+}
+
+/**
+ * Remover colaborador
+ * Eliminar el colaborador que se agrego
+ */
+function handleRemoveColaborator(e){
+    console.log(e.target);
+    let element = e.target;
+    let parent = element.parentNode;
+
+    let tooltipId = parent.getAttribute('aria-describedby');
+    console.log(tooltipId);
+    if( tooltipId ){
+        document.querySelector('#' + tooltipId).remove();
+    }
+
+    parent.remove();
 }
