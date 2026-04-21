@@ -421,6 +421,9 @@ textarea{
 .no-resize{
     resize: none;
 }
+.notification-unread{
+    border-left: 4px solid var(--bs-primary);
+}
 .object-fit-cover{
     object-fit: cover;
 }
@@ -601,6 +604,9 @@ textarea{
 }
 .text-normal{
     font-weight: normal;
+}
+.text-bg-primary{
+    background-color: var(--bs-primary);
 }
 .tt-menu{
     background: #fff;

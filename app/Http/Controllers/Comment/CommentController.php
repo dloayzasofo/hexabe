@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Comment;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Helper\MediaHelper;
-use App\Models\Brand;
+use App\Http\Helper\NotificationHelper;
 use App\Models\CommentMedia;
 use App\Models\Comment;
 use App\Models\Task;
@@ -13,15 +13,6 @@ use App\Models\User;
 use Auth;
 
 class CommentController extends Controller {
- 
-    public function index() {
-        $teams = Team::all();
-        $params = [
-            'teams' => $teams
-        ];
-
-        return view('team.index', $params);
-    }
 
     public function save(Request $request, Task $task) {
         $data = $request->all();
@@ -70,6 +61,16 @@ class CommentController extends Controller {
                 'nameInitial' => $user->name_initial
             ]
         ];
+
+        NotificationHelper::send(
+            $task->assign, 
+            $user->name . ' ha comentado en una tarea',
+            $comment->description, 
+            'COMMENT',
+            $user,
+            route('task.view', ['task' => $task->id]),
+            'medium'
+        );
 
         return response()->json(['success' => true, 'data' => $result]);
     }

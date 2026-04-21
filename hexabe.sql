@@ -324,7 +324,7 @@ CREATE TABLE notifications(
 	title VARCHAR(255),
 	message TEXT,
 	priority VARCHAR(255), -- low, medium, high
-	type VARCHAR(255), -- MENTION, TASK
+	type VARCHAR(255), -- MENTION, TASK, CRON, COMMENT
 	link VARCHAR(255) NULL,
 	user_origin_id bigint(20) UNSIGNED null,
 	user_id bigint(20) UNSIGNED,

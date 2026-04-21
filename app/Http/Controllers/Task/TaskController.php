@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Helper\MediaHelper;
 use App\Http\Helper\NotificationHelper;
 use App\Http\Requests\TeamRequest;
+use Illuminate\Support\Str;
 use App\Models\Brand;
 use App\Models\Task;
 use App\Models\TaskMedia;
@@ -74,8 +75,20 @@ class TaskController extends Controller {
     }
 
     public function finish(Request $request, Task $task) {
+        //var_dump($task->user);exit();
         $task->status = 'FINALIZED';
         $task->save();
+        
+        $user = Auth::user();
+        NotificationHelper::send(
+            $task->user, 
+            'Tarea "' . Str::limit($task->title, 12) . '" ha sido marcada como finalizada.', 
+            $task->title,
+            'TASK',
+            $user,
+            route('task.view', ['task' => $task->id]),
+            $task->priority
+        );
         
         $request->session()->flash('task.success', 'La tarea ha sido marcada como finalizada.');
         return redirect()->route('task.view', ['task' => $task->id]);

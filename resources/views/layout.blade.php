@@ -66,7 +66,7 @@
 							</div>
 						</span>
 					</a>
-					<a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block" style="background-color:#266141;">
+					<a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block">
 						<i class="bx bx-chevron-left bx-sm align-middle"></i>
 					</a>
 				</div>
@@ -97,13 +97,16 @@
 						</a>
 					</li>
 					<li id="menu-popup" class="menu-item">
-						<a href="{--{ route('admin.popup.index') }}" class="menu-link">
+						<a href="{{ route('notification.index') }}" class="menu-link">
 							<svg class="menu-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20"  
 							fill="currentColor" viewBox="0 0 24 24" >
 							<!--Boxicons v3.0.8 https://boxicons.com | License  https://docs.boxicons.com/free-->
 								<path d="M20 3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m0 2v7h-3.42c-.4 0-.76.24-.92.6-.64 1.46-2.08 2.4-3.66 2.4s-3.02-.94-3.66-2.4c-.16-.36-.52-.6-.92-.6H4V5zM4 19v-5h2.81c1.06 1.84 3.04 3 5.19 3s4.13-1.16 5.19-3H20v5z"></path>
 							</svg>
-							<div>Bandeja de entrada</div>
+							<div>Bandeja de entrada </div>
+							@if( $blade_notification_count > 0 )
+								<div class="badge text-bg-primary rounded-pill ms-auto">{{ $blade_notification_count }}</div>
+							@endif
 						</a>
 					</li>
 					<li id="menu-brand" class="menu-item">

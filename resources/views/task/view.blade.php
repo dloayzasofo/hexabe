@@ -1005,6 +1005,7 @@
     }
 
     function handleBtnSaveComment(){
+        document.querySelector('#commentSave').disabled = true;
         let comment = document.querySelector('#comment');
         let files = document.querySelectorAll('input[name="medias[]"]');
 
@@ -1021,21 +1022,16 @@
         }).then(response => {
             return response.json();
         }).then(data => {
-            console.log(data);
+            document.querySelector('#commentSave').disabled = false;
+            //console.log(data);
             if( data.success ){
                 //location.reload();
-                console.log("Success");
+                //console.log("Success");
                 renderComments(data.data);
             }
         });
     }
-    /*
-    let data =  { 
-        medias: [{id:60, mime:"text/plain", name:"htaccess_Backup_for_sofopolis.com.txt", size:553, sizeLiteral:"553 bytes", url: "/storage/1/resources/6e3dfa1e-3f64-4b69-aa38-1e9da61eed55.txt"}],
-        comment: {id: 8, description: "dfas dfasd fasdfasdfa", registerAt: "hace 1 segundo"},
-        user: {id: 1, name: "Deiby", image: "/storage/1/user/3a809c35-f3e7-4664-89f6-c57bada2c409.jpg", nameInitial: "DL"}
-    };
-    */
+    
     function renderComments( data ){
         let wrap = document.querySelector('.comment-wrapper');
         let userImage = `<span class="avatar-initial rounded-circle bg-label-danger">${ data.user.nameInitial }</span>`;
