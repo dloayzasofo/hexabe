@@ -28,13 +28,17 @@ class NotificationHelper {
 
         $notification = new Notification();
         $notification->user_id = $user->id;
-        $notification->user_origin_id = $user_origin->id;
+        $notification->user_origin_id = $user_origin != null ? $user_origin->id : null;
         $notification->title = $title;
         $notification->message = $message;
         $notification->type = $type;
         $notification->link = $link;
         $notification->priority = $priority;
         $notification->save();
+
+        if( env('APP_ENV') == 'local' ) {
+            return;
+        }
 
         try{
             $notificationMail = new NotificationMail($notification);

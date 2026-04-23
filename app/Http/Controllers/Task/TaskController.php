@@ -25,19 +25,20 @@ class TaskController extends Controller {
             $status = 'TOSTART';
         }
 
+        $user = Auth::user();
         $counters = [
-            "TOSTART" => Task::where('user_assign', Auth::id())->where('status', 'TOSTART')->count(),
-            "PROCESS" => Task::where('user_assign', Auth::id())->where('status', 'PROCESS')->count(),
-            "FINALIZED" => Task::where('user_assign', Auth::id())->where('status', 'FINALIZED')->count(),
-            "DELAY" => Task::where('user_assign', Auth::id())->where('status', 'DELAY')->count(),
-            "PAUSED" => Task::where('user_assign', Auth::id())->where('status', 'PAUSED')->count(),
+            "TOSTART" => Task::where(function($query)use($user){ $query->where('user_assign', $user->id)->orWhere('user_id', $user->id); })->where('status', 'TOSTART')->count(),
+            "PROCESS" => Task::where(function($query)use($user){ $query->where('user_assign', $user->id)->orWhere('user_id', $user->id); })->where('status', 'PROCESS')->count(),
+            "FINALIZED" => Task::where(function($query)use($user){ $query->where('user_assign', $user->id)->orWhere('user_id', $user->id); })->where('status', 'FINALIZED')->count(),
+            "DELAY" => Task::where(function($query)use($user){ $query->where('user_assign', $user->id)->orWhere('user_id', $user->id); })->where('status', 'DELAY')->count(),
+            "PAUSED" => Task::where(function($query)use($user){ $query->where('user_assign', $user->id)->orWhere('user_id', $user->id); })->where('status', 'PAUSED')->count(),
         ];
 
 
-        $user = Auth::user();
         $tasks = Task::with('brand', 'assign', 'collaborators')
             ->withCount('medias')
             ->withCount('childs')
+            ->withCount('comments')
             ->where(function($query)use($user){
                 $query->where('user_assign', $user->id)
                       ->orWhere('user_id', $user->id);
@@ -67,18 +68,83 @@ class TaskController extends Controller {
         return view('task.create', $params);
     }
 
-    public function subtask(Request $request, Task $task) {
-        $brands = Brand::all();
-        $params = [
-            'model' => new Task(),
-            'brands' => $brands,
-            'task' => $task
-        ];
-
-        return view('task.create', $params);
+    public function finish(Request $request, Task $task) {
+        //var_dump($task->user);exit();
+        $task->status = 'FINALIZED';
+        $task->save();
+        
+        $user = Auth::user();
+        NotificationHelper::send(
+            $task->user, 
+            'Tarea "' . Str::limit($task->title, 12) . '" ha sido marcada como finalizada.', 
+            $task->title,
+            'TASK',
+            $user,
+            route('task.view', ['task' => $task->id]),
+            $task->priority
+        );
+        
+        $request->session()->flash('task.success', 'La tarea ha sido marcada como finalizada.');
+        return redirect()->route('task.view', ['task' => $task->id]);
     }
 
-    public function finish(Request $request, Task $task) {
+    public function apifinish(Request $request, Task $task) {
+        $task->status = 'FINALIZED';
+        $task->save();
+        
+        $user = Auth::user();
+        NotificationHelper::send(
+            $task->user, 
+            'Tarea "' . Str::limit($task->title, 12) . '" ha sido marcada como finalizada.', 
+            $task->title,
+            'TASK',
+            $user,
+            route('task.view', ['task' => $task->id]),
+            $task->priority
+        );
+
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'action' => "FINALIZED",
+                'id' => $task->id,
+                'title' => $task->title,
+                'status' => $task->status,
+                'message' => 'La tarea ha sido marcada como finalizada.'
+            ]
+        ]);
+    }
+
+    public function apidelete(Request $request, Task $task) {
+        $id = $task->id;
+        $title = $task->title;
+        $user_origin = $task->user;
+        $task->delete();
+        
+        $user = Auth::user();
+        NotificationHelper::send(
+            $user_origin, 
+            'Tarea "' . Str::limit($title, 12) . '" ha sido eliminada', 
+            $title,
+            'TASK',
+            null,
+            null,
+            'high'
+        );
+
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'action' => "DELETE",
+                'id' => $task->id,
+                'title' => $task->title,
+                'status' => $task->status,
+                'message' => 'La tarea ha sido eliminada.'
+            ]
+        ]);
+    }
+
+    public function delete(Request $request, Task $task) {
         //var_dump($task->user);exit();
         $task->status = 'FINALIZED';
         $task->save();
@@ -170,6 +236,7 @@ class TaskController extends Controller {
             route('task.view', ['task' => $task->id]),
             $task->priority
         );
+        $request->session()->flash('task.success', 'Tarea ha sido registrada correctamente.');
         return response()->json(['success' => true, 'data' => $task]);
     }
 
@@ -191,5 +258,39 @@ class TaskController extends Controller {
         ];
 
         return view('task.view', $params);
+    }
+
+    //FUNCIONES PARA LLAMAR AL FORMULARIO CON DATOS
+    public function subtask(Request $request, Task $task) {
+        $brands = Brand::all();
+        $params = [
+            'model' => new Task(),
+            'brands' => $brands,
+            'task' => $task
+        ];
+
+        return view('task.create', $params);
+    }
+
+    public function user(Request $request, User $user) {
+        $brands = Brand::all();
+        $params = [
+            'model' => new Task(),
+            'brands' => $brands,
+            'user' => $user
+        ];
+
+        return view('task.create', $params);
+    }
+
+    public function brand(Request $request, Brand $brand) {
+        $brands = Brand::all();
+        $params = [
+            'model' => new Task(),
+            'brands' => $brands,
+            'brand' => $brand
+        ];
+
+        return view('task.create', $params);
     }
 }

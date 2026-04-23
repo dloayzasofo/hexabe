@@ -101,7 +101,7 @@
     </div>
 
     @foreach($tasks as $task)
-    <div class="task-list-item d-flex no-wrap">
+    <div id="task-{{ $task->id }}" class="task-list-item d-flex no-wrap">
         <div class="d-flex justify-content-start align-items-center user-name">
             <div class="avatar-wrapper">
                 <div class="avatar avatar-sm me-2">
@@ -199,23 +199,36 @@
             </div>
         </div>
         <div> {{ $task->medias_count == 0 ? '-' : $task->medias_count }} </div>
-        <div> - </div>
+        <div> {{ $task->comments_count == 0 ? '-' : $task->comments_count }} </div> 
         <div> {{ $task->register_at}} </div>
         <div>
-            <div class="dropdown">
-                <button class="btn text-body-secondary p-0" type="button" id="timelineWapper" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="icon-base bx bx-dots-vertical-rounded icon-lg"></i>
-                </button>
-                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="timelineWapper" style="">
-                    <a class="dropdown-item" href="javascript:void(0);">Select All</a>
-                    <a class="dropdown-item" href="javascript:void(0);">Refresh</a>
-                    <a class="dropdown-item" href="javascript:void(0);">Share</a>
-                </div>
+            <div class="d-flex align-items-center">
+                <a href="javascript:;" 
+                    class="btn btn-icon delete-record text-danger openModalMessage" 
+                    data-mode="FINALIZED"
+                    data-href="{{ route('task.api.finish', [$task]) }}"
+                    data-message="<mark>finalizar</mark> la tarea <b>{{$task->title}}</b>.">
+                    <span class="d-inline-block" data-bs-toggle="tooltip" data-bs-html="true" aria-label="Marcar como completado" data-bs-original-title="Marcar como completado">
+                        <span class="badge p-1_5 rounded-pill bg-label-success">
+                            <i class="icon-base icon-16px bx bx-check"></i>
+                        </span>
+                    </span>
+                </a>
+
+                <a href="javascript:;" data-href="{{ route('task.api.delete', [$task]) }}" 
+                    data-bs-toggle="tooltip" 
+                    class="btn btn-icon delete-record text-danger openModalMessage" 
+                    data-bs-placement="top" 
+                    aria-label="Delete" 
+                    data-mode="DELETE"
+                    data-bs-original-title="Eliminar tarea"
+                    data-message="<mark>eliminar</mark> la tarea <b>{{$task->title}}</b>.">
+                    <i class="icon-base bx bx-trash icon-md"></i>
+                </a>
             </div>
         </div>
     </div>
     @endforeach
-
 
     <div class="modal fade " id="modalCenter" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" aria-modal="true" role="dialog">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -231,6 +244,8 @@
             </div>
         </div>
     </div>
+
+    @include('task._modal_delete')
 @endsection
 
 @section('script')
@@ -722,4 +737,74 @@
     }
 </script>
 --}}
+
+<script>
+    let modalOpenMode = '';
+    window.addEventListener('load', () => {
+        let openModals = document.querySelectorAll('.openModalMessage');
+        for(let i=0; i < openModals.length; i++){
+            openModals[i].addEventListener('click', handleOpenModal);
+        }
+
+        document.querySelector('.modal-link').addEventListener('click', handleModalHref);
+    });
+
+    function handleOpenModal(){
+        modalOpenMode = this.dataset.mode;
+        let message = this.dataset.message;
+        let href = this.dataset.href;
+        $('.modal').find('.modal-message').html(message);
+        if( modalOpenMode == 'DELETE' ){
+            $('.modal').find('.modal-link').addClass('btn-danger');
+            $('.modal').find('.modal-link').removeClass('btn-primary');
+        }else{
+            $('.modal').find('.modal-link').removeClass('btn-danger');
+            $('.modal').find('.modal-link').addClass('btn-primary');
+        }
+        $('.modal').find('.modal-link').attr('data-href', href);
+
+        $('#confirmModal').modal('show');
+    }
+
+    function handleModalHref(){
+        let href = this.dataset.href;
+        var data = new FormData();
+        data.append('_token', '{{ csrf_token() }}');
+
+        fetch(href, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json'
+            },
+            body: data
+        })
+        .then(response => response.json())
+        .then(data => {
+            if( data.status == 'success' ){
+                renderTaskUpdateOrDelete(data.data);
+            };
+            $('#confirmModal').modal('hide');
+        })
+        .catch((e) => {
+            console.log("Error Catch", e);
+        });
+    }
+
+    function renderTaskUpdateOrDelete(data){
+        let taskElement = document.querySelector('#task-' + data.id)
+        if( taskElement ){
+            if( data.action == 'DELETE' ){
+                taskElement.classList.add('bg-label-danger');
+            }
+            if( data.action == 'FINALIZED' ){
+                taskElement.classList.add('bg-label-success');
+            }
+            setTimeout(() => {
+                taskElement.remove();
+            }, 1500);
+        }
+    }
+
+</script>
+
 @endsection

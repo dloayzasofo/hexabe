@@ -1,12 +1,26 @@
 @extends('layout')
 
 @section('main')
+    <div class="btn-add-task"> 
+        <button id="btnCreate" class="btn rounded-pill btn-icon btn-primary" title="Crear nueva tarea">
+            <span><i class="bx bx-plus"></i></span>
+        </button> 
+    </div>
+
     @if(Session::has('brand.success'))
         <div class="alert alert-success alert-dismissible" role="alert">
             {{ Session::get('brand.success') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
             </button>
         </div>
+    @endif
+
+    @if(Session::has('task.success'))
+    <div class="alert alert-success alert-dismissible" role="alert">
+        {{ Session::get('task.success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+        </button>
+    </div>
     @endif
 
     <div class="row sm-vl-base mb-4">
@@ -213,7 +227,7 @@
         </div>
     </div>
 
-    <div class="modal fade " id="modalCenter" tabindex="-1" aria-modal="true" role="dialog">
+    <div class="modal fade " id="modalCenter" tabindex="-1" aria-modal="true" role="dialog" data-bs-keyboard="false" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -236,8 +250,8 @@
 @hasanyrole('SUPER|ADMIN')
 <script src="{{asset('/assets/admin/js/dropzone.js')}}"></script>
 <script>
-    let mode = 'EDIT';
-    let urlCreate = "{{ route('brand.create') }}";
+    let modeBrand = 'EDIT';
+    //let urlCreate = "{{ route('brand.create') }}";
     window.addEventListener('load', () => {
         document.addEventListener('click', (e) => {
             if (e.target.classList.contains('btnSaveBrand')) {
@@ -332,7 +346,7 @@
         //    isOk = false;
         //}
 
-        if( mode == 'CREATE' && !image.value ){
+        if( modeBrand == 'CREATE' && !image.value ){
             showError('image', 'El campo es requerido');
             isOk = false;
         }else{
@@ -376,10 +390,21 @@
             document.querySelector('#modalTitle').innerHTML = 'Actualizar marca';
             document.querySelector('#modalDescription').innerHTML = 'Actualización de datos.';
             $('#modalCenter').modal('show');
-            mode = 'EDIT';
+            modeBrand = 'EDIT';
             var medropzone = new DropZone({idElement: 'dropzone', idFile: 'image'});
         });
     }
 </script>
 @endhasanyrole
+
+
+<link href="{{ asset('/assets/admin/js/quilljs/quill.css') }}" rel="stylesheet">
+<link href="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css" rel="stylesheet" type="text/css" />
+
+<script src="{{ asset('/assets/admin/js/quilljs/quill.js') }}"></script>
+<script src="{{asset('/assets/admin/js/mieditor.js')}}"></script>
+<script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
+<script>let urlCreate = "{{ route('task.brand', [$brand]) }}";</script>
+<script src="{{asset('/assets/admin/js/task.js')}}"></script>
+
 @endsection

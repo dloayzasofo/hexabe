@@ -26,6 +26,14 @@ Route::prefix('task')->group(function () {
         //->middleware(RoleMiddleware::using('ADMIN'))
         ->name('task.subtask');
 
+    Route::get('/user/{user}', [TaskController::class, 'user'])
+        //->middleware(RoleMiddleware::using('ADMIN'))
+        ->name('task.user');
+
+    Route::get('/brand/{brand}', [TaskController::class, 'brand'])
+        //->middleware(RoleMiddleware::using('ADMIN'))
+        ->name('task.brand');
+
     Route::get('/edit/{task}', [TaskController::class, 'edit'])
         //->middleware(RoleMiddleware::using('ADMIN'))
         ->name('task.edit');
@@ -50,4 +58,11 @@ Route::prefix('task')->group(function () {
     Route::get('/staff/kanban/{user}', [TaskUserController::class, 'kanban'])
         //->middleware(RoleMiddleware::using('ADMIN'))
         ->name('task.user.kanban');
+
+    Route::post('/api/finish/{task}', [TaskController::class, 'apifinish'])
+        //->middleware(RoleMiddleware::using('ADMIN'))
+        ->name('task.api.finish');
+    Route::post('/api/delete/{task}', [TaskController::class, 'apidelete'])
+        //->middleware(RoleMiddleware::using('ADMIN'))
+        ->name('task.api.delete');
 });

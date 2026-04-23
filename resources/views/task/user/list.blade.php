@@ -1,6 +1,12 @@
 @extends('layout')
 
 @section('main')
+    <div class="btn-add-task"> 
+        <button id="btnCreate" class="btn rounded-pill btn-icon btn-primary" title="Crear nueva tarea">
+            <span><i class="bx bx-plus"></i></span>
+        </button> 
+    </div>
+
     <div class="row sm-vl-base mb-2">
         <div class="col-sm-8 col-md-6">
             <h4 class="fw-bold"> {{ $user->name }} {{ $user->last_name }} - tareas </h4>
@@ -11,6 +17,14 @@
             </div>
         </div>
     </div>
+
+    @if(Session::has('task.success'))
+    <div class="alert alert-success alert-dismissible" role="alert">
+        {{ Session::get('task.success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+        </button>
+    </div>
+    @endif
 
     <div>
         <ul class="nav nav-tabs nav-fill rounded-0 timeline-indicator-advanced mb-3" role="tablist">
@@ -203,7 +217,7 @@
     @endforeach
 
 
-    <div class="modal fade " id="modalCenter" tabindex="-1" aria-modal="true" role="dialog">
+    <div class="modal fade " id="modalCenter" tabindex="-1" aria-modal="true" role="dialog" data-bs-keyboard="false" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -226,7 +240,6 @@
 <script src="{{ asset('/assets/admin/js/quilljs/quill.js') }}"></script>
 <script src="{{asset('/assets/admin/js/mieditor.js')}}"></script>
 <script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
-<script>let urlCreate = "{{ route('task.create') }}";</script>
+<script>let urlCreate = "{{ route('task.user', [$user]) }}";</script>
 <script src="{{asset('/assets/admin/js/task.js')}}"></script>
-
 @endsection

@@ -110,8 +110,8 @@
     <label for="brand" class="form-label">Asignar marca *</label>
     <select class="form-select" id="brand" name="brand">
         <option value="">Seleccione una marca</option>
-        @foreach($brands as $brand)
-        <option value="{{ $brand->id }}" @if(isset($task) && $brand->id == $task->brand_id) selected @endif>{{ $brand->name }}</option>
+        @foreach($brands as $item)
+        <option value="{{ $item->id }}" @if(isset($brand) && $item->id == $brand->id) selected @endif>{{ $item->name }}</option>
         @endforeach
     </select>
     <div id="errorBrand" class="error invalid-feedback"></div>
@@ -123,14 +123,26 @@
         <span class="input-group-text" style="background:#F8FAFC;">
             <div class="avatar avatar-sm me-2">
                 <span id="task-responsable-avatar" class="avatar-initial rounded-circle bg-label-primary">
-                    <i class="icon-base bx bx-user icon-lg"></i>
-                    {{--<img src="{{ asset('/assets/img/2.png') }}" alt="Avatar" class="rounded-circle">--}}
+                    @if( isset($user) == false )
+                        <i class="icon-base bx bx-user icon-lg"></i>
+                    @else
+                        @if( $user->image )
+                            <img class="rounded-circle" src="{{ $user->image }}" alt="{{ $user->name }}">
+                        @else
+                            <span class="avatar-initial rounded-circle bg-label-primary">{{ $user->nameInitial }}</span>
+                        @endif
+                    @endif
                 </span>
             </div>
         </span>
         <div class="result-search task-responsable-result"></div>
-        <input type="hidden" id="user_assign" name="user_assign" value="{{ $model->user_assign }}">
-        <input type="text" class="form-control task-input-responsable" id="task-input-responsable" placeholder="ejemplo@correo.com" autocomplete="do-not-autofill">
+        <input type="hidden" id="user_assign" name="user_assign" value="@if( isset($user) ){{ $user->id }}@endif">
+        <input type="text" 
+            class="form-control task-input-responsable" 
+            id="task-input-responsable" 
+            placeholder="ejemplo@correo.com" 
+            autocomplete="do-not-autofill"
+            value="@if( isset($user) ){{ $user->email }}@endif">
         <span class="input-group-text" style="background:#F8FAFC;">
             <i class="icon-base bx bx-search"></i>
         </span>

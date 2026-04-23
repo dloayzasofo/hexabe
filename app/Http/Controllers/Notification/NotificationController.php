@@ -20,7 +20,7 @@ class NotificationController extends Controller {
 
         $notificationsOld = Notification::where('user_id', $user->id)
             ->whereDate('created_at', '<', now()->toDateString())
-            ->whereNull('read_at')
+            //->whereNull('read_at')
             ->orderBy('created_at', 'desc')
             ->limit(15)
             ->get();

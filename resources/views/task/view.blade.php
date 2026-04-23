@@ -243,7 +243,7 @@
                                     </p>
                                     <div class="d-flex mt-3 ">
                                         @foreach( $comment->commentmedias as $commentmedia )
-                                        <a href="{{  $commentmedia->media->url }}" target="_blank" class="text-nowrap mb-0 me-2">
+                                        <a href="{{  $commentmedia->media->url }}" target="_blank" class="text-nowrap mb-0 me-2" download>
                                             @if( str_contains($commentmedia->media->mime, 'image') )
                                                 <i class="icon-base bx bx-image align-bottom"></i>        
                                             @else
