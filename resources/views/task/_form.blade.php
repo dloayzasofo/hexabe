@@ -106,12 +106,14 @@
     </div>
 </div>
 
-<div class="mb-3 @if( isset($task) ) hide @endif">
+<div class="mb-3">
     <label for="brand" class="form-label">Asignar marca *</label>
-    <select class="form-select" id="brand" name="brand">
+    <select class="form-select" id="brand" name="brand" @if( isset($task) )readonly disabled @endif>
         <option value="">Seleccione una marca</option>
         @foreach($brands as $item)
-        <option value="{{ $item->id }}" @if(isset($brand) && $item->id == $brand->id) selected @endif>{{ $item->name }}</option>
+        <option value="{{ $item->id }}" 
+            @if(isset($task) && $item->id == $task->brand_id) selected @endif
+            @if(isset($brand) && $item->id == $brand->id) selected @endif>{{ $item->name }}</option>
         @endforeach
     </select>
     <div id="errorBrand" class="error invalid-feedback"></div>

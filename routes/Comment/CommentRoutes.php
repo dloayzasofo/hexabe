@@ -6,7 +6,7 @@ use \Spatie\Permission\Middleware\RoleMiddleware;
 
 Route::middleware(['auth'])->prefix('comment')->group(function () {
     Route::post('/create/{task}', [CommentController::class, 'save'])
-        ->middleware(RoleMiddleware::using('ADMIN'))
+        //->middleware(RoleMiddleware::using('ADMIN'))
         ->name('comment.save');
     /*
     Route::get('/', [CommentController::class, 'index'])

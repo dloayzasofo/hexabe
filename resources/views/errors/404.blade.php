@@ -105,6 +105,30 @@
                                                     Lo sentimos pero no podemos encontrar lo que buscas
                                                 </p>
                                             </div>
+                                            <div class="text-center">
+                                                {{--
+                                                <div class="mt-4">
+                                                    <a href="{{ route('dashboard.index') }}" class="btn btn-primary">
+                                                        <span>
+                                                            <svg class="menu-icon" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" transform="" id="injected-svg" xmlns="http://www.w3.org/2000/svg"><!--Boxicons v3.0.8 https://boxicons.com | License  https://docs.boxicons.com/free--><path d="M20 11h-6c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-8c0-.55-.45-1-1-1m-1 8h-4v-6h4zm-9-4H4c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-4c0-.55-.45-1-1-1m-1 4H5v-2h4zM20 3h-6c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1h6c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1m-1 4h-4V5h4zm-9-4H4c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1h6c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1m-1 8H5V5h4z"></path></svg>
+                                                        </span>
+                                                        Volver al panel de control
+                                                    </a>
+                                                </div>
+                                                <div class="mt-3">
+                                                    <a href="{{ route('task.index') }}" class="btn btn-primary">
+                                                        <i class="menu-icon bx bx-bar-chart-square"></i>
+                                                        Ir a la sección de tareas
+                                                    </a>
+                                                </div>
+                                                --}}
+                                                <div class="mt-3">
+                                                    <a href="{{ url()->previous() }}" class="btn btn-label-warning">
+                                                        <i class="menu-icon bx bx-undo"></i>
+                                                        Vovler atras
+                                                    </a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

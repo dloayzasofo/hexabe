@@ -401,11 +401,11 @@
 
             @if( count($taskMedias) > 0 )
                 @foreach( $taskMedias as $taskMedia )
-                <div class="block" >
-                    <div class="d-flex justify-content-between">
+                <div class="block border rounded mb-2" >
+                    <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <a href="{{ $taskMedia->media->url }}" target="_blank"">
-                                <div class="card mt-2" style="background:transparent;box-shadow:none; border: 1px solid #e2e8f0;">
+                            <a href="{{ $taskMedia->media->url }}" target="_blank" class="block">
+                                <div class="card" style="background:transparent;box-shadow:none;">
                                     <div class="card-body" style="padding:10px;">
                                         <div class="d-flex justify-content-start align-items-center user-name">
                                             <div class="avatar-wrapper">
@@ -423,9 +423,10 @@
                                 </div>
                             </a>
                         </div>
-                        <div>
-                            <a href="{{ $taskMedia->media->url }}" download="{{ $taskMedia->media->name }}">
-                                Des
+                        <div class="p-2">
+                            <a href="{{ $taskMedia->media->url }}" download="{{ $taskMedia->media->name }}" class="btn btn-icon btn-outline-secondary"
+                                title="Descargar: {{ $taskMedia->media->name }}" data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top">
+                                <i class="bx bx-arrow-to-bottom"></i>
                             </a>
                         </div>
                     </div>

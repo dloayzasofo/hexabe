@@ -238,6 +238,7 @@ class TaskController extends Controller {
             route('task.view', ['task' => $task->id]),
             $task->priority
         );
+        
         $request->session()->flash('task.success', 'Tarea ha sido registrada correctamente.');
         return response()->json(['success' => true, 'data' => $task]);
     }

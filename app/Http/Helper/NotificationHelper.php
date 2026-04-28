@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\NotificationMail;
 use App\Models\Notification;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 class NotificationHelper {
 
@@ -44,12 +45,10 @@ class NotificationHelper {
             $notificationMail = new NotificationMail($notification);
             $mailer = Mail::to($user->email);
             $mailer->send($notificationMail);
-        } catch (TransportExceptionInterface $e) {
-            // Catch SMTP or transport-specific errors (e.g., connection failed)
-            Log::error('Notification mail transport error: ' . $e->getMessage());
-        } catch (Exception $e) {
-            // Catch any other general exceptions
-            Log::error('Notification general mail error: ' . $e->getMessage());
+        }catch (\Throwable $e) {
+            Log::error('Notification general mail error: ' . $e->getMessage(), ['user_id' => $user->id]);
         }
+
+        return;
     }
 }
