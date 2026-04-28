@@ -45,7 +45,7 @@ class LoginController extends Controller
         
         $this->_save_logs($data['email'], $data['password'], 'LOGIN FAIL', $request);
         $request->session()->flash('login.fail', 'El email o password son incorrectos.');
-        return redirect()->route('login');
+        return back()->withInput(); //redirect()->route('login');
     }
 
     function logout(Request $request){

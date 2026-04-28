@@ -60,7 +60,7 @@
 						@csrf
 						<div class="mb-3">
 							<label for="email" class="form-label">Email</label>
-							<input type="text" class="form-control" id="email" name="email" placeholder="Introduzca su email" autofocus required/>
+							<input type="text" class="form-control" id="email" name="email" placeholder="Introduzca su email" autofocus required value="{{ old('email') }}"/>
 							@error('email')<p class="error">{{ $message }}</p> @enderror
 						</div>
 
@@ -68,8 +68,9 @@
 							<div class="d-flex justify-content-between">
 								<label class="form-label" for="password">Contraseña</label>
 							</div>
-							<div class="input-group input-group-merge">
-								<input type="password" id="password" class="form-control" name="password" placeholder="······" autocomplete="off" minlength="4" maxlength="20" required/>
+							<div class="input-group">
+								<input type="password" name="password" class="form-control" id="password" placeholder="············" value="{{ old('password') }}">
+								<span id="passwordToggle" class="input-group-text cursor-pointer"><i id="passwordToggleIcon" class="icon-base bx bx-hide"></i></span>
 							</div>
 							@error('password')<p class="error">{{ $message }}</p> @enderror
 						</div>
@@ -79,11 +80,36 @@
 							<button class="btn btn-primary d-grid w-100" type="submit"> Ingresar </button>
 						</div>
 					</form>
+					<div class="mt-4 text-end">
+						<br> &nbsp;
+						<small>
+							¿Olvidaste tu contraseña? <b><a href="{{ route('resetpassword.index') }}">Recuperar 🥲</a></b>
+						</small>
+					</div>
             	</div>
           	</div>
           	<!-- /Register -->
         </div>
     </div>
 </div>
+<script>
+
+	window.addEventListener('load', () => {
+		document.querySelector('#passwordToggle').addEventListener('click', () => {
+			let inputPassword = document.querySelector('#password');
+			let icon = document.querySelector('#passwordToggleIcon');
+			if (inputPassword.getAttribute('type') == 'password') {
+				inputPassword.setAttribute('type', 'text');
+				icon.classList.remove('bx-hide');
+				icon.classList.add('bx-show');
+			} else {
+				inputPassword.setAttribute('type', 'password');
+				icon.classList.remove('bx-show');
+				icon.classList.add('bx-hide');
+			}
+		})
+	})
+
+</script>
 </body>
 </html>

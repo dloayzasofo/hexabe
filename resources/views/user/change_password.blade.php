@@ -39,15 +39,19 @@
                         
                         <div class="mb-3 @error('password') row-invalid  @enderror">
                             <label for="password" class="form-label">Contraseña *:</label>
-                            <input id="password" type="password" name="password" class="form-control" placeholder=""
-                                value="{{ old('password') }}">
+                            <div class="input-group">
+                                <input type="password" name="password" class="form-control" id="password" placeholder="············" value="{{ old('password') }}">
+                                <span id="passwordToggle" class="input-group-text cursor-pointer"><i id="passwordToggleIcon" class="icon-base bx bx-hide"></i></span>
+                            </div>
                             @error('password')<p class="error">{{ $message }}</p> @enderror
                         </div>
                         
                         <div class="mb-3 @error('password_confirmation') row-invalid  @enderror">
                             <label for="password_confirmation" class="form-label">Confirmar contraseña *:</label>
-                            <input id="password_confirmation" type="password" name="password_confirmation" class="form-control" placeholder=""
-                                value="{{ old('password_confirmation') }}">
+                            <div class="input-group">
+                                <input type="password" name="password_confirmation" class="form-control" id="password_confirmation" placeholder="············" value="{{ old('password_confirmation') }}">
+                                <span id="passwordToggleConfirm" class="input-group-text cursor-pointer"><i id="passwordToggleIconConfirm" class="icon-base bx bx-hide"></i></span>
+                            </div>
                             @error('password_confirmation')<p class="error">{{ $message }}</p> @enderror
                         </div>
                     </div>
@@ -61,5 +65,39 @@
             </div>
         </div>
     </form>
+@endsection
+
+@section('script')
+<script>
+	window.addEventListener('load', () => {
+		document.querySelector('#passwordToggle').addEventListener('click', () => {
+			let inputPassword = document.querySelector('#password');
+			let icon = document.querySelector('#passwordToggleIcon');
+			if (inputPassword.getAttribute('type') == 'password') {
+				inputPassword.setAttribute('type', 'text');
+				icon.classList.remove('bx-hide');
+				icon.classList.add('bx-show');
+			} else {
+				inputPassword.setAttribute('type', 'password');
+				icon.classList.remove('bx-show');
+				icon.classList.add('bx-hide');
+			}
+		})
+
+		document.querySelector('#passwordToggleConfirm').addEventListener('click', () => {
+			let inputPassword = document.querySelector('#password_confirmation');
+			let icon = document.querySelector('#passwordToggleIconConfirm');
+			if (inputPassword.getAttribute('type') == 'password') {
+				inputPassword.setAttribute('type', 'text');
+				icon.classList.remove('bx-hide');
+				icon.classList.add('bx-show');
+			} else {
+				inputPassword.setAttribute('type', 'password');
+				icon.classList.remove('bx-show');
+				icon.classList.add('bx-hide');
+			}
+		})
+	});
+</script>
 @endsection
 

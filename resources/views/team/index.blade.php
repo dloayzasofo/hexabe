@@ -34,7 +34,7 @@
         <div class="col-lg-3 mb-4" @if($team->status=='DEACTIVE') style="opacity:.35;" @endif>
             <div class="card">
                 <a href="{{ route('team.view', [$team]) }}">
-                    <img class="card-img-top object-fit-cover" src="{{ asset($team->image) }}" alt="Card image cap" style="max-height:195px;">
+                    <img class="card-img-top object-fit-cover" src="{{ asset($team->image) }}" alt="Card image cap" style="height:195px;">
                 </a>
 
                 <div class="card-body">

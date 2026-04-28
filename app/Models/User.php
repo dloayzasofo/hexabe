@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
@@ -26,7 +27,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'password',
+        'password'
     ];
 
     /**
@@ -73,5 +74,41 @@ class User extends Authenticatable
         $name = substr($this->name, 0, 1);
         $lastName = substr($this->last_name, 0, 1);
         return strtoupper($name.$lastName);
+    }
+
+    public function totalTask(){
+        $count = Task::where('user_assign', $this->id)->count();
+        return $count;
+    }
+
+    public function timeDelivery(){
+        $avergeDate = DB::select('SELECT avg(DATEDIFF(date_delivery, created_at)) AS avergedate FROM tasks where status="FINALIZED" AND user_assign = ?', [$this->id]);
+        return round($avergeDate[0]->avergedate, 1);
+    }
+
+    public function totalFinalized(){
+        $finalize_count = Task::where('user_assign', $this->id)->where('status', 'FINALIZED')->count();
+        return $finalize_count;
+    }
+
+    public function efficiency(){
+        $taskFinalizeInTime = Task::where('user_assign', $this->id)
+            ->where('status', 'FINALIZED')
+            ->whereNotNull('finalized_at')
+            ->whereRaw('finalized_at <= date_delivery')
+            ->count();
+
+        $taskFinalizeOutTime = Task::where('user_assign', $this->id)
+            //->where('status', '<>', 'FINALIZED')
+            ->where(function($query){
+                $now = date('Y-m-d');
+                $query->whereRaw('(' . $now .' > date_delivery OR finalized_at > date_delivery)');
+            })
+            ->count();
+
+        if( $taskFinalizeInTime == 0 && $taskFinalizeOutTime == 0 ) return 0;
+        $percentEfficiency = round( ($taskFinalizeInTime / ($taskFinalizeInTime + $taskFinalizeOutTime)) * 100 );
+
+        return $percentEfficiency;
     }
 }

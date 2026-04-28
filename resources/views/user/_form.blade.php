@@ -57,10 +57,29 @@
         @if( $model->id == null )
             <div class="mb-3 @error('password') row-invalid  @enderror">
                 <label for="password" class="form-label">Contraseña *:</label>
-                <input id="password" type="password" name="password" class="form-control" placeholder="******"
-                    value="{{ old('password', $model->password) }}">
+                <div class="input-group">
+                    <input type="password" name="password" class="form-control" id="password" placeholder="············" value="{{ old('password', $model->password) }}">
+                    <span id="passwordToggle" class="input-group-text cursor-pointer"><i id="passwordToggleIcon" class="icon-base bx bx-hide"></i></span>
+                </div>
                 @error('password')<p class="error">{{ $message }}</p> @enderror
             </div>
         @endif
     </div>
 </div>
+<script>
+	window.addEventListener('load', () => {
+		document.querySelector('#passwordToggle').addEventListener('click', () => {
+			let inputPassword = document.querySelector('#password');
+			let icon = document.querySelector('#passwordToggleIcon');
+			if (inputPassword.getAttribute('type') == 'password') {
+				inputPassword.setAttribute('type', 'text');
+				icon.classList.remove('bx-hide');
+				icon.classList.add('bx-show');
+			} else {
+				inputPassword.setAttribute('type', 'password');
+				icon.classList.remove('bx-show');
+				icon.classList.add('bx-hide');
+			}
+		})
+	});
+</script>

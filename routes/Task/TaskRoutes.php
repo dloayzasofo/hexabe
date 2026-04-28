@@ -6,7 +6,7 @@ use App\Http\Controllers\Task\TaskUserController;
 use App\Http\Controllers\Task\KanbanController;
 use \Spatie\Permission\Middleware\RoleMiddleware;
 
-Route::prefix('task')->group(function () {
+Route::middleware(['auth'])->prefix('task')->group(function () {
     Route::get('/', [TaskController::class, 'index'])
         //->middleware(RoleMiddleware::using('ADMIN'))
         ->name('task.index');

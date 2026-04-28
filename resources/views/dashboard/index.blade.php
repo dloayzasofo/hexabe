@@ -9,15 +9,15 @@
 
     <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
         <div class="col">
-            <div class="p-3 rounded back-process color-process">
-                <div class="fw-bold display-6">{{ $taskCategories['PROCESS'] }}</div>
-                <div>En proceso</div>
+            <div class="p-3 rounded back-tostart color-tostart">
+                <div class="fw-bold display-6">{{ $taskCategories['TOSTART'] }}</div>
+                <div>Sin empezar</div>
             </div>
         </div>
         <div class="col">
-            <div class="p-3 rounded back-success color-success">
-                <div class="fw-bold display-6">{{ $taskCategories['FINALIZED'] }}</div>
-                <div>Finalizado</div>
+            <div class="p-3 rounded back-process color-process">
+                <div class="fw-bold display-6">{{ $taskCategories['PROCESS'] }}</div>
+                <div>En proceso</div>
             </div>
         </div>
         <div class="col">
@@ -27,15 +27,15 @@
             </div>
         </div>
         <div class="col">
-            <div class="p-3 rounded back-tostart color-tostart">
-                <div class="fw-bold display-6">{{ $taskCategories['TOSTART'] }}</div>
-                <div>Sin empezar</div>
-            </div>
-        </div>
-        <div class="col">
             <div class="p-3 rounded back-pause color-pause">
                 <div class="fw-bold display-6">{{ $taskCategories['PAUSED'] }}</div>
                 <div>Pausado</div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="p-3 rounded back-success color-success">
+                <div class="fw-bold display-6">{{ $taskCategories['FINALIZED'] }}</div>
+                <div>Finalizado</div>
             </div>
         </div>
     </div>

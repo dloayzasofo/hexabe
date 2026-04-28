@@ -16,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'media/*',
             'comment/*',
             'user/*',
+            'popup/*',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

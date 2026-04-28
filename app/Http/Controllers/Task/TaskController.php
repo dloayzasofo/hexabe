@@ -57,7 +57,7 @@ class TaskController extends Controller {
     }
 
     public function create(Request $request) {
-        $brands = Brand::all();
+        $brands = Brand::orderBy('name', 'asc')->get();
         $task = null;
         $params = [
             'model' => new Task(),
@@ -71,6 +71,7 @@ class TaskController extends Controller {
     public function finish(Request $request, Task $task) {
         //var_dump($task->user);exit();
         $task->status = 'FINALIZED';
+        $task->finalized_at = date('Y-m-d H:i:s');
         $task->save();
         
         $user = Auth::user();
@@ -90,6 +91,7 @@ class TaskController extends Controller {
 
     public function apifinish(Request $request, Task $task) {
         $task->status = 'FINALIZED';
+        $task->finalized_at = date('Y-m-d H:i:s');
         $task->save();
         
         $user = Auth::user();
@@ -262,7 +264,7 @@ class TaskController extends Controller {
 
     //FUNCIONES PARA LLAMAR AL FORMULARIO CON DATOS
     public function subtask(Request $request, Task $task) {
-        $brands = Brand::all();
+        $brands = Brand::orderBy('name', 'asc')->get();
         $params = [
             'model' => new Task(),
             'brands' => $brands,
@@ -273,7 +275,7 @@ class TaskController extends Controller {
     }
 
     public function user(Request $request, User $user) {
-        $brands = Brand::all();
+        $brands = Brand::orderBy('name', 'asc')->get();
         $params = [
             'model' => new Task(),
             'brands' => $brands,
@@ -284,7 +286,7 @@ class TaskController extends Controller {
     }
 
     public function brand(Request $request, Brand $brand) {
-        $brands = Brand::all();
+        $brands = Brand::orderBy('name', 'asc')->get();
         $params = [
             'model' => new Task(),
             'brands' => $brands,

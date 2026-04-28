@@ -71,7 +71,7 @@ class TeamController extends Controller {
             $teamUser->save();
         }
 
-        $brands = $request->brands;
+        $brands = $request->brands == null ? [] : $request->brands;
         foreach($brands as $brand) {
             $teamBrand = new TeamBrand();
             $teamBrand->team_id = $team->id;

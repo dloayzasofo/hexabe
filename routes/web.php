@@ -19,3 +19,6 @@ require_once __DIR__ . '/Setting/PerfilRoutes.php';
 require_once __DIR__ . '/Setting/NotificationRoutes.php';
 require_once __DIR__ . '/Notification/NotificationRoutes.php';
 require_once __DIR__ . '/User/UserRoutes.php';
+require_once __DIR__ . '/Popup/PopupRoutes.php';
+require_once __DIR__ . '/Report/ReportRoutes.php';
+require_once __DIR__ . '/ResetPassword/ResetPasswordRoutes.php';

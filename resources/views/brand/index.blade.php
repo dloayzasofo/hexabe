@@ -33,12 +33,12 @@
         @foreach($brands as $brand)
         <div class="col-lg-3 mb-4" @if($brand->status=='DEACTIVE') style="opacity:.35;" @endif>
             <div class="card">
-                <a href="{{ route('brand.view', [$brand]) }}">
-                    <img class="card-img-top object-fit-cover" src="{{ asset($brand->image) }}" alt="Card image cap" style="max-height:195px;">
+                <a href="{{ route('brand.view', [$brand]) }}" class="card-image-wrap">
+                    <img class="card-img-top object-fit-cover" src="{{ asset($brand->image) }}" alt="Card image cap" style="height:195px;">
                 </a>
 
                 <div class="card-badget-top-right">
-                    <span class="badge bg-label-secondary"> {{ $brand->industry }} </span>
+                    <span class="badge bg-label-secondary brand-industry"> {{ $brand->industry }} </span>
                 </div>
                 <div class="card-body">
                     <h5 class="card-title fw-bold" style="margin-bottom:4px;">

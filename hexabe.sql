@@ -244,6 +244,7 @@ CREATE TABLE tasks(
     business_id bigint(20) unsigned,
     color VARCHAR(10) NULL,
     position INT NULL,
+    finalized_at date NULL DEFAULT NULL,
 	 created_at timestamp NULL DEFAULT now(),
 	 updated_at timestamp NULL DEFAULT now(),
     deleted_at timestamp NULL DEFAULT NULL,
@@ -336,6 +337,21 @@ CREATE TABLE notifications(
    foreign key (user_origin_id) references users(id) on delete SET null on update no action
 );
 
+CREATE TABLE `popups` (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `target` boolean DEFAULT 0,
+  `active` boolean DEFAULT 0,
+  media_id bigint UNSIGNED,
+  `user_id` bigint UNSIGNED DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  FOREIGN KEY(media_id) REFERENCES medias(id) ON DELETE SET NULL ON UPDATE NO ACTION,
+  PRIMARY KEY (`id`)
+);
+
 -- DROP TABLE notifications;
 -- INSERT USERS
 insert into users(name, last_name, email, password, role, status) values
@@ -354,3 +370,9 @@ insert into model_has_roles(role_id, model_type, model_id) values
 
 select *from users;
 select *from business;
+
+
+SELECT *FROM tasks WHERE finalized_at <= date_delivery AND status='FINALIZED' AND user_assign=1;
+
+
+SELECT  avg(DATEDIFF(date_delivery, finalized_at)) AS diffdates FROM tasks;

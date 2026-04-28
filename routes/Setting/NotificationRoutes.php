@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Setting\NotificationController;
 use \Spatie\Permission\Middleware\RoleMiddleware;
 
-Route::prefix('setting/notification')->group(function () {
+Route::middleware(['auth'])->prefix('setting/notification')->group(function () {
     Route::get('/', [NotificationController::class, 'index'])
         //->middleware(RoleMiddleware::using('ADMIN'))
         ->name('setting.notification.index');

@@ -401,24 +401,35 @@
 
             @if( count($taskMedias) > 0 )
                 @foreach( $taskMedias as $taskMedia )
-                    <a href="{{ $taskMedia->media->url }}" class="block" target="_blank">
-                        <div class="card mt-2" style="background:transparent;box-shadow:none; border: 1px solid #e2e8f0;">
-                            <div class="card-body" style="padding:10px;">
-                                <div class="d-flex justify-content-start align-items-center user-name">
-                                    <div class="avatar-wrapper">
-                                        <div class="avatar avatar-md me-3">
-                                            <span class="avatar-initial rounded bg-label-danger"><i class="icon-base bx bx-file icon-lg"></i></span>
+                <div class="block" >
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <a href="{{ $taskMedia->media->url }}" target="_blank"">
+                                <div class="card mt-2" style="background:transparent;box-shadow:none; border: 1px solid #e2e8f0;">
+                                    <div class="card-body" style="padding:10px;">
+                                        <div class="d-flex justify-content-start align-items-center user-name">
+                                            <div class="avatar-wrapper">
+                                                <div class="avatar avatar-md me-3">
+                                                    <span class="avatar-initial rounded bg-label-danger"><i class="icon-base bx bx-file icon-lg"></i></span>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <small>{{ $taskMedia->media->name }}</small>
+                                                <small>{{ $taskMedia->media->size_literal }}</small>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="d-flex flex-column">
-                                        <small>{{ $taskMedia->media->name }}</small>
-                                        <small>{{ $taskMedia->media->size_literal }}</small>
+        
                                     </div>
                                 </div>
-
-                            </div>
+                            </a>
                         </div>
-                    </a>
+                        <div>
+                            <a href="{{ $taskMedia->media->url }}" download="{{ $taskMedia->media->name }}">
+                                Des
+                            </a>
+                        </div>
+                    </div>
+                </div>
                 @endforeach
             @endif
 

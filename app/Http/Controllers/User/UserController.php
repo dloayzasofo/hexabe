@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Helper\MediaHelper;
+use App\Http\Requests\PasswordRequest;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
@@ -294,6 +295,8 @@ class UserController extends Controller {
 
         $users = User::where('business_id', $business_id)
             ->where('email', 'like', '%' . $query. '%')
+            ->orWhere('name', 'like', '%' . $query. '%')
+            ->orWhere('last_name', 'like', '%' . $query. '%')
             ->get();
 
         $result = [];

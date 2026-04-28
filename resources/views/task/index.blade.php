@@ -52,13 +52,6 @@
                 </a>
             </li>
             <li class="nav-item" role="presentation">
-                <a href="{{ route('task.index') }}?status=FINALIZED" class="nav-link @if( $status == 'FINALIZED') active @endif" aria-selected="true">
-                <span class="d-none d-sm-inline-flex align-items-center">
-                    Finalizado <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-success ms-2">{{ $counters['FINALIZED'] }}</span>
-                </span>
-                </a>
-            </li>
-            <li class="nav-item" role="presentation">
                 <a href="{{ route('task.index') }}?status=DELAY" class="nav-link @if( $status == 'DELAY') active @endif" aria-selected="true">
                 <span class="d-none d-sm-inline-flex align-items-center">
                     Retraso <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-danger ms-2">{{ $counters['DELAY'] }}</span>
@@ -69,6 +62,13 @@
                 <a href="{{ route('task.index') }}?status=PAUSED" class="nav-link @if( $status == 'PAUSED') active @endif" aria-selected="true">
                 <span class="d-none d-sm-inline-flex align-items-center">
                     Pausado <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-danger ms-2">{{ $counters['PAUSED'] }}</span>
+                </span>
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a href="{{ route('task.index') }}?status=FINALIZED" class="nav-link @if( $status == 'FINALIZED') active @endif" aria-selected="true">
+                <span class="d-none d-sm-inline-flex align-items-center">
+                    Finalizado <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-success ms-2">{{ $counters['FINALIZED'] }}</span>
                 </span>
                 </a>
             </li>
@@ -109,7 +109,7 @@
                 </div>
             </div>
             <div class="d-flex flex-column">
-                <a href="{{ route('task.view', ['task'=> $task]) }}" class="text-heading text-truncate">
+                <a href="{{ route('task.view', ['task'=> $task]) }}" class="text-heading">
                     <span class="fw-medium">{{ $task->title }}</span>
                 </a>
                 <small>{{ strtoupper($task->brand->name) }}</small>
@@ -202,7 +202,8 @@
         <div> {{ $task->comments_count == 0 ? '-' : $task->comments_count }} </div> 
         <div> {{ $task->register_at}} </div>
         <div>
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center justify-content-end">
+                @if( $status != 'FINALIZED' )
                 <a href="javascript:;" 
                     class="btn btn-icon delete-record text-danger openModalMessage" 
                     data-mode="FINALIZED"
@@ -214,7 +215,7 @@
                         </span>
                     </span>
                 </a>
-
+                @endif
                 <a href="javascript:;" data-href="{{ route('task.api.delete', [$task]) }}" 
                     data-bs-toggle="tooltip" 
                     class="btn btn-icon delete-record text-danger openModalMessage" 

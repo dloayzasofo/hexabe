@@ -59,9 +59,9 @@
       let boards = {
         "TOSTART": [],
         "PROCESS": [],
-        "FINALIZED": [],
         "DELAY": [],
-        "PAUSED": []
+        "PAUSED": [],
+        "FINALIZED": []
       }
 
       @foreach($tasks as $task)
@@ -205,12 +205,6 @@
             item: boards.PROCESS
           },
           {
-            id: "FINALIZED",
-            title: "Finalizado",
-            class: "success",
-            item: boards.FINALIZED
-          },
-          {
             id: "DELAY",
             title: "Retrasado",
             class: "success",
@@ -221,6 +215,12 @@
             title: "Pausado",
             class: "success",
             item: boards.PAUSED
+          },
+          {
+            id: "FINALIZED",
+            title: "Finalizado",
+            class: "success",
+            item: boards.FINALIZED
           }
         ]
       });

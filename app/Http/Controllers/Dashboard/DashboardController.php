@@ -18,7 +18,7 @@ class DashboardController extends Controller {
  
     public function index() {
         $user = Auth::user();
-        $brands = Brand::where('business_id', $user->business_id)->limit(5)->get();
+        $brands = Brand::where('business_id', $user->business_id)->limit(5)->orderBy('id', 'desc')->get();
         $task = Task::where('user_assign', $user->id)
             ->whereIn('status', ['DELAY', 'TOSTART'])
             ->limit(3)

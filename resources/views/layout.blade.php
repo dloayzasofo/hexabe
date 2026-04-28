@@ -52,6 +52,8 @@
 	</script>
 </head>
 <body>
+	
+
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">
       	<div class="layout-container">
@@ -90,12 +92,14 @@
 							<div>Tareas</div>
 						</a>
 					</li>
-					<li id="menu-popup" class="menu-item">
-						<a href="{--{ route('admin.popup.index') }}" class="menu-link">
+                	@hasanyrole('SUPER|ADMIN')
+					<li id="menu-report" class="menu-item">
+						<a href="{{ route('report.index') }}" class="menu-link">
 							<i class="menu-icon bx bx-bar-chart"></i>
 							<div>Reportes</div>
 						</a>
 					</li>
+					@endhasanyrole
 					<li id="menu-popup" class="menu-item">
 						<a href="{{ route('notification.index') }}" class="menu-link">
 							<svg class="menu-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20"  
@@ -137,6 +141,14 @@
 							<div>Usuarios</div>
 						</a>
 					</li>
+					{{-- 
+					<li id="menu-popup" class="menu-item">
+						<a href="{{ route('popup.index') }}" class="menu-link">
+							<i class='menu-icon bx bx-copy'></i>
+							<div>Popup</div> 
+						</a>
+					</li>
+					--}}
 					@endhasanyrole
 					<li id="menu-logout" class="menu-item">
 						<a href="{{ route('login.exit') }}" class="menu-link" style="color:#ff3e1d;">
@@ -210,7 +222,20 @@
 
 			<!-- Layout container -->
 			<div class="layout-page">
-				
+				<div class="d-flex justify-content-between align-items-center menu-fixed-wrap">
+					<div>
+						<a href="{{ route('dashboard.index') }}">
+							<img src="{{ asset('assets/img/logo.png') }}" alt="Hexabe" style="max-height:40px;">
+						</a>
+					</div>
+					<div>
+						<div class="layout-menu-toggle navbar-nav align-items-xl-center me-4 me-xl-0   d-xl-none ">
+							<a class="nav-item nav-link px-0 me-xl-6" href="javascript:void(0)">
+								<i class="icon-base bx bx-menu icon-md" style="font-size:28px;color:#313131;"></i>
+							</a>
+						</div>
+					</div>
+				</div>
 
 				<div class="content-wrapper">
 					<div class="container-xxl flex-grow-1 container-p-y">

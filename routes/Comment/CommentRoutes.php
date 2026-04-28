@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Comment\CommentController;
 use \Spatie\Permission\Middleware\RoleMiddleware;
 
-Route::prefix('comment')->group(function () {
+Route::middleware(['auth'])->prefix('comment')->group(function () {
     Route::post('/create/{task}', [CommentController::class, 'save'])
         ->middleware(RoleMiddleware::using('ADMIN'))
         ->name('comment.save');

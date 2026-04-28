@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Setting\PerfilController;
 use \Spatie\Permission\Middleware\RoleMiddleware;
 
-Route::prefix('setting/perfil')->group(function () {
+Route::middleware(['auth'])->prefix('setting/perfil')->group(function () {
     Route::get('/', [PerfilController::class, 'index'])
         ->name('setting.perfil.index');
 

@@ -52,13 +52,6 @@
                 </a>
             </li>
             <li class="nav-item" role="presentation">
-                <a href="{{ route('task.user.list', $user->id) }}?status=FINALIZED" class="nav-link @if( $status == 'FINALIZED') active @endif" aria-selected="true">
-                <span class="d-none d-sm-inline-flex align-items-center">
-                    Finalizado <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-success ms-2">{{ $counters['FINALIZED'] }}</span>
-                </span>
-                </a>
-            </li>
-            <li class="nav-item" role="presentation">
                 <a href="{{ route('task.user.list', $user->id) }}?status=DELAY" class="nav-link @if( $status == 'DELAY') active @endif" aria-selected="true">
                 <span class="d-none d-sm-inline-flex align-items-center">
                     Retraso <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-danger ms-2">{{ $counters['DELAY'] }}</span>
@@ -69,6 +62,13 @@
                 <a href="{{ route('task.user.list', $user->id) }}?status=PAUSED" class="nav-link @if( $status == 'PAUSED') active @endif" aria-selected="true">
                 <span class="d-none d-sm-inline-flex align-items-center">
                     Pausado <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-danger ms-2">{{ $counters['PAUSED'] }}</span>
+                </span>
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a href="{{ route('task.user.list', $user->id) }}?status=FINALIZED" class="nav-link @if( $status == 'FINALIZED') active @endif" aria-selected="true">
+                <span class="d-none d-sm-inline-flex align-items-center">
+                    Finalizado <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-success ms-2">{{ $counters['FINALIZED'] }}</span>
                 </span>
                 </a>
             </li>
@@ -109,7 +109,7 @@
                 </div>
             </div>
             <div class="d-flex flex-column">
-                <a href="{{ route('task.view', ['task'=> $task]) }}" class="text-heading text-truncate">
+                <a href="{{ route('task.view', ['task'=> $task]) }}" class="text-heading">
                     <span class="fw-medium">{{ $task->title }}</span>
                 </a>
                 <small>{{ strtoupper($task->brand->name) }}</small>

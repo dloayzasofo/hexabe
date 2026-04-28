@@ -26,6 +26,14 @@
     background: #FFF7ED;
     border: 1px solid #FFEDD5;
 }
+.brand-industry{
+    display: -webkit-box;
+    max-width: 180px;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 .btn-add-task{
     position: fixed;
     right: 20px;
@@ -402,6 +410,10 @@ textarea{
 .mb-6 {
     margin-block-end: 1.5rem !important;
 }
+.menu-fixed-wrap{
+    display: none !important;
+}
+
 .modal-header .btn-close{
     position: absolute;
     right: 20px;
@@ -586,7 +598,7 @@ textarea{
     font-size: 12px;
 }
 .task-list-item>div:nth-child(1){
-    flex: 1 1 20%;
+    flex: 0 0 20%;
 }
 .task-list-item>div:nth-child(2){
     flex: 0 0 10%;
@@ -649,10 +661,20 @@ textarea{
 .wrap-toast>div{
     margin-bottom: 15px;
 }
+
 @media (min-width: 1200px){
     .layout-navbar{
         display: none;
-    }   
+    }
+}
+@media (max-width: 1199px){
+    .menu-fixed-wrap{
+        display: flex !important;
+        background: #fff;
+        padding: 15px;
+        position: sticky;
+        top:0px;
+    }
 }
 @media (max-width: 768px){
     .col-sm-4{
