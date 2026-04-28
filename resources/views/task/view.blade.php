@@ -1043,6 +1043,7 @@
                 //location.reload();
                 //console.log("Success");
                 renderComments(data.data);
+                cleanFormComment();
             }
         });
     }
@@ -1100,6 +1101,14 @@
         wrap.insertAdjacentHTML('afterbegin', html);
         wrap.scrollTop = 0;
         wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function cleanFormComment(){
+        let comment = document.querySelector('#comment');
+        comment.value = '';
+
+        let wrapFiles = document.querySelector('#wrapCommentFiles');
+        wrapFiles.innerHTML = '';
     }
 </script>
 @endsection
