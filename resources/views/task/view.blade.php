@@ -401,36 +401,38 @@
 
             @if( count($taskMedias) > 0 )
                 @foreach( $taskMedias as $taskMedia )
-                <div class="block border rounded mb-2" >
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <a href="{{ $taskMedia->media->url }}" target="_blank" class="block">
-                                <div class="card" style="background:transparent;box-shadow:none;">
-                                    <div class="card-body" style="padding:10px;">
-                                        <div class="d-flex justify-content-start align-items-center user-name">
-                                            <div class="avatar-wrapper">
-                                                <div class="avatar avatar-md me-3">
-                                                    <span class="avatar-initial rounded bg-label-danger"><i class="icon-base bx bx-file icon-lg"></i></span>
+                    @if( $taskMedia->media !== null )
+                    <div class="block border rounded mb-2" >
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <a href="{{ $taskMedia->media->url }}" target="_blank" class="block">
+                                    <div class="card" style="background:transparent;box-shadow:none;">
+                                        <div class="card-body" style="padding:10px;">
+                                            <div class="d-flex justify-content-start align-items-center user-name">
+                                                <div class="avatar-wrapper">
+                                                    <div class="avatar avatar-md me-3">
+                                                        <span class="avatar-initial rounded bg-label-danger"><i class="icon-base bx bx-file icon-lg"></i></span>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex flex-column">
+                                                    <small>{{ $taskMedia->media->name }}</small>
+                                                    <small>{{ $taskMedia->media->size_literal }}</small>
                                                 </div>
                                             </div>
-                                            <div class="d-flex flex-column">
-                                                <small>{{ $taskMedia->media->name }}</small>
-                                                <small>{{ $taskMedia->media->size_literal }}</small>
-                                            </div>
+            
                                         </div>
-        
                                     </div>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="p-2">
-                            <a href="{{ $taskMedia->media->url }}" download="{{ $taskMedia->media->name }}" class="btn btn-icon btn-outline-secondary"
-                                title="Descargar: {{ $taskMedia->media->name }}" data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top">
-                                <i class="bx bx-arrow-to-bottom"></i>
-                            </a>
+                                </a>
+                            </div>
+                            <div class="p-2">
+                                <a href="{{ $taskMedia->media->url }}" download="{{ $taskMedia->media->name }}" class="btn btn-icon btn-outline-secondary"
+                                    title="Descargar: {{ $taskMedia->media->name }}" data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top">
+                                    <i class="bx bx-arrow-to-bottom"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
+                    @endif
                 @endforeach
             @endif
 

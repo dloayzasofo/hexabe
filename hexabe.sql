@@ -376,3 +376,11 @@ SELECT *FROM tasks WHERE finalized_at <= date_delivery AND status='FINALIZED' AN
 
 
 SELECT  avg(DATEDIFF(date_delivery, finalized_at)) AS diffdates FROM tasks;
+
+
+
+insert into medias (name, path, mime, size, user_id, business_id, updated_at, created_at) VALUES 
+('dia del trabajo_salutación four loko.pptx', '1/resources/c670f1df-1e7c-4c8a-8e4a-21e46cc657ad.pptx', 
+'application/vnd.openxmlformats-officedocument.presentationml.presentation', 26943723, 2, 1, '2026-04-28 13:17:05', '2026-04-28 13:17:05')
+
+SELECT *FROM medias ORDER BY id desc;

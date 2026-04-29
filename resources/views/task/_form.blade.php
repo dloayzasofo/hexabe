@@ -143,7 +143,7 @@
             class="form-control task-input-responsable" 
             id="task-input-responsable" 
             placeholder="ejemplo@correo.com" 
-            autocomplete="do-not-autofill"
+            autocomplete="off"
             value="@if( isset($user) ){{ $user->email }}@endif">
         <span class="input-group-text" style="background:#F8FAFC;">
             <i class="icon-base bx bx-search"></i>

@@ -13,7 +13,11 @@ function handleBtnCreate(){
     .then(response => response.text())
     .then(data => {
         document.querySelector('#popup').innerHTML = data;
-        document.querySelector('#modalTitle').innerHTML = 'Crear nueva tarea';
+        if( document.querySelector('#parent_id') ){
+            document.querySelector('#modalTitle').innerHTML = 'Crear sub tarea';
+        }else{
+            document.querySelector('#modalTitle').innerHTML = 'Crear nueva tarea';
+        }
         document.querySelector('#modalDescription').innerHTML = 'Todos los campos con  (*) son obligatorios.';
         $('#modalCenter').modal('show');
         mode = 'CREATE';
@@ -263,7 +267,8 @@ function handlerRenderMemberByKey(data){
             if( user.image ) {
                 div.innerHTML = '<img src="' + user.image + '" class="avatar rounded-circle"/> ' + user.email;
             }else{
-                div.innerHTML = '<span>' + user.initials + '</span> ' + user.email;
+                div.innerHTML = '<span>' + user.initials + '</span>' + user.email;
+                //div.innerHTML = '<div class="avatar avatar-sm"> <span>' + user.initials + '</span> </div>' + user.email;
             }
 
             div.classList.add('task-responsable-result-item');
