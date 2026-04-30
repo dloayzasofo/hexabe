@@ -52,6 +52,7 @@ function dropzoneInitHandle(){
                 data: { id: file.id },
                 success: function(response) {
                     console.log(response);
+                    document.querySelector('#media-' + file.id).remove();
                 }
             });
         }
@@ -64,6 +65,7 @@ function dropzoneInitHandle(){
             let input = document.createElement('input');
             input.setAttribute('type', 'hidden');
             input.setAttribute('name', 'medias[]');
+            input.setAttribute('id', 'media-' + responseText.data.id);
             input.setAttribute('value', responseText.data.id);
             attached.appendChild(input);
             
@@ -76,19 +78,25 @@ function dropzoneInitHandle(){
  * crear tarea enviando datos por fetch a controlador y mostrar errores de validacion 
  */
 window.addEventListener('load', () => {
+    /*
     document.addEventListener('input', (e) => {
         if (e.target.classList.contains('task-input-responsable')) {
             searchByKeyPress(e.target.value);
         }
     });
+    */
 
-    document.addEventListener('keydown', (e) => {
+    document.addEventListener('keyup', (e) => {
         if (e.target.classList.contains('task-input-responsable')) {
+            //console.log(e);
             if( e.target.value.length < 2){
                 document.querySelector('.task-responsable-result').classList.remove('active');
                 return;
             }
-            searchByKeyPress(e.target.value);
+            const regex = /^[a-zA-Z0-9]$/;
+            if( regex.test(e.key) || e.key == 'Backspace'){
+                searchByKeyPress(e.target.value);
+            }
         }
 
         if (e.target.classList.contains('task-input-member')) {
@@ -98,7 +106,6 @@ window.addEventListener('load', () => {
             }
             searchMemeberKeyPress(e.target.value);
         }
-
     });
 
     document.addEventListener('click', (e) => {
@@ -126,6 +133,13 @@ window.addEventListener('load', () => {
  * Search responsable by key press, send request to server and render result
  */
 function searchByKeyPress(value){
+    if( value.trim() == '' ){
+        let result = document.querySelector('.task-responsable-result');
+        result.innerHTML = '';
+        result.classList.remove('active');
+        return;
+    }
+    
     fetch(urlSearchByKey + '?q=' + value, {
         method: 'GET',
         headers: {

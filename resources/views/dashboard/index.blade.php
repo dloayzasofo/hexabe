@@ -9,34 +9,44 @@
 
     <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
         <div class="col">
-            <div class="p-3 rounded back-tostart color-tostart">
-                <div class="fw-bold display-6">{{ $taskCategories['TOSTART'] }}</div>
-                <div>Sin empezar</div>
-            </div>
+            <a href="{{ route('task.index') }}?status=TOSTART">
+                <div class="p-3 rounded back-tostart color-tostart">
+                    <div class="fw-bold display-6">{{ $taskCategories['TOSTART'] }}</div>
+                    <div>Sin empezar</div>
+                </div>
+            </a>
         </div>
         <div class="col">
-            <div class="p-3 rounded back-process color-process">
-                <div class="fw-bold display-6">{{ $taskCategories['PROCESS'] }}</div>
-                <div>En proceso</div>
-            </div>
+            <a href="{{ route('task.index') }}?status=PROCESS">
+                <div class="p-3 rounded back-process color-process">
+                    <div class="fw-bold display-6">{{ $taskCategories['PROCESS'] }}</div>
+                    <div>En proceso</div>
+                </div>
+            </a>
         </div>
         <div class="col">
-            <div class="p-3 rounded back-mora color-mora">
-                <div class="fw-bold display-6">{{ $taskCategories['DELAY'] }}</div>
-                <div>Retrasado</div>
-            </div>
+            <a href="{{ route('task.index') }}?status=DELAY">
+                <div class="p-3 rounded back-mora color-mora">
+                    <div class="fw-bold display-6">{{ $taskCategories['DELAY'] }}</div>
+                    <div>Retrasado</div>
+                </div>
+            </a>
         </div>
         <div class="col">
-            <div class="p-3 rounded back-pause color-pause">
-                <div class="fw-bold display-6">{{ $taskCategories['PAUSED'] }}</div>
-                <div>Pausado</div>
-            </div>
+            <a href="{{ route('task.index') }}?status=PAUSED">
+                <div class="p-3 rounded back-pause color-pause">
+                    <div class="fw-bold display-6">{{ $taskCategories['PAUSED'] }}</div>
+                    <div>Pausado</div>
+                </div>
+            </a>
         </div>
         <div class="col">
-            <div class="p-3 rounded back-success color-success">
-                <div class="fw-bold display-6">{{ $taskCategories['FINALIZED'] }}</div>
-                <div>Finalizado</div>
-            </div>
+            <a href="{{ route('task.index') }}?status=FINALIZED">
+                <div class="p-3 rounded back-success color-success">
+                    <div class="fw-bold display-6">{{ $taskCategories['FINALIZED'] }}</div>
+                    <div>Finalizado</div>
+                </div>
+            </a>
         </div>
     </div>
 

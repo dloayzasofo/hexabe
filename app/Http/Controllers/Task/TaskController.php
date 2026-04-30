@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Helper\MediaHelper;
 use App\Http\Helper\NotificationHelper;
-use App\Http\Requests\TeamRequest;
 use Illuminate\Support\Str;
 use App\Models\Brand;
 use App\Models\Task;
@@ -27,13 +26,21 @@ class TaskController extends Controller {
 
         $user = Auth::user();
         $counters = [
+            "TOSTART" => Task::getTaskCountByStatus('TOSTART', $user),
+            "PROCESS" => Task::getTaskCountByStatus('PROCESS', $user),
+            "FINALIZED" => Task::getTaskCountByStatus('FINALIZED', $user),
+            "DELAY" => Task::getTaskCountByStatus('DELAY', $user),
+            "PAUSED" => Task::getTaskCountByStatus('PAUSED', $user)
+        ];
+        /*
+        $counters = [
             "TOSTART" => Task::where(function($query)use($user){ $query->where('user_assign', $user->id)->orWhere('user_id', $user->id); })->where('status', 'TOSTART')->count(),
             "PROCESS" => Task::where(function($query)use($user){ $query->where('user_assign', $user->id)->orWhere('user_id', $user->id); })->where('status', 'PROCESS')->count(),
             "FINALIZED" => Task::where(function($query)use($user){ $query->where('user_assign', $user->id)->orWhere('user_id', $user->id); })->where('status', 'FINALIZED')->count(),
             "DELAY" => Task::where(function($query)use($user){ $query->where('user_assign', $user->id)->orWhere('user_id', $user->id); })->where('status', 'DELAY')->count(),
             "PAUSED" => Task::where(function($query)use($user){ $query->where('user_assign', $user->id)->orWhere('user_id', $user->id); })->where('status', 'PAUSED')->count(),
         ];
-
+        */
 
         $tasks = Task::with('brand', 'assign', 'collaborators')
             ->withCount('medias')
@@ -41,9 +48,9 @@ class TaskController extends Controller {
             ->withCount('comments')
             ->where(function($query)use($user){
                 $query->where('user_assign', $user->id)
-                      ->orWhere('user_id', $user->id);
+                      ->orWhere('user_id', $user->id)
+                      ->orWhereRaw('id in (SELECT task_id FROM task_collaborators WHERE user_id = ?)', [$user->id]);
             })
-            //->where('user_assign', $user->id)
             ->where('status', $status)
             ->get();
         
@@ -75,15 +82,23 @@ class TaskController extends Controller {
         $task->save();
         
         $user = Auth::user();
-        NotificationHelper::send(
-            $task->user, 
-            'Tarea "' . Str::limit($task->title, 12) . '" ha sido marcada como finalizada.', 
-            $task->title,
-            'TASK',
-            $user,
-            route('task.view', ['task' => $task->id]),
-            $task->priority
-        );
+
+        $userNotify = $task->user;
+        if($user->id == $task->user_id){
+            $userNotify = $task->assign;
+        }
+
+        if( $task->user_id != $task->user_assign ){
+            NotificationHelper::send(
+                $userNotify, 
+                'Tarea "' . Str::limit($task->title, 12) . '" ha sido marcada como finalizada.', 
+                $task->title,
+                'TASK',
+                $user,
+                route('task.view', ['task' => $task->id]),
+                $task->priority
+            );
+        }
         
         $request->session()->flash('task.success', 'La tarea ha sido marcada como finalizada.');
         return redirect()->route('task.view', ['task' => $task->id]);
@@ -93,17 +108,25 @@ class TaskController extends Controller {
         $task->status = 'FINALIZED';
         $task->finalized_at = date('Y-m-d H:i:s');
         $task->save();
-        
+
         $user = Auth::user();
-        NotificationHelper::send(
-            $task->user, 
-            'Tarea "' . Str::limit($task->title, 12) . '" ha sido marcada como finalizada.', 
-            $task->title,
-            'TASK',
-            $user,
-            route('task.view', ['task' => $task->id]),
-            $task->priority
-        );
+
+        $userNotify = $task->user;
+        if($user->id == $task->user_id){
+            $userNotify = $task->assign;
+        }
+
+        if( $task->user_id != $task->user_assign ){
+            NotificationHelper::send(
+                $userNotify, 
+                'Tarea "' . Str::limit($task->title, 12) . '" ha sido marcada como finalizada.', 
+                $task->title,
+                'TASK',
+                $user,
+                route('task.view', ['task' => $task->id]),
+                $task->priority
+            );
+        }
 
         return response()->json([
             'status' => 'success',
@@ -244,12 +267,19 @@ class TaskController extends Controller {
     }
 
     public function view(Request $request, Task $task) {
-
+        $user = Auth::user();
         $taskMedias = TaskMedia::with('media')->where('task_id', $task->id)->get();
         $taskLinks = TaskLink::where('task_id', $task->id)->get();
         $taskCollaboratos = TaskCollaborator::where('task_id', $task->id)->get();
         $childs = Task::where('parent_id', $task->id)->orderBy('date_delivery', 'asc')->get();
         $comments = $task->comments()->with('user')->with('commentmedias')->orderBy('created_at', 'desc')->get();
+        $brands = Brand::orderBy('name', 'asc')->get();
+
+        $userIsPartOfTask = false;
+        foreach( $task->collaborators as $collaborator ){
+            if( $collaborator->user_id == $user->id ) $userIsPartOfTask = true;
+        }
+        if( $task->user_id == $user->id || $task->user_assign == $user->id ) $userIsPartOfTask = true;
 
         $params = [
             'task' => $task,
@@ -257,7 +287,9 @@ class TaskController extends Controller {
             'taskLinks' => $taskLinks,
             'taskCollaboratos' => $taskCollaboratos,
             'childs' => $childs,
-            'comments' => $comments
+            'comments' => $comments,
+            'userIsPartOfTask' => $userIsPartOfTask,
+            'brands' => $brands
         ];
 
         return view('task.view', $params);

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Helper\MediaHelper;
 use App\Http\Helper\NotificationHelper;
+use Illuminate\Support\Str;
 use App\Models\CommentMedia;
 use App\Models\Comment;
 use App\Models\Task;
@@ -62,15 +63,36 @@ class CommentController extends Controller {
             ]
         ];
 
+        //Si el comentario viene del mismo usuario no envia ninguna notificacion
+        if( $task->user_assign == $user->id AND $task->user_id == $user->id ) {
+            return response()->json(['success' => true, 'data' => $result]);
+        }
+
+        $userToNotify = $task->assign;
+        if( $user->id == $task->user_assign ) $userToNotify = $task->user;
+
         NotificationHelper::send(
-            $task->assign, 
-            $user->name . ' ha comentado en una tarea',
+            $userToNotify, 
+            $user->name . ' ha comentado la tarea: ' . Str::limit($task->title, 25),
             $comment->description, 
             'COMMENT',
             $user,
             route('task.view', ['task' => $task->id]),
             'medium'
         );
+
+        //Si es un colaboradro enviar tb la notificacion al creador
+        if( $user->id != $task->user_assign AND $user->id != $task->user_id ) {
+            NotificationHelper::send(
+                $task->user, 
+                $user->name . ' ha comentado la tarea: ' . Str::limit($task->title, 25),
+                $comment->description, 
+                'COMMENT',
+                $user,
+                route('task.view', ['task' => $task->id]),
+                'medium'
+            );
+        }
 
         return response()->json(['success' => true, 'data' => $result]);
     }

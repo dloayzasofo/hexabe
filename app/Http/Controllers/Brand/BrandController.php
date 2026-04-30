@@ -8,6 +8,8 @@ use App\Http\Helper\MediaHelper;
 use App\Http\Requests\BrandRequest;
 use App\Models\Brand;
 use App\Models\Task;
+use App\Models\Team;
+use App\Models\TeamBrand;
 use Auth;
 
 class BrandController extends Controller {
@@ -96,6 +98,22 @@ class BrandController extends Controller {
         ];
 
         return view('brand.view', $params);
+    }
+
+    public function delete(Request $request, Brand $brand) {
+        $taskCount = Task::where('brand_id', $brand->id)->count();
+        $name = $brand->name;
+
+        if( $taskCount > 0 ) {
+            $request->session()->flash('brand.error', 'No se puede eliminar la marca porque tiene tareas asociadas.');
+            return redirect()->route('brand.view', [$brand]);
+        } 
+
+        TeamBrand::where('brand_id', $brand->id)->delete();
+
+        $brand->delete();
+        $request->session()->flash('brand.success', 'Marca ' . $name . ' ha sido eliminada correctamente.');
+        return redirect()->route('brand.index');
     }
 
     public function search_by_key(Request $request) {

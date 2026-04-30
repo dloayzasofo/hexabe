@@ -28,6 +28,10 @@ Route::middleware(['auth'])->prefix('team')->group(function () {
         //->middleware(RoleMiddleware::using('ADMIN'))
         ->name('team.view');
 
+    Route::get('/delete/{team}', [TeamController::class, 'delete'])
+        //->middleware(RoleMiddleware::using('ADMIN'))
+        ->name('team.delete');
+
     Route::get('/remove/brand/{team}/{brand}', [TeamController::class, 'removeBrand'])
         ->middleware(RoleMiddleware::using('ADMIN'))
         ->name('team.remove.brand');

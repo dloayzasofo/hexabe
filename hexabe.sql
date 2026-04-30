@@ -383,4 +383,9 @@ insert into medias (name, path, mime, size, user_id, business_id, updated_at, cr
 ('dia del trabajo_salutación four loko.pptx', '1/resources/c670f1df-1e7c-4c8a-8e4a-21e46cc657ad.pptx', 
 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 26943723, 2, 1, '2026-04-28 13:17:05', '2026-04-28 13:17:05')
 
-SELECT *FROM medias ORDER BY id desc;
+SELECT *FROM tasks WHERE STATUS = 'TOSTART' AND ( user_assign = 2 OR id IN (SELECT task_id FROM task_collaborators WHERE user_id = 2) );
+
+
+
+
+

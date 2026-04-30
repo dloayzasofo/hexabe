@@ -91,4 +91,16 @@ class Task extends Model
     {
         return $this->childs()->where('status', 'FINALIZED')->count();
     }
+
+    public static function getTaskCountByStatus($status, $user){
+        $count = Task::where('status', $status)
+            ->where(function($query) use($status, $user){ 
+                $query->where('user_assign', $user->id)
+                    ->orWhere('user_id', $user->id)
+                    ->orWhereRaw('id in (SELECT task_id FROM task_collaborators WHERE user_id = ?)', [$user->id]);
+                })
+            ->count();
+
+        return $count;
+    }
 }

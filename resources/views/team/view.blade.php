@@ -20,6 +20,12 @@
                     <span class="d-none d-sm-inline-block">Editar equipo</span>
                 </span>
             </button>
+
+            <button type="button" class="btn btn-label-danger confirmDelete" title="Eliminar equipo"
+                data-href="{{ route('team.delete', [$team]) }}"
+                data-message="el equipo <b> {{ $team->name }} </b>.">
+                <i class="icon-base bx bx-trash icon-md"></i> 
+            </button>
             @endhasanyrole
         </div>
     </div>
@@ -35,6 +41,14 @@
     @if(Session::has('team.invitation.success'))
     <div class="alert alert-success alert-dismissible" role="alert">
         {{ Session::get('team.invitation.success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+        </button>
+    </div>
+    @endif
+
+    @if(Session::has('brand.error'))
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        {{ Session::get('brand.error') }}
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
         </button>
     </div>
@@ -365,6 +379,7 @@
 			</div>
 		</div>
 	</div>
+    
     @include('team._modal_delete')
 @endsection
 

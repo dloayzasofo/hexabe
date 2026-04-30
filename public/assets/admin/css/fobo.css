@@ -63,7 +63,6 @@
     border-radius: 5px;
     color: #000 !important;
 }
-
 .color-mora{
     color: #DC2626;
 }
@@ -101,6 +100,16 @@
 .chart-icon.success{
     color: #71dd37;
     background: rgba(113,221,55, 0.15);
+}
+.custom-col-3{
+    max-height: 70vh;
+    overflow: auto;
+}
+.custom-col-3 .col-md{
+    flex: 0 0 33%;
+}
+.custom-col-3 .custom-option.checked{
+    border-width: 2px;
 }
 .fobo-datatable label,
 .fobo-datatable .dataTables_info{
@@ -213,6 +222,9 @@
 .fobo-datatable .dataTables_wrapper{
     min-height: 80vh;
 }
+.form-check-input:checked[type=radio]{
+    border-width: 4px;
+}
 .dropzone,
 .dropzone-image{
     background-size: contain;
@@ -306,6 +318,13 @@
 .hide{
     display: none;
 }
+.btnTaskEdit{
+    opacity: 0.1;
+    transition: all 0.2s ease-in-out;;
+}
+.hoverEdit:hover .btnTaskEdit{
+    opacity: 1;
+}
 input,
 select,
 textarea{
@@ -346,21 +365,31 @@ textarea{
 .task-responsable-result-item,
 .input-search-result-item{
     cursor: pointer;
+    display: flex;
+    align-items: center;
 }
 .result-search-item span,
 .task-responsable-result-item span,
 .input-search-result-item span{
     display: inline-block;
     color: #fff;
-    width: 20px;
-    height: 20px;
+    width: 37px;
+    height: 37px;
     border-radius: 50%;
     text-align: center;
     line-height: 20px;
     margin-right: 5px;
     font-size: 12px;
     background: #696cff;
+    display: flex;
+    align-items: center;
+    justify-content: center
 }
+.task-responsable-result-item img,
+.task-responsable-result-item span{
+    margin-right: 8px;
+}
+
 .json-editor-blackbord{
     min-height: 548px;
     padding: 10px 20px;
@@ -497,6 +526,13 @@ textarea{
     top: 5px;
     right: 3px;
     transform: translate(1px, -2px) !important;
+}
+.switch,
+.switch .switch-label{
+    cursor: pointer;
+}
+.switch-on{
+    background: var(--bs-primary);
 }
 /*
 .quill-area{

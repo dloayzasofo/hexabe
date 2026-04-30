@@ -1,0 +1,44 @@
+<?php 
+
+namespace App\Http\Controllers\Cron;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Http\Helper\NotificationHelper;
+use Illuminate\Support\Str;
+use App\Models\Task;
+use Auth;
+
+class DelayTasksController extends Controller {
+ 
+    public function delaytasks(Request $request, $token) {
+        if( $token != env('APP_TOKEN_CRON') ){
+            echo 'Token invalido';
+            return;
+        }
+
+        $tasks = Task::whereIn('status', ['TOSTART', 'PROCESS'])
+            ->whereDate('date_delivery', '<', date('Y-m-d'))
+            ->get();
+
+        $count = 0;
+        foreach( $tasks as $task ) {
+            $task->status = 'DELAY';
+            $task->save();
+            $count++;
+            NotificationHelper::send(
+                $task->assign, 
+                'Tarea "' . Str::limit($task->title, 12) . '" ha sido marcada como Retrasada.', 
+                $task->title,
+                'CRON',
+                null,
+                route('task.view', ['task' => $task->id]),
+                $task->priority
+            );
+        }
+
+        echo $count . ' Tareas marcadas como retrasadas';
+        return;
+    }
+
+}

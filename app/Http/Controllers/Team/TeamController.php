@@ -188,6 +188,17 @@ class TeamController extends Controller {
         return view('team.view', $params);
     }
 
+    public function delete(Request $request, Team $team) {
+        TeamBrand::where('team_id', $team->id)->delete();
+        TeamUser::where('team_id', $team->id)->delete();
+
+        $name = $team->name;
+        $team->delete();
+        
+        $request->session()->flash('team.success', 'Equipo '.$name.' ha sido removido correctamente.');
+        return redirect()->route('team.index');
+    }
+
     public function removeBrand(Request $request, Team $team, Brand $brand) {
         $name = $brand->name;
         TeamBrand::where('team_id', $team->id)->where('brand_id', $brand->id)->delete();

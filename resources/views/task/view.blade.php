@@ -19,29 +19,51 @@
     <div class="row sm-vl-base mb-4">
         <div class="col-md-12">
             <div class="d-flex mb-3">
-                @if( $task->status == 'TOSTART' )
-                    <span class="badge rounded-pill me-2 bg-label-secondary">Por empezar</span>
-                @elseif( $task->status == 'PROCCESS' )
-                    <span class="badge rounded-pill me-2 bg-label-primary">Proceso</span>
-                @elseif( $task->status == 'DELAY' )
-                    <span class="badge rounded-pill me-2 bg-label-danger">Retrasado</span>
-                @elseif( $task->status == 'PAUSED' )
-                    <span class="badge rounded-pill me-2 bg-label-warning">Pausado</span>
-                @elseif( $task->status == 'FINALIZED' )
-                    <span class="badge rounded-pill me-2 bg-label-success">Finalizado</span>
-                @endif
+                <span class="me-2 hoverEdit">
+                    <span id="modelStatus" class="badge rounded-pill 
+                        @if( $task->status == 'TOSTART' ) bg-label-secondary
+                        @elseif( $task->status == 'PROCESS' ) bg-label-primary
+                        @elseif( $task->status == 'DELAY' ) bg-label-danger
+                        @elseif( $task->status == 'PAUSED' ) bg-label-warning
+                        @elseif( $task->status == 'FINALIZED' ) bg-label-success @endif">
+                            @if( $task->status == 'TOSTART' ) Sin empezar
+                            @elseif( $task->status == 'PROCESS' ) En proceso
+                            @elseif( $task->status == 'DELAY' ) Retrasado
+                            @elseif( $task->status == 'PAUSED' ) Pausado
+                            @elseif( $task->status == 'FINALIZED' ) Finalizado @endif
+                    </span> 
+                    @if( in_array(Auth::user()->id, [$task->user_id, $task->user_assign]) )
+                    <button id="btnEditStatus" class="btn rounded-pill btn-icon btn-outline-secondary btnTaskEdit" data-bs-toggle="modal" data-bs-target="#statusModal"> 
+                        <i class="bx bx-pencil"></i>
+                    </button>
+                    @endif
+                </span>
                 
-                @if( $task->priority == 'low')
-                    <span class="badge rounded-pill bg-label-primary ">Prioridad baja</span>
-                @elseif( $task->priority == 'medium')
-                    <span class="badge rounded-pill bg-label-warning ">Prioridad media</span>
-                @elseif( $task->priority == 'high')
-                    <span class="badge rounded-pill bg-label-danger">Prioridad alta</span>
-                @endif
+                <span class="me-2 hoverEdit">
+                    <span id="modelPriority" class="badge rounded-pill 
+                        @if( $task->priority == 'low') bg-label-primary 
+                        @elseif( $task->priority == 'medium') bg-label-warning 
+                        @elseif( $task->priority == 'high') bg-label-danger @endif">
+                            Prioridad
+                            @if( $task->priority == 'low') baja
+                            @elseif( $task->priority == 'medium') media
+                            @elseif( $task->priority == 'high') alta @endif
+                    </span>
+                    @if( in_array(Auth::user()->id, [$task->user_id, $task->user_assign]) )
+                    <button id="btnEditPriority" class="btn rounded-pill btn-icon btn-outline-secondary btnTaskEdit" data-bs-toggle="modal" data-bs-target="#priorityModal"> 
+                        <i class="bx bx-pencil"></i> 
+                    </button>
+                    @endif
+                </span>
             </div>
             <div class="d-flex align-items-center w-100">
-                <div>
-                    <h2 class="fw-bold" style="margin-bottom:4px;"> {{ $task->title }} </h2>
+                <div class="d-flex align-items-top hoverEdit">
+                    @if( in_array(Auth::user()->id, [$task->user_id, $task->user_assign]) )
+                    <button id="btnEditTitle" class="btn rounded-pill btn-icon btn-outline-secondary me-2 btnTaskEdit" data-bs-toggle="modal" data-bs-target="#titleModal"> 
+                        <i class="bx bx-pencil"></i> 
+                    </button>
+                    @endif
+                    <h2 id="modelTitle" class="fw-bold" style="margin-bottom:4px;"> {{ $task->title }} </h2>
                 </div>
             </div>
         </div>
@@ -49,12 +71,14 @@
 
     <div class="row">
         <div class="col-md-8">
-            @if( trim($task->description) !== '' )
             <div class="mb-2"><b>Descripción:</b> </div>
             <div class="border rounded p-3">
-                <div>{!! $task->description !!}</div>
+                @if( trim($task->description) !== '' )
+                <div id="modelDescription">{!! $task->description !!}</div>
+                @else
+                <div id="modelDescription"> S/N </div>
+                @endif
             </div>
-            @endif
 
             @if( count($childs) > 0 )
             <div class="mt-3">
@@ -75,7 +99,6 @@
                                 </div>
                             </div>
                         </div>
-
                         
                         <div>
                             @foreach ($childs as $child)
@@ -113,45 +136,6 @@
                                 </div>
                             </div>
                             @endforeach
-                            {{-- 
-                            <div class="d-flex align-items-center border-primary py-3 px-4 border rounded mt-2" style="border-color:#F1F5F9 !important;">
-                                <div class="me-3">
-                                    <span class="timeline-indicator-advanced timeline-indicator-success border-0 shadow-none">
-                                        <i class="icon-base bx bx-circle" style="font-size:25px;"></i>
-                                    </span>
-                                </div>
-                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                    <div class="me-3">
-                                        <p class="mb-0 text-heading">Lorem ipsum dolor sit amet consectetur.</p>
-                                    </div>
-                                    <div class="user-progress">
-                                        <div class="avatar avatar-sm">
-                                                <span class="avatar-initial rounded-circle bg-label-danger">DL</span>
-                                            </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="d-flex align-items-center border-primary py-3 px-4 border rounded mt-2" style="border-color:#F1F5F9 !important;">
-                                <div class="me-3">
-                                    <span class="timeline-indicator-advanced timeline-indicator-success border-0 shadow-none" >
-                                        <i class="icon-base bx bx-circle" style="font-size:25px;"></i>
-                                    </span>
-                                </div>
-                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                    <div class="me-3">
-                                        <p class="mb-0 text-heading">Lorem ipsum dolor sit amet consectetur.</p>
-                                    </div>
-                                    <div class="user-progress">
-                                        <div class="d-flex justify-content-center">
-                                            <div class="avatar avatar-sm">
-                                                <span class="avatar-initial rounded-circle bg-label-danger">DL</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            --}}
                         </div>
                     </div>
                 </div>
@@ -161,64 +145,8 @@
             <div class="mt-5">
                 <h4 class="fw-bold">Conversación del equipo </h4>
                 <div class="comment-wrapper">
-                    {{--
-                    <div class="d-flex overflow-hidden mb-3">
-                        <div class="user-avatar flex-shrink-0 me-4">
-                            <div class="avatar avatar-md">
-                            <img src="{{ asset('assets/img/2.png') }}" alt="Avatar" class="rounded-circle">
-                            </div>
-                        </div>
-                        <div class="chat-message-wrapper flex-grow-1">
-                            <div class="chat-message-text p-3" style="background:#fff;border-radius:0px 12px 12px 12px;">
-                                <div class="d-flex justify-content-between mb-2">
-                                    <div class="fw-bold">
-                                        Alex Rivera
-                                    </div>
-                                    <div>
-                                        Hace 1 horas
-                                    </div>
-                                </div>
-                                <p class="mb-0">
-                                    Lorem ipsum dolor sit amet consectetur. Dignissim id purus suspendisse elementum. Pretium libero eget integer ridiculus.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="d-flex overflow-hidden mb-3">
-                        <div class="user-avatar flex-shrink-0 me-4">
-                            <div class="avatar avatar-md">
-                            <img src="{{ asset('assets/img/3.png') }}" alt="Avatar" class="rounded-circle">
-                            </div>
-                        </div>
-                        <div class="chat-message-wrapper flex-grow-1">
-                            <div class="chat-message-text p-3" style="background:#fff;border-radius:0px 12px 12px 12px;">
-                                <div class="d-flex justify-content-between mb-2">
-                                    <div class="fw-bold">
-                                        Sarah Chen
-                                    </div>
-                                    <div>
-                                        Hace 2 horas
-                                    </div>
-                                </div>
-                                <p class="mb-0">
-                                    Lorem ipsum dolor sit amet consectetur. Dignissim id purus suspendisse elementum. Pretium libero eget integer ridiculus.
-                                </p>
-                                <div class="d-flex mt-3 ">
-                                    <a href="" target="_blank" class="text-nowrap mb-0 me-2">
-                                        <i class="icon-base bx bx-file align-bottom"></i> <small style="transform:translateY(2px);display:inline-block;">5 Mb</small>
-                                    </a>
-                                    <a href="" target="_blank" class="text-nowrap mb-0 me-2">
-                                        <i class="icon-base bx bx-image align-bottom"></i> <small style="transform:translateY(2px);display:inline-block;">5 Mb</small>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    --}}
-
                     @foreach($comments as $comment)
-                        <div class="d-flex overflow-hidden mb-3">
+                        <div id="comment-{{ $comment->id }}" class="d-flex overflow-hidden mb-3">
                             <div class="user-avatar flex-shrink-0 me-4">
                                 <div class="avatar avatar-md">
                                     @if( $comment->user->image )
@@ -259,9 +187,9 @@
                     @endforeach
                 </div>
 
+                @if( $userIsPartOfTask )
                 <div class="mt-5">
                     <form action="">
-
                         <div class="d-flex overflow-hidden mb-3">
                             <div class="user-avatar flex-shrink-0 me-4">
                                 <div class="avatar avatar-md">
@@ -293,6 +221,7 @@
                         </div>
                     </form>
                 </div>
+                @endif
             </div>
 
             @if( $task->status != 'FINALIZED' )
@@ -311,26 +240,32 @@
                 @endif
             @endif
         </div>
+
         <div class="col-md-4">
             <div class="card" style="background-color: transparent;">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex justify-content-between align-items-center hoverEdit">
                         <div class="d-flex justify-content-start align-items-center user-name">
                             <div class="avatar-wrapper">
                                 <div class="avatar avatar-md me-3">
-                                    <img src="{{ $task->brand->image }}" alt="Avatar" class="rounded-2">
+                                    <img id="brandImage" src="{{ $task->brand->image }}" class="rounded-2">
                                 </div>
                             </div>
                             <div class="d-flex flex-column">
-                                <a href="{{ route('brand.view', ['brand' => $task->brand]) }}" class="text-heading text-truncate">
-                                    <span class="fw-medium">{{ $task->brand->name }}</span>
+                                <a id="brandUrl" href="{{ route('brand.view', ['brand' => $task->brand]) }}" class="text-heading text-truncate">
+                                    <span id="brandName" class="fw-medium"> {{ $task->brand->name }} </span>
                                 </a>
-                                <small>{{ $task->brand->industry }}</small>
+                                <small id="brandIndustry"> {{ $task->brand->industry }} </small>
                             </div>
                         </div>
+
+                        @if( in_array(Auth::user()->id, [$task->user_id, $task->user_assign]) )
                         <div class="text-end">
-                            <span class="email-list-item-label badge badge-dot bg-success d-none d-md-inline-block me-2" data-label="work"></span>
+                            <button id="btnEditBrand" class="btn rounded-pill btn-icon btn-outline-secondary me-2 btnTaskEdit" data-bs-toggle="modal" data-bs-target="#brandModal"> 
+                                <i class="bx bx-pencil"></i> 
+                            </button>
                         </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -358,10 +293,10 @@
                     </div>
 
                     <div class="mb-2 mt-4"><small>RESPONSABLE</small></div>
-                    <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex justify-content-between align-items-center hoverEdit">
                         <div class="d-flex justify-content-start align-items-center user-name">
                             <div class="avatar-wrapper">
-                                <div class="avatar avatar-md me-3">
+                                <div id="assignImage" class="avatar avatar-md me-3">
                                     @if( $task->assign->image != null )
                                         <img src="{{ $task->assign->image }}" alt="Avatar" class="rounded-2">
                                     @else 
@@ -370,20 +305,32 @@
                                 </div>
                             </div>
                             <div class="d-flex flex-column">
-                                <a href="{{ route('task.user.list', [$task->assign]) }}" class="text-heading text-truncate">
-                                    <span class="fw-medium">{{ $task->assign->name }}</span>
+                                <a id="assignUrl" href="{{ route('task.user.list', [$task->assign]) }}" class="text-heading text-truncate">
+                                    <span id="assignName" class="fw-medium">{{ $task->assign->name }}</span>
                                 </a>
                             </div>
+                        </div>
+                        <div>
+                            <button id="btnEditAssign" class="btn rounded-pill btn-icon btn-outline-secondary me-2 btnTaskEdit" data-bs-toggle="modal" data-bs-target="#userModal">
+                                <i class="bx bx-pencil"></i> 
+                            </button>
                         </div>
                     </div>
 
                     <div class="mb-2 mt-4"><small>FECHA LÍMITE</small></div>
-                    <div class="d-flex align-items-center">
-                        <div class="me-2">
-                            <i class="bx bx-calendar"></i>
+                    <div class="d-flex justify-content-between hoverEdit">
+                        <div class="d-flex align-items-center">
+                            <div class="me-2">
+                                <i class="bx bx-calendar"></i>
+                            </div>
+                            <div id="modelDate">
+                                {{ Carbon\Carbon::parse($task->date_delivery)->format('d/m/Y') }}
+                            </div>
                         </div>
                         <div>
-                            {{ Carbon\Carbon::parse($task->date_delivery)->format('d/m/Y') }}
+                            <button id="btnEditDate" class="btn rounded-pill btn-icon btn-outline-secondary me-2 btnTaskEdit" data-bs-toggle="modal" data-bs-target="#dateModal"> 
+                                <i class="bx bx-pencil"></i> 
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -475,6 +422,13 @@
             </div>
         </div>
     </div>
+
+    @include('task.view._status')
+    @include('task.view._priority')
+    @include('task.view._title')
+    @include('task.view._brand')
+    @include('task.view._user')
+    @include('task.view._date')
 @endsection
 
 @section('script')

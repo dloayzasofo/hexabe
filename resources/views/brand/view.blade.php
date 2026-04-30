@@ -23,6 +23,14 @@
     </div>
     @endif
 
+    @if(Session::has('brand.error'))
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        {{ Session::get('brand.error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+        </button>
+    </div>
+    @endif
+
     <div class="row sm-vl-base mb-4">
         <div class="col-sm-8 col-md-6">
             <div class="d-flex align-items-center w-100">
@@ -41,6 +49,12 @@
                 <span><i class="bx bx-edit me-sm-2"></i> 
                     <span class="d-none d-sm-inline-block">Editar marca</span>
                 </span>
+            </button>
+
+            <button type="button" class="btn btn-label-danger confirmDelete" title="Eliminar marca"
+                data-href="{{ route('brand.delete', [$brand]) }}"
+                data-message="la marca <b> {{ $brand->name }} </b>.">
+                <i class="icon-base bx bx-trash icon-md"></i> 
             </button>
             @endhasanyrole
         </div>
@@ -244,6 +258,8 @@
             </div>
         </div>
     </div>
+
+    @include('brand._modal_delete')
 @endsection
 
 @section('script')

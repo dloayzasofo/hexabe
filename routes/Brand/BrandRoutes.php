@@ -19,6 +19,7 @@ Route::middleware(['auth'])->prefix('brand')->group(function () {
     Route::get('/edit/{brand}', [BrandController::class, 'edit'])
         ->middleware(RoleMiddleware::using('ADMIN'))
         ->name('brand.edit');
+
     Route::post('/edit/{brand}', [BrandController::class, 'update'])
         ->middleware(RoleMiddleware::using('ADMIN'))
         ->name('brand.update');
@@ -26,6 +27,10 @@ Route::middleware(['auth'])->prefix('brand')->group(function () {
     Route::get('/view/{brand}', [BrandController::class, 'view'])
         //->middleware(RoleMiddleware::using('ADMIN'))
         ->name('brand.view');
+
+    Route::get('/delete/{brand}', [BrandController::class, 'delete'])
+        //->middleware(RoleMiddleware::using('ADMIN'))
+        ->name('brand.delete');
 
     Route::get('/search-by-key', [BrandController::class, 'search_by_key'])
         //->middleware(RoleMiddleware::using('ADMIN'))
