@@ -281,6 +281,14 @@ class TaskController extends Controller {
         }
         if( $task->user_id == $user->id || $task->user_assign == $user->id ) $userIsPartOfTask = true;
 
+        $parent = null;
+        if( $task->parent != null ){
+            $parent = [
+                'parent' => $task->parent,
+                'childs' => Task::with('assign')->where('parent_id', $task->parent->id)->orderBy('date_delivery', 'asc')->get()
+            ];
+        }
+
         $params = [
             'task' => $task,
             'taskMedias' => $taskMedias,
@@ -289,7 +297,8 @@ class TaskController extends Controller {
             'childs' => $childs,
             'comments' => $comments,
             'userIsPartOfTask' => $userIsPartOfTask,
-            'brands' => $brands
+            'brands' => $brands,
+            'parent' => $parent
         ];
 
         return view('task.view', $params);

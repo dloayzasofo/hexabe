@@ -80,112 +80,11 @@
                 @endif
             </div>
 
-            @if( count($childs) > 0 )
-            <div class="mt-3">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <h5 class="fw-bold">Subtareas</h5>
-                            </div>
-                            <div>
-                                {{ $task->progress }}% Completado
-                            </div>
-                        </div>
-                        <div class="mt-2">
-                            <div class="progress" style="height: 16px;">
-                                <div class="progress-bar bg-success" role="progressbar" style="width: {{ $task->progress }}%;" aria-valuenow="{{ $task->progress }}" aria-valuemin="0" aria-valuemax="100">
-                                    {{ $task->progress }}%
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            @foreach ($childs as $child)
-                            <div class="d-flex align-items-center border-primary py-3 px-4 border rounded mt-2" style="border-color:#F1F5F9 !important;">
-                                <div class="me-3">
-                                    <span class="timeline-indicator-advanced timeline-indicator-success border-0 shadow-none" 
-                                        @if( $child->status == 'FINALIZED' ) style="color:#22C55E;" @endif>
-                                        <i class="icon-base bx @if( $child->status == 'FINALIZED' ) bx-check-circle @else bx-circle @endif" style="font-size:25px;"></i>
-                                    </span>
-                                </div>
-                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                    <div class="me-3">
-                                        <div>
-
-                                            <a href="{{ route('task.view', $child->id) }}" class="mb-0 text-heading" 
-                                                @if( $child->status == 'FINALIZED' ) style="text-decoration: line-through;" @endif>
-                                                {{ $child->title }} <br>
-                                            </a>
-                                            <small class="mt-auto mb-1 text-heading"> {{ $child->register_at }} </small>
-                                        </div>
-                                    </div>
-                                    <div class="user-progress">
-                                        <div class="d-flex justify-content-center">
-                                            <div class="avatar avatar-sm">
-                                                <div data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar pull-up" aria-label="{{ $child->assign->name }}" data-bs-original-title="{{ $child->assign->name }}">
-                                                    @if( $child->assign->image != null )
-                                                        <img src="{{ $child->assign->image }}" class="avatar rounded-circle">
-                                                    @else
-                                                        <span class="avatar-initial rounded-circle bg-label-danger">{{ $child->assign->nameInitial }}</span>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-            </div> 
-            @endif           
+            @include('task.view_section._subtask')         
 
             <div class="mt-5">
                 <h4 class="fw-bold">Conversación del equipo </h4>
-                <div class="comment-wrapper">
-                    @foreach($comments as $comment)
-                        <div id="comment-{{ $comment->id }}" class="d-flex overflow-hidden mb-3">
-                            <div class="user-avatar flex-shrink-0 me-4">
-                                <div class="avatar avatar-md">
-                                    @if( $comment->user->image )
-                                        <img src="{{ $comment->user->image }}" alt="Avatar" class="rounded-circle">
-                                    @else
-                                        <span class="avatar-initial rounded-circle bg-label-danger">{{ $comment->user->nameInitial }}</span>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="chat-message-wrapper flex-grow-1">
-                                <div class="chat-message-text p-3" style="background:#fff;border-radius:0px 12px 12px 12px;">
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <div class="fw-bold">
-                                            {{ $comment->user->name }}
-                                        </div>
-                                        <div>
-                                            {{ $comment->created_at->diffForHumans() }}
-                                        </div>
-                                    </div>
-                                    <p class="mb-0">
-                                        {{ $comment->description }}
-                                    </p>
-                                    <div class="d-flex mt-3 ">
-                                        @foreach( $comment->commentmedias as $commentmedia )
-                                        <a href="{{  $commentmedia->media->url }}" target="_blank" class="text-nowrap mb-0 me-2" download>
-                                            @if( str_contains($commentmedia->media->mime, 'image') )
-                                                <i class="icon-base bx bx-image align-bottom"></i>        
-                                            @else
-                                                <i class="icon-base bx bx-file align-bottom"></i>        
-                                            @endif
-                                             <small style="transform:translateY(2px);display:inline-block;">{{ $commentmedia->media->size_literal }}</small>
-                                        </a>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
+                @include('task.view_section._comment')
 
                 @if( $userIsPartOfTask )
                 <div class="mt-5">
@@ -242,7 +141,7 @@
         </div>
 
         <div class="col-md-4">
-            <div class="card" style="background-color: transparent;">
+            <div class="card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center hoverEdit">
                         <div class="d-flex justify-content-start align-items-center user-name">
@@ -270,140 +169,11 @@
                 </div>
             </div>
 
-            <div class="card mt-4">
-                <div class="card-body">
-                    <div class="mb-2"><small>DUEÑO DEL PROYECTO</small></div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="d-flex justify-content-start align-items-center user-name">
-                            <div class="avatar-wrapper">
-                                <div class="avatar avatar-md me-3">
-                                    @if( $task->user->image != null )
-                                        <img src="{{ $task->user->image }}" alt="Avatar" class="rounded-2">
-                                    @else 
-                                        <span class="avatar-initial rounded-circle bg-label-danger">{{ $task->user->nameInitial }}</span>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="d-flex flex-column">
-                                <a href="{{ route('task.user.list', [$task->user]) }}" class="text-heading text-truncate">
-                                    <span class="fw-medium">{{ $task->user->name }}</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mb-2 mt-4"><small>RESPONSABLE</small></div>
-                    <div class="d-flex justify-content-between align-items-center hoverEdit">
-                        <div class="d-flex justify-content-start align-items-center user-name">
-                            <div class="avatar-wrapper">
-                                <div id="assignImage" class="avatar avatar-md me-3">
-                                    @if( $task->assign->image != null )
-                                        <img src="{{ $task->assign->image }}" alt="Avatar" class="rounded-2">
-                                    @else 
-                                        <span class="avatar-initial rounded-circle bg-label-danger">{{ $task->assign->nameInitial }}</span>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="d-flex flex-column">
-                                <a id="assignUrl" href="{{ route('task.user.list', [$task->assign]) }}" class="text-heading text-truncate">
-                                    <span id="assignName" class="fw-medium">{{ $task->assign->name }}</span>
-                                </a>
-                            </div>
-                        </div>
-                        <div>
-                            <button id="btnEditAssign" class="btn rounded-pill btn-icon btn-outline-secondary me-2 btnTaskEdit" data-bs-toggle="modal" data-bs-target="#userModal">
-                                <i class="bx bx-pencil"></i> 
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="mb-2 mt-4"><small>FECHA LÍMITE</small></div>
-                    <div class="d-flex justify-content-between hoverEdit">
-                        <div class="d-flex align-items-center">
-                            <div class="me-2">
-                                <i class="bx bx-calendar"></i>
-                            </div>
-                            <div id="modelDate">
-                                {{ Carbon\Carbon::parse($task->date_delivery)->format('d/m/Y') }}
-                            </div>
-                        </div>
-                        <div>
-                            <button id="btnEditDate" class="btn rounded-pill btn-icon btn-outline-secondary me-2 btnTaskEdit" data-bs-toggle="modal" data-bs-target="#dateModal"> 
-                                <i class="bx bx-pencil"></i> 
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="mt-4 mb-4">
-                <div class="fw-bold">Archivos adjuntos y enlaces</div>
-
-                @if( count($taskMedias) == 0 && count($taskLinks) == 0 )
-                    <div class="border rounded p-3 text-center mt-2" style="background:#F1F5F9;">
-                        No hay archivos adjuntos ni enlaces relacionados con esta tarea.
-                    </div>
-                @endif
-            </div>
-
-            @if( count($taskMedias) > 0 )
-                @foreach( $taskMedias as $taskMedia )
-                    @if( $taskMedia->media !== null )
-                    <div class="block border rounded mb-2" >
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <a href="{{ $taskMedia->media->url }}" target="_blank" class="block">
-                                    <div class="card" style="background:transparent;box-shadow:none;">
-                                        <div class="card-body" style="padding:10px;">
-                                            <div class="d-flex justify-content-start align-items-center user-name">
-                                                <div class="avatar-wrapper">
-                                                    <div class="avatar avatar-md me-3">
-                                                        <span class="avatar-initial rounded bg-label-danger"><i class="icon-base bx bx-file icon-lg"></i></span>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex flex-column">
-                                                    <small>{{ $taskMedia->media->name }}</small>
-                                                    <small>{{ $taskMedia->media->size_literal }}</small>
-                                                </div>
-                                            </div>
             
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="p-2">
-                                <a href="{{ $taskMedia->media->url }}" download="{{ $taskMedia->media->name }}" class="btn btn-icon btn-outline-secondary"
-                                    title="Descargar: {{ $taskMedia->media->name }}" data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top">
-                                    <i class="bx bx-arrow-to-bottom"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    @endif
-                @endforeach
-            @endif
-
-            @if( count($taskLinks) > 0 )
-                @foreach( $taskLinks as $taskLink )
-                    <a href="{{ $taskLink->url }}" class="block" target="_blank">
-                        <div class="card mt-2" style="background:transparent;box-shadow:none; border: 1px solid #e2e8f0;">
-                            <div class="card-body" style="padding:10px;">
-                                <div class="d-flex justify-content-start align-items-center user-name">
-                                    <div class="avatar-wrapper">
-                                        <div class="avatar avatar-md me-3">
-                                            <span class="avatar-initial rounded bg-label-danger"><i class="icon-base bx bx-link icon-lg"></i></span>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex flex-column">
-                                        <small>{{ $taskLink->url }}</small>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </a>
-                @endforeach
-            @endif
+            @include('task.view_section._info')
+            @include('task.view_section._parent')
+            @include('task.view_section._media')
+            
         </div>
     </div>
 
