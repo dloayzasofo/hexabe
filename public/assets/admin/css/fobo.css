@@ -433,6 +433,24 @@ textarea{
 .list-item-drag-move{
     background:#bfc0fa;
 }
+.loading{
+    position: fixed;
+    background: rgba(0,0,0,0.1);
+    top: 0px;
+    left: 0px;
+    height: 100vh;
+    width: 100vw;
+    z-index: 9;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(.8px);
+}
+.loading.hide{
+    z-index: -1;
+    display: none;
+}
 .mh-4{
     min-height: 400px;
 }

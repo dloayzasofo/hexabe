@@ -134,6 +134,13 @@
               <div class="d-flex justify-content-between align-items-center">
                 <div>
                   <ul class="list-unstyled users-list d-flex align-items-center avatar-group m-0 me-2">
+                    <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar pull-up avatar-xs" aria-label="{{ $task->assign->name }}" data-bs-original-title="{{ $task->assign->name }}">
+                      @if( $task->assign->image )
+                        <img class="rounded-circle" src="{{ $task->assign->image }}" alt="{{ $task->assign->name }}">
+                      @else
+                        <span class="avatar-initial rounded-circle">{{ $task->assign->nameInitial }}</span>
+                      @endif
+                    </li>
                     @foreach($task->collaborators as $index => $collaborator)
                       @if( $index >= 2)
                           @break

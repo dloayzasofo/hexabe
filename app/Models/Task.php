@@ -62,10 +62,22 @@ class Task extends Model
     public function getRegisterAtAttribute()
     {
         $date = Carbon::parse($this->date_delivery . " 18:00:00");
-        if( $date->diffInDays() < 1 ) {
+        $now = Carbon::now();
+        $now->hour = 18;
+        $now->minute = 0;
+        $now->second = 0;
+        $dateDiff = $date->diffInDays($now);
+
+        if(  $dateDiff >= -1 AND $dateDiff < 0 ) {
+            return "Mañana";
+        }
+        if(  $dateDiff >= 0 AND $dateDiff < 1 ) {
             return "Hoy";
         }
-        return $date->diffForHumans();
+        if(  $dateDiff >= 1 AND $dateDiff < 2 ) {
+            return "Ayer";
+        }
+        return $date->diffForHumans($now);
 
     }
 

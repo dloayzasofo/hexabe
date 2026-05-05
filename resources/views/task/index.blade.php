@@ -1,6 +1,7 @@
 @extends('layout')
 
 @section('main')
+    <div class="wrap-toast"></div>
     <div class="btn-add-task"> 
         <button id="btnCreate" class="btn rounded-pill btn-icon btn-primary" title="Crear nueva tarea">
             <span><i class="bx bx-plus"></i></span>
@@ -203,6 +204,15 @@
         <div> {{ $task->register_at}} </div>
         <div>
             <div class="d-flex align-items-center justify-content-end">
+                <button data-href="{{ route('task.view', [$task]) }}" 
+                    data-bs-toggle="tooltip" 
+                    class="btn btn-icon delete-record text-primary btnCopyLink"
+                    data-bs-placement="top" 
+                    data-task="{{ $task->title }}"
+                    aria-label="Copiar enlace" 
+                    data-bs-original-title="Copiar enlace">
+                    <i class="icon-base bx bx-link icon-md"></i>
+                </button>
                 @if( $status != 'FINALIZED' )
                 <a href="javascript:;" 
                     class="btn btn-icon delete-record text-danger openModalMessage" 
@@ -747,6 +757,11 @@
             openModals[i].addEventListener('click', handleOpenModal);
         }
 
+        let btnsCopyLink = document.querySelectorAll('.btnCopyLink');
+        for(let i=0; i < btnsCopyLink.length; i++){
+            btnsCopyLink[i].addEventListener('click', handleCopyLink);
+        }
+
         document.querySelector('.modal-link').addEventListener('click', handleModalHref);
     });
 
@@ -806,6 +821,36 @@
         }
     }
 
+    function handleCopyLink(){
+        let href = this.dataset.href;
+        let task = this.dataset.task;
+        navigator.clipboard.writeText(href);
+
+        let toastElement = document.createElement('div');
+        toastElement.classList.add('bs-toast', 'toast', 'fade', 'bg-success');
+        toastElement.setAttribute('role', 'alert');
+        toastElement.setAttribute('aria-live', 'assertive');
+        toastElement.setAttribute('aria-atomic', 'true');
+        toastElement.setAttribute('data-bs-autohide', 'true');
+        toastElement.setAttribute('data-bs-delay', '2000');
+        toastElement.innerHTML = `
+            <div class="toast-header">
+                <i class="icon-base bx bx-bell me-2"></i>
+                <div class="me-auto fw-medium">Enlace copiado</div>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">Tarea: ${task}</div>
+        `;
+
+        let wrapToast = document.querySelector('.wrap-toast');
+        wrapToast.appendChild(toastElement);
+        const toast = new bootstrap.Toast(toastElement, {
+            autohide: true,
+            delay: 2000 // 2 seconds
+        });
+
+        toast.show();
+    }
 </script>
 
 @endsection

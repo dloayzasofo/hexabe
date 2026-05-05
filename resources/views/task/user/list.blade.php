@@ -202,16 +202,15 @@
         <div> - </div>
         <div> {{ $task->register_at}} </div>
         <div>
-            <div class="dropdown">
-                <button class="btn text-body-secondary p-0" type="button" id="timelineWapper" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="icon-base bx bx-dots-vertical-rounded icon-lg"></i>
-                </button>
-                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="timelineWapper" style="">
-                    <a class="dropdown-item" href="javascript:void(0);">Select All</a>
-                    <a class="dropdown-item" href="javascript:void(0);">Refresh</a>
-                    <a class="dropdown-item" href="javascript:void(0);">Share</a>
-                </div>
-            </div>
+            <button data-href="{{ route('task.view', [$task]) }}" 
+                data-bs-toggle="tooltip" 
+                class="btn btn-icon delete-record text-primary btnCopyLink"
+                data-bs-placement="top" 
+                data-task="{{ $task->title }}"
+                aria-label="Copiar enlace" 
+                data-bs-original-title="Copiar enlace">
+                <i class="icon-base bx bx-link icon-md"></i>
+            </button>
         </div>
     </div>
     @endforeach
@@ -242,4 +241,44 @@
 <script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
 <script>let urlCreate = "{{ route('task.user', [$user]) }}";</script>
 <script src="{{asset('/assets/admin/js/task.js')}}"></script>
+
+<script>
+    window.addEventListener('load', () => {
+        let btnsCopyLink = document.querySelectorAll('.btnCopyLink');
+        for(let i=0; i < btnsCopyLink.length; i++){
+            btnsCopyLink[i].addEventListener('click', handleCopyLink);
+        }
+    });
+
+    function handleCopyLink(){
+        let href = this.dataset.href;
+        let task = this.dataset.task;
+        navigator.clipboard.writeText(href);
+
+        let toastElement = document.createElement('div');
+        toastElement.classList.add('bs-toast', 'toast', 'fade', 'bg-success');
+        toastElement.setAttribute('role', 'alert');
+        toastElement.setAttribute('aria-live', 'assertive');
+        toastElement.setAttribute('aria-atomic', 'true');
+        toastElement.setAttribute('data-bs-autohide', 'true');
+        toastElement.setAttribute('data-bs-delay', '2000');
+        toastElement.innerHTML = `
+            <div class="toast-header">
+                <i class="icon-base bx bx-bell me-2"></i>
+                <div class="me-auto fw-medium">Enlace copiado</div>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">Tarea: ${task}</div>
+        `;
+
+        let wrapToast = document.querySelector('.wrap-toast');
+        wrapToast.appendChild(toastElement);
+        const toast = new bootstrap.Toast(toastElement, {
+            autohide: true,
+            delay: 2000 // 2 seconds
+        });
+
+        toast.show();
+    }
+</script>
 @endsection

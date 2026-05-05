@@ -17,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'comment/*',
             'user/*',
             'popup/*',
+            'report/*',
             'task/api/*',
         ]);
     })

@@ -123,11 +123,11 @@
                                     <div class="user-progress">
                                         <div class="d-flex justify-content-center">
                                             <div class="avatar avatar-sm">
-                                                <div data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar pull-up" aria-label="{{ $task->assign->name }}" data-bs-original-title="{{ $task->assign->name }}">
-                                                    @if( $task->assign->image != null )
-                                                        <img src="{{ $task->assign->image }}" class="avatar rounded-circle">
+                                                <div data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar pull-up" aria-label="{{ $child->assign->name }}" data-bs-original-title="{{ $child->assign->name }}">
+                                                    @if( $child->assign->image != null )
+                                                        <img src="{{ $child->assign->image }}" class="avatar rounded-circle">
                                                     @else
-                                                        <span class="avatar-initial rounded-circle bg-label-danger">{{ $task->assign->nameInitial }}</span>
+                                                        <span class="avatar-initial rounded-circle bg-label-danger">{{ $child->assign->nameInitial }}</span>
                                                     @endif
                                                 </div>
                                             </div>
