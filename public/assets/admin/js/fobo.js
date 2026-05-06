@@ -70,16 +70,9 @@ function setActiveToMenuByUrl(){
         'report': "menu-report",
         'setting': "menu-setting",
         
-        'form-contact': "menu-forms-contact",
+        'group': "menu-group",
         'service': "menu-forms-service",
-        'boletin': "menu-forms-boletin",
-        'contact': "menu-contact",
-        'blog/article': "menu-blog-article",
-        'blog/categories': "menu-blog-category",
-        'bursatil/article': "menu-bursatil-article",
-        'bursatil/categories': "menu-bursatil-category",
-        'bursatil/video': "menu-bursatil-video",
-        'sorteo/ask': "menu-sorteo-ask",
+        'performance': "menu-performance",
     };
 
     var keys = Object.keys(menu);
@@ -90,47 +83,13 @@ function setActiveToMenuByUrl(){
         $('#menu-admin').addClass('active');
         return;
     }
-
-    if( url.includes('logs') ){
-        $('#menu-historial').addClass('active');
-        return;
-    }
-
-    if( url.includes('sorteo/ask') ){
-        $('#menu-sorteo-ask').addClass('active');
-        return;
-    }
     
     for(var i=0; i < keys.length; i++){
         var key = keys[i];
         if( url.includes(key) ){
-            
-            if( url.includes('tarifario') ){
-                $('#menu-service').addClass('open');
-                $('#menu-tarifario').addClass('active');
-                return;
-            }
             if( url.includes('requisitos') ){
                 $('#menu-service').addClass('open');
                 $('#menu-requisitos').addClass('active');
-                return;
-            }
-
-            if( url.includes('forms/contact') ){
-                $('#menu-forms-contact').addClass('active');
-                return;
-            }
-
-            if( url.includes('structure/gestion') ){
-                $('#menu-gestion').addClass('active');
-                return;
-            }
-            if( url.includes('structure/bono') ){
-                $('#menu-bono').addClass('active');
-                return;
-            }
-            if( url.includes('structure/archivo') ){
-                $('#menu-archivo').addClass('active');
                 return;
             }
             

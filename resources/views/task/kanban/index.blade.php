@@ -32,10 +32,19 @@
 		<div>
 			<ul class="nav nav-tabs nav-fill rounded-0 timeline-indicator-advanced" role="tablist">
 				<li class="nav-item" role="presentation">
-					<a href="{{ route('task.index') }}" type="button" class="nav-link" aria-selected="false" tabindex="-1">Lista</a>
+					<a href="{{ route('task.index') }}" type="button" class="nav-link" aria-selected="false" tabindex="-1">
+            <i class="bx bx-list-ol"></i> Lista
+          </a>
 				</li>
 				<li class="nav-item" role="presentation">
-					<a href="{{ route('kanban.index') }}" type="button" class="nav-link active" ria-selected="true">Tarjetas</a>
+					<a href="{{ route('kanban.index') }}" type="button" class="nav-link active" ria-selected="true">
+            <i class="bx bx-card"></i> Tarjetas
+          </a>
+				</li>
+				<li class="nav-item" role="presentation">
+					<a href="{{ route('calendar.index') }}" type="button" class="nav-link" ria-selected="true">
+            <i class="bx bx-calendar"></i> Calendario
+          </a>
 				</li>
 			</ul>
 		</div>

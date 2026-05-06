@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Task\TaskController;
 use App\Http\Controllers\Task\TaskUserController;
 use App\Http\Controllers\Task\KanbanController;
+use App\Http\Controllers\Task\CalendarController;
 use \Spatie\Permission\Middleware\RoleMiddleware;
 
 Route::middleware(['auth'])->prefix('task')->group(function () {
@@ -65,4 +66,14 @@ Route::middleware(['auth'])->prefix('task')->group(function () {
     Route::post('/api/delete/{task}', [TaskController::class, 'apidelete'])
         //->middleware(RoleMiddleware::using('ADMIN'))
         ->name('task.api.delete');
+
+    Route::get('/calendar', [CalendarController::class, 'index'])
+        //->middleware(RoleMiddleware::using('ADMIN'))
+        ->name('calendar.index');
+    Route::post('/calendar/list', [CalendarController::class, 'list'])
+        //->middleware(RoleMiddleware::using('ADMIN'))
+        ->name('calendar.list');
+    Route::post('/calendar/draganddrop', [CalendarController::class, 'draganddrop'])
+        //->middleware(RoleMiddleware::using('ADMIN'))
+        ->name('calendar.draganddrop');
 });

@@ -271,7 +271,7 @@
                         data-bs-toggle="tooltip" 
                         class="btn btn-icon text-primary btnCopyLink"
                         data-bs-placement="top" 
-                        data-task="title"
+                        data-task="${item.title}"
                         aria-label="Copiar enlace" 
                         data-bs-original-title="Copiar enlace">
                         <i class="icon-base bx bx-link icon-md"></i>

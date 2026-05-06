@@ -19,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'popup/*',
             'report/*',
             'task/api/*',
+            'task/calendar/*',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

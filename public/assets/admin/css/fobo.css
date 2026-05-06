@@ -55,6 +55,31 @@
 .bx-paperclip{
     transform: rotate(90deg);
 }
+.calendar-item{
+    padding: 4px;
+}
+.calendar-item>div:first-child{
+    display: flex;
+    justify-content: space-between;
+    flex-flow: row nowrap;
+    align-items: center;
+    margin-bottom: 7px;
+}
+.calendar-item>div:last-child{
+    font-size: 11px;
+}
+.calendar-item .avatar-initial{
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+}
+.calendar-item .rounded-circle{
+    height: 30px;
+    width: 30px;
+    object-fit: cover;
+}
 .card-badget-top-right{
     position: absolute;
     top: 10px;
@@ -111,6 +136,9 @@
 }
 .custom-col-3 .custom-option.checked{
     border-width: 2px;
+}
+.fc-daygrid-event-harness .fc-event{
+    text-wrap: auto !important;
 }
 .fobo-datatable label,
 .fobo-datatable .dataTables_info{
