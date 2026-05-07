@@ -28,6 +28,14 @@
     </div>
     @endif
 
+    @if(Session::has('user.error'))
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        {{ Session::get('user.error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+        </button>
+    </div>
+    @endif
+
     <div class="card">
         <div class="card-datatable table-responsive">
             <div class="dataTables_wrapper dt-bootstrap5 no-footer">

@@ -11,6 +11,28 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="row gy-3 custom-col-3">
+                        @foreach($users as $item)
+                        <div class="col-md">
+                            <div class="form-check custom-option custom-option-icon @if( $item->id == $task->assign->id ) checked @endif">
+                                <label class="form-check-label custom-option-content" for="updateUser{{ $item->id }}">
+                                    <span class="custom-option-body">
+                                        <div class="avatar avatar-xl mx-auto">
+                                            @if( $item->image != null )
+                                            <img src="{{ $item->image }}" alt="{{ $item->name }}" class="rounded-circle">
+                                            @else
+                                            <span class="avatar-initial rounded-circle bg-label-primary">{{ $item->nameInitial }}</span>
+                                            @endif
+                                        </div>
+                                        <span class="custom-option-title mb-1 mt-2"> {{ $item->name }} <br> {{ $item->last_name }}</span>
+                                    </span>
+                                    <input name="updateUser" class="form-check-input" type="radio" value="{{ $item->id }}" id="updateUser{{ $item->id }}" 
+                                       @if( $item->id == $task->assign->id ) checked @endif>
+                                </label>
+                            </div>
+                        </div>
+                        @endforeach
+
+                        {{-- 
                         <div class="col-md">
                             <div class="form-check custom-option custom-option-icon checked">
                                 <label class="form-check-label custom-option-content" for="updateUser{{ $task->assign->id }}">
@@ -48,7 +70,7 @@
                             </div>
                         </div>
                         @endif
-
+                        
                         @foreach($taskCollaboratos as $collaborator)
                             @if( $collaborator->user->id == $task->user->id || $collaborator->user->id == $task->assign->id ) @continue @endif
                             <div class="col-md">
@@ -69,6 +91,7 @@
                                 </div>
                             </div>
                         @endforeach
+                        --}}
                     </div>
                 </div>
             </div>

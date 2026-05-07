@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 use App\Models\User;
 use App\Models\Brand;
+use App\Models\Task;
+use App\Models\TaskCollaborator;
+use App\Models\Comment;
 use Auth;
 
 class UserController extends Controller {
@@ -83,6 +86,16 @@ class UserController extends Controller {
     function delete(Request $request, User $user){
         $name = $user->name . ' ' . $user->last_name;
         $user_id = $user->id;
+
+        $tasks = Task::where('user_id', $user_id)->orWhere('user_assign', $user_id)->get();
+        if( count($tasks) > 0 ){
+            $request->session()->flash('user.error', 'No se puede eliminar el usuario "' . $name . '" porque tiene tareas asignadas');
+            return redirect()->back();
+        }
+
+        TaskCollaborator::where('user_id', $user_id)->delete();
+        Comment::where('user_id', $user_id)->delete();
+
         $user->email = $user->email . '_deleted_' . Str::random(5);
         $user->delete();
         $this->_save_logs($user, 'DELETE', $request);

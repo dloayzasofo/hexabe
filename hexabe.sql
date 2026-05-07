@@ -283,6 +283,7 @@ CREATE TABLE task_links(
     user_id bigint(20) UNSIGNED,
     created_at timestamp NULL DEFAULT now(),
 	 updated_at timestamp NULL DEFAULT now(),
+	 deleted_at timestamp NULL DEFAULT NULL,
     foreign key (task_id) references tasks(id) on delete cascade on update no action,
     foreign key (user_id) references users(id) on delete cascade on update no action
 );
@@ -293,6 +294,7 @@ CREATE TABLE task_collaborators(
     user_id bigint(20) UNSIGNED,
     created_at timestamp NULL DEFAULT now(),
 	 updated_at timestamp NULL DEFAULT now(),
+	 deleted_at timestamp NULL,
     foreign key (task_id) references tasks(id) on delete cascade on update no action,
     foreign key (user_id) references users(id) on delete cascade on update no action
 );
@@ -304,6 +306,7 @@ CREATE TABLE comments(
 	 user_id bigint(20) UNSIGNED,
 	 created_at timestamp NULL DEFAULT now(),
 	 updated_at timestamp NULL DEFAULT now(),
+	 deleted_at timestamp NULL,
     foreign key (task_id) references tasks(id) on delete cascade on update no action,
     foreign key (user_id) references users(id) on delete cascade on update no action
 );

@@ -274,6 +274,7 @@ class TaskController extends Controller {
         $childs = Task::where('parent_id', $task->id)->orderBy('date_delivery', 'asc')->get();
         $comments = $task->comments()->with('user')->with('commentmedias')->orderBy('created_at', 'desc')->get();
         $brands = Brand::orderBy('name', 'asc')->get();
+        $users = User::where('business_id', $user->business_id)->orderBy('name')->orderBy('last_name')->get();
 
         $userIsPartOfTask = false;
         foreach( $task->collaborators as $collaborator ){
@@ -298,7 +299,8 @@ class TaskController extends Controller {
             'comments' => $comments,
             'userIsPartOfTask' => $userIsPartOfTask,
             'brands' => $brands,
-            'parent' => $parent
+            'parent' => $parent,
+            'users' => $users
         ];
 
         return view('task.view', $params);
