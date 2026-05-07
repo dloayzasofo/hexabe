@@ -108,34 +108,118 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="fw-bold">Carga de trabajo actual</h5>
-                        <div class="row">
-                            @foreach($team as $item)
-                                <div class="col-md-6 mb-4">
-                                    <div class="d-flex justify-content-between mb-1">
-                                        <div>{{ $item['name'] }} {{ $item['last_name'] }}</div>
-                                        <div>
-                                            @if( $item['totalTask'] == 0 )
-                                                -
-                                            @else
-                                                {{ $item['totalFinalized'] }} / {{ $item['totalTask'] }}
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <div class="progress w-100" style="height: 8px;">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="fw-bold">Carga de trabajo actual</h5>
+                        <div>
+                            <select name="work" id="work" class="form-select">
+                                <option value="today">Hoy</option>
+                                <option value="week">Ultima semana</option>
+                                <option value="month">Ultimo mes</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="wrap-work" class="row mt-4">
+                        {{-- 
+                        @foreach($team as $item)
+                            <div class="col-md-6 mb-4">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <div>{{ $item['name'] }} {{ $item['last_name'] }}</div>
+                                    <div>
                                         @if( $item['totalTask'] == 0 )
                                             -
                                         @else
-                                            @php $progress = $item['totalFinalized'] * 100 / $item['totalTask'] @endphp
-                                            <div class="progress-bar" style="width: {{ $progress }}%; background:@if($progress >= 85) #22C55E; @elseif ($progress >= 50) #EAB308; @else #EF4444; @endif" aria-valuenow="{{ $progress }}%" aria-valuemin="0" aria-valuemax="100"></div>
+                                            {{ $item['totalFinalized'] }} / {{ $item['totalTask'] }}
                                         @endif
                                     </div>
                                 </div>
-                            @endforeach
-                        </div>
+                                <div class="progress w-100" style="height: 8px;">
+                                    @if( $item['totalTask'] == 0 )
+                                        -
+                                    @else
+                                        @php $progress = $item['totalFinalized'] * 100 / $item['totalTask'] @endphp
+                                        <div class="progress-bar" style="width: {{ $progress }}%; background:@if($progress >= 85) #22C55E; @elseif ($progress >= 50) #EAB308; @else #EF4444; @endif" aria-valuenow="{{ $progress }}%" aria-valuemin="0" aria-valuemax="100"></div>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                        --}}
+                    </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+<script>
+    window.addEventListener('load', () => {
+        let time = 'today';
+        serverGetReportTeam(time);
+
+        let work = document.querySelector('#work');
+        work.addEventListener('change', (e) => {
+            time = e.target.value;
+            serverGetReportTeam(time);
+        });
+    });
+
+    function serverGetReportTeam(time){
+        let url = "{{ route('report.list') }}?time=" + time;
+        fetch(url,{
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            if (data.status == 'success') {
+                handleRenderWork(data.data)
+            }
+        });
+    }
+
+    function handleRenderWork(data){
+        let html = '';
+        for(let i=0; i < data.length; i++){
+            let item = data[i];
+
+            let totalHtml = '-';
+            if( item.totalTask > 0 ){
+                totalHtml = item.totalFinalized + ' / ' + item.totalTask;
+            }
+
+            let progressHtml = '';
+            if( item.totalTask > 0 ){
+                let progress = item.totalFinalized * 100 / item.totalTask;
+                let color = '#EF4444';
+                if( progress >= 50 ){
+                    color = '#EAB308';
+                }
+                if( progress >= 85 ){
+                    color = '#22C55E';
+                }
+                progressHtml = `<div class="progress-bar" style="width: ${ progress }%; background:${ color }" aria-valuenow="${ progress }%" aria-valuemin="0" aria-valuemax="100"></div>`;
+            }
+
+            html += `
+                <div class="col-md-6 mb-4">
+                    <div class="d-flex justify-content-between mb-1">
+                        <div>${ item.name } ${ item.last_name }</div>
+                        <div> ${ totalHtml }</div>
+                    </div>
+                    <div class="progress w-100" style="height: 8px;">
+                        ${ progressHtml }
+                    </div>
+                </div>
+            `;
+        }
+
+        $('#wrap-work').html(html);
+    }
+
+</script>
 @endsection

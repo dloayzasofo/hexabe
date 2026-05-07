@@ -111,4 +111,23 @@ class User extends Authenticatable
 
         return $percentEfficiency;
     }
+
+    public function totalTaskByDate($start, $end){
+        if( $start == $end ){
+            $count = Task::where('user_assign', $this->id)->whereDate('date_delivery', $start)->count();
+            return $count;
+        }
+        $count = Task::where('user_assign', $this->id)->whereBetween('date_delivery', [$start, $end])->count();
+        return $count;
+    }
+
+
+    public function totalFinalizedByDate($start, $end){
+        if( $start == $end ){
+            $finalize_count = Task::where('user_assign', $this->id)->whereDate('date_delivery', $start)->where('status', 'FINALIZED')->count();
+            return $finalize_count;
+        }
+        $finalize_count = Task::where('user_assign', $this->id)->whereBetween('date_delivery', [$start, $end])->where('status', 'FINALIZED')->count();
+        return $finalize_count;
+    }
 }

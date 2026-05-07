@@ -51,4 +51,46 @@ class ReportController extends Controller {
         
         return view('report.index', $params);
     }
+
+    public function listWork(Request $request){
+        $user = Auth::user();
+        $users = User::where('business_id', $user->business_id)->get();
+        $time = $request->query('time') ?? 'today';
+
+        $startdate = '';
+        $enddate = '';
+        if( $time == 'today' ){
+            $startdate = date('Y-m-d');
+            $enddate = date('Y-m-d');
+        }
+        if( $time == 'week' ){
+            $startdate = date('Y-m-d', strtotime('-1 week'));
+            $enddate = date('Y-m-d');
+        }
+        if( $time == 'month' ){
+            $startdate = date('Y-m-d', strtotime('-1 month'));
+            $enddate = date('Y-m-d');
+        }
+
+        $result = [];
+        foreach ($users as $item) {
+            $totalTask = $item->totalTaskByDate($startdate, $enddate);
+            $totalFinalized = $item->totalFinalizedByDate($startdate, $enddate);
+            $result[] = [
+                'id'=> $item->id,
+                'name'=> $item->name,
+                'last_name'=> $item->last_name,
+                'totalTask'=> $totalTask,
+                'totalFinalized' => $totalFinalized,
+            ];
+
+        }
+
+        $params = [
+            'status' =>'success',
+            'data' => $result
+        ];
+
+        return response()->json($params);
+    }
 }
