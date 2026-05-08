@@ -15,12 +15,21 @@
 	<div class="row sm-vl-base mb-4">
 		<div>
 			<ul class="nav nav-tabs nav-fill rounded-0 timeline-indicator-advanced" role="tablist">
-				<li class="nav-item" role="presentation">
-					<a href="{{ route('task.user.list', $user->id) }}" type="button" class="nav-link" aria-selected="false" tabindex="-1">Lista</a>
-				</li>
-				<li class="nav-item" role="presentation">
-					<a href="{{ route('task.user.kanban', $user->id) }}" type="button" class="nav-link active" ria-selected="true">Tarjetas</a>
-				</li>
+        <li class="nav-item" role="presentation">
+          <a href="{{ route('task.user.list', $user->id) }}" class="nav-link" aria-selected="true">
+            <i class="bx bx-list-ol"></i> Lista
+          </a>
+        </li>
+        <li class="nav-item" role="presentation">
+          <a href="{{ route('task.user.kanban', $user->id) }}" class="nav-link active" ria-selected="false" tabindex="-1">
+            <i class="bx bx-card"></i> Tarjetas
+          </a>
+        </li>
+        <li class="nav-item" role="presentation">
+          <a href="{{ route('task.user.calendar', $user->id) }}" class="nav-link" ria-selected="true">
+            <i class="bx bx-calendar"></i> Calendario
+          </a>
+        </li>
 			</ul>
 		</div>
 		<div id="myKanban" class="kanban"></div>

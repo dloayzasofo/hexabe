@@ -63,4 +63,50 @@ class TaskUserController extends Controller {
 
         return view('task.user.kanban', $params);
     }
+
+    public function calendar(Request $request, User $user) {
+        $params = [
+            'user' => $user
+        ];
+        return view('task.user.calendar', $params);
+    }
+
+    public function calendar_list(Request $request, User $user) {
+        $dateIni = $request->input('date_ini');
+        $dateEnd = $request->input('date_end');
+
+        $tasks = Task::with('brand', 'assign', 'collaborators')
+            ->whereBetween('date_delivery', [$dateIni, $dateEnd])
+            ->where(function($query)use($user){
+                $query->where('user_assign', $user->id)
+                      ->orWhere('user_id', $user->id)
+                      ->orWhereRaw('id in (SELECT task_id FROM task_collaborators WHERE user_id = ?)', [$user->id]);
+            })
+            ->orderBy('position', 'asc')
+            ->get();
+
+        $data = [];
+        foreach($tasks as $task){
+            $data[] = [
+                'id' => $task->id,
+                'title' => $task->title,
+                'status' => $task->status,
+                'date_delivery' => $task->date_delivery,
+                'assign' => [
+                    'id' => $task->assign->id,
+                    'name' => $task->assign->name,
+                    'last_name' => $task->assign->last_name,
+                    'image' => $task->assign->image,
+                    'nameInitial' => $task->assign->nameInitial
+                ]
+            ];
+        }
+
+        $params = [
+            'success' => true,
+            'data' => $data
+        ];
+
+        return response()->json($params);
+    }
 }

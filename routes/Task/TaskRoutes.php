@@ -59,6 +59,12 @@ Route::middleware(['auth'])->prefix('task')->group(function () {
     Route::get('/staff/kanban/{user}', [TaskUserController::class, 'kanban'])
         //->middleware(RoleMiddleware::using('ADMIN'))
         ->name('task.user.kanban');
+    Route::get('/staff/calendar/{user}', [TaskUserController::class, 'calendar'])
+        //->middleware(RoleMiddleware::using('ADMIN'))
+        ->name('task.user.calendar');
+    Route::post('/staff/calendar/list/{user}', [TaskUserController::class, 'calendar_list'])
+        //->middleware(RoleMiddleware::using('ADMIN'))
+        ->name('task.user.calendar.list');
 
     Route::post('/api/finish/{task}', [TaskController::class, 'apifinish'])
         //->middleware(RoleMiddleware::using('ADMIN'))

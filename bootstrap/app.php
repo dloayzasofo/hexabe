@@ -20,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'report/*',
             'task/api/*',
             'task/calendar/*',
+            'task/staff/calendar/*',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -36,19 +36,6 @@ class CalendarController extends Controller {
             })
             ->orderBy('position', 'asc')
             ->get();
-        /*
-        $tasks = Task::with('brand', 'assign', 'collaborators')
-            ->withCount('medias')
-            ->withCount('childs')
-            ->whereBetween('date_delivery', [$dateIni, $dateEnd])
-            ->where(function($query)use($user){
-                $query->where('user_assign', $user->id)
-                      ->orWhere('user_id', $user->id);
-            })
-            //->where('user_assign', $user->id)
-            ->orderBy('position', 'asc')
-            ->get();
-        */
 
         $data = [];
         foreach($tasks as $task){
