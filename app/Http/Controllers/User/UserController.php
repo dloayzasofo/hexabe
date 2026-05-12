@@ -14,6 +14,8 @@ use App\Models\Brand;
 use App\Models\Task;
 use App\Models\TaskCollaborator;
 use App\Models\Comment;
+use App\Models\UserHistory;
+use Carbon\Carbon;
 use Auth;
 
 class UserController extends Controller {
@@ -163,6 +165,8 @@ class UserController extends Controller {
             $name = $model->name;
             $last_name  = $model->last_name;
             $email      = $model->email;
+            $history    = UserHistory::where('user_id', $model->id)->orderBy('id', 'desc')->first();
+            $lastAction = $history == null ? '-' : Carbon::parse($history->created_at)->format('d/m/Y H:i:s');
 
             $teams = '';
             foreach($model->teamusers as $teamuser){
@@ -184,7 +188,7 @@ class UserController extends Controller {
                 break;
             }
 
-            $created_at = date('d/m/Y H:i', strtotime($model->created_at));
+            //$created_at = date('d/m/Y H:i', strtotime($model->created_at));
 
             $image = '<span class="avatar-initial rounded-circle bg-label-danger">' . $model->nameInitial . '</span>';
             if( $model->image ){
@@ -229,9 +233,9 @@ class UserController extends Controller {
             $data_arr[] = [
                 "name" => $nameHtml,
                 "role"  => $role,
-                "position"      => $model->position,
+                "position"   => $model->position,
                 "teams"      => $teams,
-                "created_at" => $created_at,
+                "created_at" => $lastAction,
                 "actions"    => $actions
             ];
         }

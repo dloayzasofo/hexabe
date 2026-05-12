@@ -8,6 +8,7 @@ use App\Http\Helper\MediaHelper;
 use Intervention\Image\Laravel\Facades\Image;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Helper\HistoryHelper;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\Brand;
@@ -54,6 +55,7 @@ class DashboardController extends Controller {
             'taskCategories' => $taskCategories
         ];
         
+        HistoryHelper::save(Auth::user(), 'dashboard');
         return view('dashboard.index', $params);
     }
 }

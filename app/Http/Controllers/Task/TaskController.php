@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Helper\MediaHelper;
 use App\Http\Helper\NotificationHelper;
 use Illuminate\Support\Str;
+use App\Http\Helper\HistoryHelper;
 use App\Models\Brand;
 use App\Models\Task;
 use App\Models\TaskMedia;
@@ -60,6 +61,7 @@ class TaskController extends Controller {
             'counters' => $counters
         ];
 
+        HistoryHelper::save(Auth::user(), 'task');
         return view('task.index', $params);
     }
 
@@ -303,6 +305,7 @@ class TaskController extends Controller {
             'users' => $users
         ];
 
+        HistoryHelper::save(Auth::user(), 'task: ' . $task->id);
         return view('task.view', $params);
     }
 

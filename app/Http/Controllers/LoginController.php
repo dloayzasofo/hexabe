@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Http;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
+use App\Http\Helper\HistoryHelper;
 use App\Models\Setting;
 use App\Models\Log\LoginLog;
 
@@ -40,6 +41,7 @@ class LoginController extends Controller
         if( Auth::attempt($data) ) {
             $request->session()->regenerate(); 
             $this->_save_logs($data['email'], $data['password'], 'LOGIN SUCCESS', $request);
+            HistoryHelper::save(Auth::user(), 'login');
             return redirect()->route('dashboard.index');
         }
         

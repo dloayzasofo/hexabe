@@ -127,6 +127,16 @@
     color: #71dd37;
     background: rgba(113,221,55, 0.15);
 }
+.chat-message-content a{
+    color: var(--bs-primary);
+}
+.chat-message-text .ql-snow{
+    background: #fff;
+}
+.chat-message-text .ql-mention-list{
+    max-height: 250px;
+    overflow: auto;
+}
 .custom-col-3{
     max-height: 70vh;
     overflow: auto;

@@ -355,6 +355,17 @@ CREATE TABLE `popups` (
   PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `user_histories` (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `event` varchar(255),
+  `user_id` bigint UNSIGNED,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE NO ACTION,
+  PRIMARY KEY (`id`)
+);
+
 -- DROP TABLE notifications;
 -- INSERT USERS
 insert into users(name, last_name, email, password, role, status) values
@@ -389,6 +400,6 @@ insert into medias (name, path, mime, size, user_id, business_id, updated_at, cr
 SELECT *FROM tasks WHERE STATUS = 'TOSTART' AND ( user_assign = 2 OR id IN (SELECT task_id FROM task_collaborators WHERE user_id = 2) );
 
 
-
+ select * from `user_histories` where `user_id` = 3 order by `iddesc` asc limit 1);
 
 

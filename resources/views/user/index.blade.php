@@ -51,7 +51,7 @@
                                     <th>Rol</th>
                                     <th>Área</th>
                                     <th>Equipos</th>
-                                    <th>Creado</th>
+                                    <th>Ult. Conexión</th>
                                     <th>Acción</th>
                                 </tr>
                             </thead>

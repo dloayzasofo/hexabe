@@ -20,9 +20,9 @@
                             {{ $comment->created_at->diffForHumans() }}
                         </div>
                     </div>
-                    <p class="mb-0">
-                        {{ $comment->description }}
-                    </p>
+                    <div class="mb-0 chat-message-content">
+                        {!! $comment->description !!}
+                    </div>
                     <div class="d-flex mt-3 ">
                         @foreach( $comment->commentmedias as $commentmedia )
                         <a href="{{  $commentmedia->media->url }}" target="_blank" class="text-nowrap mb-0 me-2" download>
