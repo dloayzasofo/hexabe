@@ -366,6 +366,18 @@ CREATE TABLE `user_histories` (
   PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `firebase`(
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `token` varchar(255),
+  `source` varchar(255),
+  `user_id` bigint UNSIGNED,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE NO ACTION,
+  PRIMARY KEY (`id`)	
+);
+
 -- DROP TABLE notifications;
 -- INSERT USERS
 insert into users(name, last_name, email, password, role, status) values

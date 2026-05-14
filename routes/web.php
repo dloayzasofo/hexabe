@@ -25,3 +25,4 @@ require_once __DIR__ . '/Report/ReportRoutes.php';
 require_once __DIR__ . '/Report/ReportGroupRoutes.php';
 require_once __DIR__ . '/ResetPassword/ResetPasswordRoutes.php';
 require_once __DIR__ . '/Cron/CronRoutes.php';
+require_once __DIR__ . '/Firebase/FirebaseRoutes.php';
