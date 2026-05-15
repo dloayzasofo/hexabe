@@ -4,40 +4,40 @@ namespace App\Services\Firebase;
 use Google\Client as GoogleClient;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-
-//use App\Models\Firebase;
+use App\Models\Firebase;
 
 class FirebaseService
 {
     private $setting = __DIR__ . "/hexabe-89665-firebase-adminsdk-fbsvc-cb6f9e664f.json";
 
-    function send($firebaseUser, $title, $body, $data=[], $payload=[]){
+    function send($token, $title, $body, $link, $imageUrl){
         $client = new GoogleClient();
         $client->setAuthConfig($this->setting);
         $client->addScope("https://www.googleapis.com/auth/firebase.messaging"); 
         $client->refreshTokenWithAssertion();
-        $token = $client->getAccessToken();
-        $access_token = $token['access_token'];
-        $projectId = config('services.fcm.project_id');
+        $accessToken = $client->getAccessToken();
+        $access_token = $accessToken['access_token'];
+        $projectId = 'hexabe-89665'; //config('services.fcm.project_id');
         
         $headers = [
             "Authorization: Bearer $access_token",
             'Content-Type: application/json'
         ];
 
-        $data["title"] = $title;
-        $data["body"] = $body;
-        $tokenUser = $firebaseUser->token;
-
         $dataMessage = [
             "message" => [
-                "token" => $tokenUser,
-                //"token" => env('MICOMPU_TOKEN_FIREBASE'),
-                //"notification" => [
-                //    "title" => $title,
-                //    "body" => $body
-                //],
-                "data" => $data
+                "token" => $token,
+                "notification" => [
+                    "title" => $title,
+                    "body" => $body,
+                    "image" => $imageUrl
+                ],
+                "webpush" => [
+                    "fcm_options" => [
+                        "link" => $link
+                    ]
+                ]
+                //"data" => $data
             ]
         ];
 
@@ -74,14 +74,14 @@ class FirebaseService
             Log::build([
                 'driver' => 'single',
                 'path' => storage_path('logs/firebase.log'),
-            ])->warning('service.firebaseservice.send: [' . $tokenUser . '] ' . $err);
+            ])->warning('service.firebaseservice.send: [' . $token . '] ' . $err);
             return false;
             //var_dump($err);exit();
         } else {
             $rd = json_decode($response, true);
 
             if( isset($rd['error']) ){
-                $this->manageError($rd['error'], $tokenUser);
+                $this->manageError($rd['error'], $token);
                 return false;
             }
 

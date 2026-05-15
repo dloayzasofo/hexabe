@@ -9,7 +9,9 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\NotificationMail;
 use App\Models\Notification;
 use App\Models\User;
+use App\Models\Firebase;
 use Illuminate\Support\Facades\Log;
+use App\Services\Firebase\FirebaseService;
 
 class NotificationHelper {
 
@@ -26,7 +28,6 @@ class NotificationHelper {
      * 
      */
     public static function send(User $user, $title, $message, $type, User $user_origin=null, $link=null, $priority=null) {
-
         $notification = new Notification();
         $notification->user_id = $user->id;
         $notification->user_origin_id = $user_origin != null ? $user_origin->id : null;
@@ -49,6 +50,13 @@ class NotificationHelper {
             Log::error('Notification general mail error: ' . $e->getMessage(), ['user_id' => $user->id]);
         }
 
+        $userFirebases = Firebase::where('user_id', $user->id)->pluck('token');
+        foreach($userFirebases as $token) {
+            $firebaseService = new FirebaseService();
+            $imagePush = 'https://hexabe.sofopolis.com/assets/img/icon-push.png';
+            //$token = 'cHaSZMLEVw7RRB1QjfbVDd:APA91bHTwBnfso0NqrpralA2Dsh-r7uyIiNjKAjP1W7y5-L_pwWBx9vrF_u5mkpGrOJsBSsdb1CLjJbuYMXSYOFrurwivp1mqYpK3lKVqOtRbp4kRJ_nqKw';
+            $firebaseService->send($token, $title, $message, $link, $imagePush);
+        }
         return;
     }
 }
