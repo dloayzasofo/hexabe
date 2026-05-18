@@ -18,18 +18,7 @@
       	</button> 
   	</div>
 
-	<div class="row sm-vl-base mb-2">
-		<div class="col-sm-8 col-md-6">
-			<h4 class="fw-bold"> Mis tareas </h4>
-		</div>
-		<div class="col-sm-4 col-md-6">
-			<div class="dt-action-buttons text-end pt-md-0">
-				<div class="dt-buttons"> </div>
-			</div>
-		</div>
-	</div>
-
-	<div class="wrap-toast"></div>
+	@include('task._form_search', ['title' => 'Mis tareas'])
 
 	@if(Session::has('task.success'))
 	<div class="alert alert-success alert-dismissible" role="alert">

@@ -548,6 +548,38 @@ textarea{
 .row-invalid input{
     border-color: #ff3e1d;;
 }
+.search-result{
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    background: #fff;
+    box-shadow: 0px 2px 5px rgba(50,50,50,.15);
+    border-radius: 3px;
+    padding: 10px;
+    top: 73px;
+    right: 0px;
+    display: none;
+    max-height: 450px;
+    max-width: 550px;
+    overflow-y: auto;
+    z-index: -1;
+}
+.search-result.active{
+    display: block;
+    z-index: -1;
+}
+.search-result .search-item:hover{
+    background: #fafafa;
+    border-radius: 7px;
+}
+.search-result a{
+    border-bottom: 1px solid #f7f7f7;
+    display: block;
+    padding: 10px 0px;
+}
+.search-result a:last-child{
+    border-bottom: none;
+}
 #selected-members li{
     position: relative;
 }

@@ -13,6 +13,7 @@ require_once __DIR__ . '/Brand/BrandRoutes.php';
 require_once __DIR__ . '/Team/TeamRoutes.php';
 require_once __DIR__ . '/Task/TaskRoutes.php';
 require_once __DIR__ . '/Task/TaskEditRoutes.php';
+require_once __DIR__ . '/Task/TaskSearchRoutes.php';
 require_once __DIR__ . '/Comment/CommentRoutes.php';
 require_once __DIR__ . '/Media/MediaRoutes.php';
 require_once __DIR__ . '/Dashboard/DashboardRoutes.php';

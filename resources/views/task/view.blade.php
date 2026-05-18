@@ -308,9 +308,10 @@
     }
 
     function handleBtnSaveComment(){
-        document.querySelector('#btnFinishTask').disabled = true;
+        let btnFinishTask = document.querySelector('#btnFinishTask');
+        if( btnFinishTask ) btnFinishTask.disabled = true;
         if( validateFormComment() == false ){
-            document.querySelector('#btnFinishTask').disabled = false;
+            if( btnFinishTask ) btnFinishTask.disabled = false;
             return false;
         }
         document.querySelector('#commentSave').disabled = true;
@@ -328,11 +329,15 @@
         let url = "{{ route('comment.save', ['task' => $task->id]) }}";
         fetch(url, {
             method: 'POST',
+            //headers: {
+            //    'Content-Type': 'application/json',
+            //    'Accept': 'application/json'
+            //},
             body: formData
         }).then(response => {
             return response.json();
         }).then(data => {
-            document.querySelector('#btnFinishTask').disabled = false;
+            if( btnFinishTask ) btnFinishTask.disabled = false;
             document.querySelector('#commentSave').disabled = false;
             if( data.success ){
                 renderComments(data.data);
