@@ -8,7 +8,7 @@ use App\Models\Firebase;
 
 class FirebaseService
 {
-    private $setting = __DIR__ . "/hexabe-89665-firebase-adminsdk-fbsvc-cb6f9e664f.json";
+    private $setting = __DIR__ . "/hexabe-89665-33c2839bafbe.json";
 
     function send($token, $title, $body, $link, $imageUrl){
         $client = new GoogleClient();

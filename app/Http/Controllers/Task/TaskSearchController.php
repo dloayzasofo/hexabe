@@ -21,9 +21,11 @@ use Auth;
 class TaskSearchController extends Controller {
  
     public function search(Request $request) {
+        $user = Auth::user();
         $search = $request->query('s');
         
-        $tasks = Task::with('assign')->where('title', 'LIKE', "%$search%")
+        $tasks = Task::with('assign')->where('business_id', $user->business_id)
+            ->where('title', 'LIKE', "%$search%")
             ->orWhere('description', 'LIKE', "%$search%")
             ->orWhereHas('brand', function ($query) use ($search) {
                 $query->where('name', 'LIKE', "%$search%");

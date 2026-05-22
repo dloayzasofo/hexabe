@@ -77,9 +77,9 @@
         "DELAY": [],
         "PAUSED": [],
         "FINALIZED": []
-      }
-
-      @foreach($tasks as $task)
+    }
+	{{--
+    @foreach($tasks as $task)
         boards["{{ $task->status }}"].push({
           id: "{{ $task->id }}",
           title: `
@@ -189,9 +189,318 @@
             </div>
           `
         });
-      @endforeach
+    @endforeach
+	--}}
+    @foreach($taskToStart as $task)
+		data = {
+			id: "{{ $task->id }}",
+			title: "{{ $task->title }}",
+			brand: { name: "{{ $task->brand->name }}", image: "{{ $task->brand->image }}" },
+			priority: getPriorityColor("{{ $task->priority }}"),
+			register_at: "{{ $task->register_at }}",
+			assign: { 
+				name: "{{ $task->assign->name }}", 
+				image: "{{ $task->assign->image }}",
+				nameInitial: "{{ $task->assign->nameInitial }}"
+			},
+			collaborators: [
+				@foreach($task->collaborators as $collaborator)
+				{
+					user: {
+						name: "{{ $collaborator->user->name }}",
+						image: "{{ $collaborator->user->image }}",
+						nameInitial: "{{ $collaborator->user->nameInitial }}"
+					}
+				},
+				@endforeach
+			],
+			childs_count: "{{ $task->childs_count }}",
+			childs_done: "{{ $task->childs_done }}",
+			progress: "{{ $task->progress }}",
+			medias_count: "{{ $task->medias_count }}",
+			comments_count: "{{ $task->comments_count }}",
+			url: "{{ route('task.view', $task->id) }}"
+		};
+		
+		boards['TOSTART'].push(createItemKanban(data));
+    @endforeach
 
-      var KanbanTest = new jKanban({
+	@foreach($taskProcess as $task)
+		data = {
+			id: "{{ $task->id }}",
+			title: "{{ $task->title }}",
+			brand: { name: "{{ $task->brand->name }}", image: "{{ $task->brand->image }}" },
+			priority: getPriorityColor("{{ $task->priority }}"),
+			register_at: "{{ $task->register_at }}",
+			assign: { 
+				name: "{{ $task->assign->name }}", 
+				image: "{{ $task->assign->image }}",
+				nameInitial: "{{ $task->assign->nameInitial }}"
+			},
+			collaborators: [
+				@foreach($task->collaborators as $collaborator)
+				{
+					user: {
+						name: "{{ $collaborator->user->name }}",
+						image: "{{ $collaborator->user->image }}",
+						nameInitial: "{{ $collaborator->user->nameInitial }}"
+					}
+				},
+				@endforeach
+			],
+			childs_count: "{{ $task->childs_count }}",
+			childs_done: "{{ $task->childs_done }}",
+			progress: "{{ $task->progress }}",
+			medias_count: "{{ $task->medias_count }}",
+			comments_count: "{{ $task->comments_count }}",
+			url: "{{ route('task.view', $task->id) }}"
+		};
+		
+		boards['PROCESS'].push(createItemKanban(data));
+    @endforeach
+	
+	@foreach($taskFinalized as $task)
+		data = {
+			id: "{{ $task->id }}",
+			title: "{{ $task->title }}",
+			brand: { name: "{{ $task->brand->name }}", image: "{{ $task->brand->image }}" },
+			priority: getPriorityColor("{{ $task->priority }}"),
+			register_at: "{{ $task->register_at }}",
+			assign: { 
+				name: "{{ $task->assign->name }}", 
+				image: "{{ $task->assign->image }}",
+				nameInitial: "{{ $task->assign->nameInitial }}"
+			},
+			collaborators: [
+				@foreach($task->collaborators as $collaborator)
+				{
+					user: {
+						name: "{{ $collaborator->user->name }}",
+						image: "{{ $collaborator->user->image }}",
+						nameInitial: "{{ $collaborator->user->nameInitial }}"
+					}
+				},
+				@endforeach
+			],
+			childs_count: "{{ $task->childs_count }}",
+			childs_done: "{{ $task->childs_done }}",
+			progress: "{{ $task->progress }}",
+			medias_count: "{{ $task->medias_count }}",
+			comments_count: "{{ $task->comments_count }}",
+			url: "{{ route('task.view', $task->id) }}"
+		};
+		
+		boards['FINALIZED'].push(createItemKanban(data));
+    @endforeach
+	
+	@foreach($taskDelay as $task)
+		data = {
+			id: "{{ $task->id }}",
+			title: "{{ $task->title }}",
+			brand: { name: "{{ $task->brand->name }}", image: "{{ $task->brand->image }}" },
+			priority: getPriorityColor("{{ $task->priority }}"),
+			register_at: "{{ $task->register_at }}",
+			assign: { 
+				name: "{{ $task->assign->name }}", 
+				image: "{{ $task->assign->image }}",
+				nameInitial: "{{ $task->assign->nameInitial }}"
+			},
+			collaborators: [
+				@foreach($task->collaborators as $collaborator)
+				{
+					user: {
+						name: "{{ $collaborator->user->name }}",
+						image: "{{ $collaborator->user->image }}",
+						nameInitial: "{{ $collaborator->user->nameInitial }}"
+					}
+				},
+				@endforeach
+			],
+			childs_count: "{{ $task->childs_count }}",
+			childs_done: "{{ $task->childs_done }}",
+			progress: "{{ $task->progress }}",
+			medias_count: "{{ $task->medias_count }}",
+			comments_count: "{{ $task->comments_count }}",
+			url: "{{ route('task.view', $task->id) }}"
+		};
+		
+		boards['DELAY'].push(createItemKanban(data));
+    @endforeach
+
+	@foreach($taskPaused as $task)
+		data = {
+			id: "{{ $task->id }}",
+			title: "{{ $task->title }}",
+			brand: { name: "{{ $task->brand->name }}", image: "{{ $task->brand->image }}" },
+			priority: getPriorityColor("{{ $task->priority }}"),
+			register_at: "{{ $task->register_at }}",
+			assign: { 
+				name: "{{ $task->assign->name }}", 
+				image: "{{ $task->assign->image }}",
+				nameInitial: "{{ $task->assign->nameInitial }}"
+			},
+			collaborators: [
+				@foreach($task->collaborators as $collaborator)
+				{
+					user: {
+						name: "{{ $collaborator->user->name }}",
+						image: "{{ $collaborator->user->image }}",
+						nameInitial: "{{ $collaborator->user->nameInitial }}"
+					}
+				},
+				@endforeach
+			],
+			childs_count: "{{ $task->childs_count }}",
+			childs_done: "{{ $task->childs_done }}",
+			progress: "{{ $task->progress }}",
+			medias_count: "{{ $task->medias_count }}",
+			comments_count: "{{ $task->comments_count }}",
+			url: "{{ route('task.view', $task->id) }}"
+		};
+		
+		boards['PAUSED'].push(createItemKanban(data));
+    @endforeach
+	
+	function getPriorityColor(priority){
+		let className = '';
+		let name = ''; 
+
+		switch(priority){
+			case 'low':
+				className = 'bg-label-primary';
+				name = 'BAJA';
+			break;
+			case 'medium':
+				className = 'bg-label-warning';
+				name = 'MEDIA';
+			break;
+			case 'high':
+				className = 'bg-label-danger';
+				name = 'ALTA';
+			break;
+		}
+
+		return { class: className, name: name };
+		
+	}
+
+	function createItemKanban(data){
+		let medias_html = '';
+		let comment_html = '';
+		let tasks_html = '';
+		let assign_html = '';
+		let collaborators_html = '';
+		
+		if( data.medias_count > 0 ){
+			medias_html = `<div class="d-flex gap-2">
+							<i class="bx bx-paperclip"></i>
+							<span> ${ data.medias_count } </span>
+						  </div>`;
+		}
+		
+		if( data.comments_count > 0 ){
+			comment_html = `<div class="d-flex gap-2">
+							<i class="bx bx-message" style="transform:translateY(3px);"></i>
+							<span> ${ data.comments_count } </span>
+						  </div>`;
+		}
+		
+		if( data.childs_count > 0 ){
+			tasks_html = `<div class="d-flex justify-content-between mb-1">
+							<div>
+								<small class="fw-bold">Subtareas</small>
+							</div>
+							<div class="text-primary fw-bold">
+								${ data.childs_done }/${ data.childs_count }
+							</div>
+						</div>
+						<div>
+							<div class="progress" style="height: 16px;">
+								<div class="progress-bar" role="progressbar" style="width: ${ data.progress }%;" aria-valuenow="${ data.progress }" aria-valuemin="0" aria-valuemax="100">
+									${ data.progress }%
+								</div>
+							</div>
+						</div>`;
+
+		}
+		
+		if( data.assign.image ){
+			assign_html = `<img class="rounded-circle" src="${ data.assign.image }" alt="${ data.assign.name }">`;
+		}else{
+			assign_html = `<span class="avatar-initial rounded-circle">${ data.assign.nameInitial }</span>`;
+		}
+		
+		for(let i=0; i < data.collaborators.length; i++){
+			let collaborator = data.collaborators[i];
+			if( i >= 2){
+				break
+			}
+
+			let imageCollaborator = `<span class="avatar-initial rounded-circle">${ collaborator.user.nameInitial }</span>`;
+			if( collaborator.user.image ){
+				imageCollaborator = `<img class="rounded-circle" src="${ collaborator.user.image }" alt="${ collaborator.user.name }">`;
+			}
+
+			collaborators_html += `<li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar pull-up avatar-xs" aria-label="${ collaborator.user.name }" data-bs-original-title="${ collaborator.user.name }">
+					${ imageCollaborator }
+			</li>`;
+		}
+
+		if( data.collaborators_count >= 3 ){
+			collaborators_html += `<li class="avatar">
+									<span class="avatar-initial rounded-circle pull-up text-heading avatar-xs" 
+										data-bs-toggle="tooltip" 
+										data-bs-placement="bottom" 
+										data-bs-original-title="${ 3 - data.collaborators_count } más">
+										+${ 3 - data.collaborators_count }
+									</span>
+								</li>`;
+		}
+		
+		return {
+			id: data.id,
+			title: `
+				<div>
+					<div class="d-flex justify-content-between align-items-center mb-2">
+						<div class="d-flex align-items-center">
+						<img src="${ data.brand.image }" class="rounded me-1" width="30" height="30">
+							<small class="fw-bold">${ data.brand.name }</small>
+						</div>
+						<div>
+						<small class="badge rounded-pill ${ data.priority.class }"> ${ data.priority.name } </small>
+						</div>
+					</div>
+					<div>
+						<div class="fw-bold"> 
+						<a href="${ data.url }" class="no-drag">  ${ data.title } </a>
+						</div>
+					</div>
+					<div class="mt-2 mb-2 d-flex justify-content-start align-items-center gap-3">
+						${ medias_html }
+						${ comment_html }
+					</div>
+					<div class="mb-2">
+						${ tasks_html }
+					</div>
+					<div class="d-flex justify-content-between align-items-center">
+						<div>
+							<ul class="list-unstyled users-list d-flex align-items-center avatar-group m-0 me-2">
+								<li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar pull-up avatar-xs" aria-label="${ data.assign.name }" data-bs-original-title="${ data.assign.name }">
+									${ assign_html }
+								</li>
+								${ collaborators_html }
+							</ul>  
+						</div>
+						<div>
+							<small>${ data.register_at }</small>
+						</div>
+					</div>
+				</div>
+			`
+		}
+	}
+
+    var KanbanTest = new jKanban({
         //dragBoards: false, // evita mover columnas
         //dragItems: false ,// evita mover items 
 
@@ -263,6 +572,7 @@
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              "Accept": "application/json",
               "X-CSRF-TOKEN": "{{ csrf_token() }}"
             },
             body: JSON.stringify({
@@ -321,7 +631,7 @@
             if (e.target.closest(".no-drag")) {
               e.stopPropagation();
               const href = e.target.getAttribute('href');
-              window.open(href, "_blank");
+              window.open(href, '_self');
             }
           });
       });

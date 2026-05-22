@@ -48,6 +48,11 @@ class Task extends Model
         return $this->hasMany(Comment::class);
     }
 
+    public function order(): HasMany
+    {
+        return $this->hasMany(TaskOrderUser::class);
+    }
+
 
 
     public function medias(): HasMany

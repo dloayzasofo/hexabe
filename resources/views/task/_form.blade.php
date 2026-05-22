@@ -100,7 +100,7 @@
     <div class="col-md-6">
         <div class="mb-3">
             <label for="date_delivery" class="form-label">Fecha de entrega *</label>
-            <input type="date" class="form-control" id="date_delivery" name="date_delivery" placeholder="Ej: Equipo de Diseño UX" value="{{ $model->created_at }}">
+            <input type="date" class="form-control" id="date_delivery" name="date_delivery" placeholder="Ej: Equipo de Diseño UX" value="{{ $model->date_delivery ? $model->date_delivery->format('Y-m-d') : \Carbon\Carbon::now()->format('Y-m-d') }}">
             <div id="errorDate_delivery" class="error invalid-feedback"></div>
         </div>
     </div>

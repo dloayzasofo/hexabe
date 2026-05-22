@@ -50,13 +50,18 @@ class NotificationHelper {
             Log::error('Notification general mail error: ' . $e->getMessage(), ['user_id' => $user->id]);
         }
 
-        $userFirebases = Firebase::where('user_id', $user->id)->pluck('token');
-        foreach($userFirebases as $token) {
-            $firebaseService = new FirebaseService();
-            $imagePush = 'https://hexabe.sofopolis.com/assets/img/icon-push.png';
-            //$token = 'cHaSZMLEVw7RRB1QjfbVDd:APA91bHTwBnfso0NqrpralA2Dsh-r7uyIiNjKAjP1W7y5-L_pwWBx9vrF_u5mkpGrOJsBSsdb1CLjJbuYMXSYOFrurwivp1mqYpK3lKVqOtRbp4kRJ_nqKw';
-            $firebaseService->send($token, $title, $message, $link, $imagePush);
+        try{
+            $userFirebases = Firebase::where('user_id', $user->id)->pluck('token');
+            foreach($userFirebases as $token) {
+                $firebaseService = new FirebaseService();
+                $imagePush = 'https://hexabe.sofopolis.com/assets/img/icon-push.png';
+                //$token = 'cHaSZMLEVw7RRB1QjfbVDd:APA91bHTwBnfso0NqrpralA2Dsh-r7uyIiNjKAjP1W7y5-L_pwWBx9vrF_u5mkpGrOJsBSsdb1CLjJbuYMXSYOFrurwivp1mqYpK3lKVqOtRbp4kRJ_nqKw';
+                $firebaseService->send($token, $title, $message, $link, $imagePush);
+            }
+        }catch (\Throwable $e) {
+            Log::error('Notification firebase mail error: ' . $e->getMessage(), ['user_id' => $user->id]);
         }
+
         return;
     }
 }

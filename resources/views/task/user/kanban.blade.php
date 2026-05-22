@@ -252,7 +252,7 @@
             if (e.target.closest(".no-drag")) {
               e.stopPropagation();
               const href = e.target.getAttribute('href');
-              window.open(href, "_blank");
+              window.open(href, "_self");
             }
           });
       });

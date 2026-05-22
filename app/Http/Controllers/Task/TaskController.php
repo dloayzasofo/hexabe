@@ -12,6 +12,7 @@ use App\Models\Brand;
 use App\Models\Task;
 use App\Models\TaskMedia;
 use App\Models\TaskCollaborator;
+use App\Models\TaskOrderUser;
 use App\Models\TeamUser;
 use App\Models\TaskLink;
 use App\Models\User;
@@ -204,9 +205,7 @@ class TaskController extends Controller {
         $members = $request->members;
         $links = $request->links;
 
-        $position = Task::where('user_assign', $user->id)->where('status', 'TOSTART')->max('position');
-        if( $position == null ) $position = 0;
-        else $position++;
+        
 
         $task = new Task();
         $task->title = $title;
@@ -218,7 +217,7 @@ class TaskController extends Controller {
         $task->status = 'TOSTART';
         $task->user_id = $user->id;
         $task->business_id = $user->business_id;
-        $task->position = $position;
+        $task->position = 0;
         $task->save();
 
         if( $medias ){
@@ -254,6 +253,9 @@ class TaskController extends Controller {
             $task->save();
         }
 
+        $this->saveOrder($task->id, $user->id);
+        $this->saveOrder($task->id, $user_assign);
+
         NotificationHelper::send(
             $task->assign, 
             'Tienes una tarea por realizar', 
@@ -266,6 +268,24 @@ class TaskController extends Controller {
         
         $request->session()->flash('task.success', 'Tarea ha sido registrada correctamente.');
         return response()->json(['success' => true, 'data' => $task]);
+    }
+
+    public function saveOrder($task_id, $user_id){
+        $position = Task::where('tasks.user_id', $user_id)
+            ->where('status', 'TOSTART')
+            ->leftJoin('task_order_users', function ($join) use($user_id) {
+                $join->on('task_order_users.task_id', '=', 'tasks.id')->where('task_order_users.user_id', '=', $user_id);
+            })
+            ->max('task_order_users.position');
+        
+        if( $position == null ) $position = 0;
+        else $position++;
+
+        TaskOrderUser::create([
+            'task_id' => $task_id,
+            'user_id' => $user_id,
+            'position' => $position
+        ]);
     }
 
     public function view(Request $request, Task $task) {

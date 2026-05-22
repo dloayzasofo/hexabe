@@ -266,6 +266,17 @@ CREATE TABLE tasks_info(
     foreign key(task_dependency_id) references tasks(id) on delete set null on update no action
 );
 
+CREATE TABLE task_order_users(
+	 id bigint(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+	 position INT,
+	 task_id bigint(20) UNSIGNED,
+	 user_id bigint(20) UNSIGNED,
+	 created_at timestamp NULL DEFAULT now(),
+	 updated_at timestamp NULL DEFAULT NOW(),
+	 foreign key(task_id) references tasks(id) on delete cascade on update no action,
+    foreign key(user_id) references users(id) on delete cascade on update no action
+);
+
 CREATE TABLE task_medias(
 	 id bigint(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     task_id bigint(20) UNSIGNED,
