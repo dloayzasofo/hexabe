@@ -138,7 +138,6 @@
             </div>
         </span>
         <div class="result-search task-responsable-result"></div>
-        <input type="hidden" id="user_assign" name="user_assign" value="@if( isset($user) ){{ $user->id }}@endif">
         <input type="text" 
             class="form-control task-input-responsable" 
             id="task-input-responsable" 
@@ -148,8 +147,9 @@
         <span class="input-group-text" style="background:#F8FAFC;">
             <i class="icon-base bx bx-search"></i>
         </span>
+        <input type="hidden" id="user_assign" name="user_assign" value="@if( isset($user) ){{ $user->id }}@endif">
+        <div id="errorUser_assign" class="error invalid-feedback"></div>
     </div>
-    <div id="errorName" class="error invalid-feedback"></div>
 </div>
 
 <div class="mb-3">

@@ -254,7 +254,9 @@ class TaskController extends Controller {
         }
 
         $this->saveOrder($task->id, $user->id);
-        $this->saveOrder($task->id, $user_assign);
+        if( $user_assign != $user->id ){
+            $this->saveOrder($task->id, $user_assign);
+        }
 
         NotificationHelper::send(
             $task->assign, 

@@ -19,6 +19,16 @@
     <div class="row sm-vl-base mb-4">
         <div class="col-md-12">
             <div class="d-flex mb-3">
+                @if(url()->previous() !== url()->current())
+                    <a href="{{ url()->previous() }}" class="btn rounded-pill btn-icon btn-primary me-2" title="Atras" data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" aria-label="Atras" data-bs-original-title="Atras">
+                        <i class="bx bx-chevron-left"></i>
+                    </a>
+                @else
+                    <a href="{{ route('task.index') }}" class="btn rounded-pill btn-icon btn-primary me-2" title="Atras" data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" aria-label="Atras" data-bs-original-title="Atras">
+                        <i class="bx bx-chevron-left"></i>
+                    </a>
+                @endif
+
                 <span class="me-2 hoverEdit">
                     <span id="modelStatus" class="badge rounded-pill 
                         @if( $task->status == 'TOSTART' ) bg-label-secondary

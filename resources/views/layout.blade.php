@@ -63,13 +63,15 @@
 					<a href="{{ route('dashboard.index') }}" class="app-brand-link">
 						<span class="app-brand-logo demo">
 							<div class="app-brand-link gap-2 fw-bold">
+								<img src="{{ asset('assets/img/icon-push.png') }}" alt="Hexabe" style="max-height:40px;margin-right:8px;">
 								<span style='color:#243C78;font-size:32px;font-family:"Poppins",sans-serif;'>Hexa</span>
 								<span style='color:#FE7531;font-size:32px;font-family:"Poppins",sans-serif;margin-left:-7px;'>Be</span>
 							</div>
 						</span>
 					</a>
 					<a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block">
-						<i class="bx bx-chevron-left bx-sm align-middle"></i>
+						<i class="bx bx-dots-vertical-rounded bx-sm align-middle"></i>
+						{{--<i class="bx bx-chevron-left bx-sm align-middle"></i>--}}
 					</a>
 				</div>
 
