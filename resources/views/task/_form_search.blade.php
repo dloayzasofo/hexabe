@@ -53,8 +53,10 @@
         const searchResult = document.querySelector('#searchResult');
         let html = '';
 
+        console.log(data.data.length);
         if( data.data.length == 0 ){
             html = '<div class="search-item"><div class="py-3 text-center"> No se encontraron resultados </div></div>';
+            searchResult.innerHTML = html;
             return;
         }
 

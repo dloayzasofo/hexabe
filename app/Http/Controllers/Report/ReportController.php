@@ -17,7 +17,7 @@ class ReportController extends Controller {
         $avergeDate = DB::select('SELECT avg(DATEDIFF(date_delivery, created_at)) AS avergedate FROM tasks where business_id = ?', [$user->business_id]);
         $avergeDate = round($avergeDate[0]->avergedate, 1);
         
-        $users = User::where('business_id', $user->business_id)->get();
+        $users = User::where('business_id', $user->business_id)->orderBy('name', 'asc')->get();
         $team = [];
         $efficiencyTeam = [];
         foreach ($users as $item) {
