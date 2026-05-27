@@ -15,6 +15,7 @@ use App\Models\TaskCollaborator;
 use App\Models\TaskOrderUser;
 use App\Models\TeamUser;
 use App\Models\TaskLink;
+use App\Models\TaskInfo;
 use App\Models\User;
 use Auth;
 
@@ -79,7 +80,6 @@ class TaskController extends Controller {
     }
 
     public function finish(Request $request, Task $task) {
-        //var_dump($task->user);exit();
         $task->status = 'FINALIZED';
         $task->finalized_at = date('Y-m-d H:i:s');
         $task->save();
@@ -100,6 +100,19 @@ class TaskController extends Controller {
                 $user,
                 route('task.view', ['task' => $task->id]),
                 $task->priority
+            );
+        }
+
+        $taskDependencies = TaskInfo::with('task')->where('task_dependency_id', $task->id)->get();
+        foreach( $taskDependencies as $taskDependency ){
+            NotificationHelper::send(
+                $taskDependency->task->assign, 
+                'Tarea "' . Str::limit($taskDependency->task->title, 12) . '" ha sido desbloqueada.', 
+                $taskDependency->task->title,
+                'TASK',
+                $user,
+                route('task.view', ['task' => $taskDependency->task->id]),
+                $taskDependency->task->priority
             );
         }
         
@@ -131,6 +144,19 @@ class TaskController extends Controller {
             );
         }
 
+        $taskDependencies = TaskInfo::with('task')->where('task_dependency_id', $task->id)->get();
+        foreach( $taskDependencies as $taskDependency ){
+            NotificationHelper::send(
+                $taskDependency->task->assign, 
+                'Tarea "' . Str::limit($taskDependency->task->title, 12) . '" ha sido desbloqueada.', 
+                $taskDependency->task->title,
+                'TASK',
+                $user,
+                route('task.view', ['task' => $taskDependency->task->id]),
+                $taskDependency->task->priority
+            );
+        }
+
         return response()->json([
             'status' => 'success',
             'data' => [
@@ -147,6 +173,7 @@ class TaskController extends Controller {
         $id = $task->id;
         $title = $task->title;
         $user_origin = $task->user;
+        $status = $task->status;
         $task->delete();
         
         $user = Auth::user();
@@ -164,14 +191,15 @@ class TaskController extends Controller {
             'status' => 'success',
             'data' => [
                 'action' => "DELETE",
-                'id' => $task->id,
-                'title' => $task->title,
-                'status' => $task->status,
+                'id' => $id,
+                'title' => $title,
+                'status' => $status,
                 'message' => 'La tarea ha sido eliminada.'
             ]
         ]);
     }
 
+    /*
     public function delete(Request $request, Task $task) {
         //var_dump($task->user);exit();
         $task->status = 'FINALIZED';
@@ -191,6 +219,7 @@ class TaskController extends Controller {
         $request->session()->flash('task.success', 'La tarea ha sido marcada como finalizada.');
         return redirect()->route('task.view', ['task' => $task->id]);
     }
+    */
 
     public function save(Request $request) {
         $user = Auth::user();
@@ -363,5 +392,19 @@ class TaskController extends Controller {
         ];
 
         return view('task.create', $params);
+    }
+
+
+    public function getTaskByBrand(Request $request, Brand $brand) {
+        $taskId  = $request->query('t');
+        $s = $request->query('s');
+        $tasks = Task::select('id', 'title', 'status', 'priority', 'date_delivery', 'brand_id')
+            ->where('title', 'like', "%{$s}%")
+            ->where('brand_id', $brand->id)
+            ->where('id', '!=', $taskId)
+            ->orderBy('created_at', 'desc')
+            ->get();
+        //var_dump($tasks->toArray());exit();
+        return response()->json(['success' => true, 'data' => $tasks], 200);
     }
 }

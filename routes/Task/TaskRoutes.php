@@ -82,4 +82,8 @@ Route::middleware(['auth'])->prefix('task')->group(function () {
     Route::post('/calendar/draganddrop', [CalendarController::class, 'draganddrop'])
         //->middleware(RoleMiddleware::using('ADMIN'))
         ->name('calendar.draganddrop');
+
+    Route::get('/search/brand/{brand}', [TaskController::class, 'getTaskByBrand'])
+        //->middleware(RoleMiddleware::using('ADMIN'))
+        ->name('task.info.brand');
 });

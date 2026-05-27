@@ -221,8 +221,12 @@
 
 
 {{-- COMMENTS --}}
+{{--
 <link href="https://cdn.jsdelivr.net/npm/quill-mention@2.2.6/dist/quill.mention.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/quill-mention@2.2.6/dist/quill.mention.min.js"></script>
+--}}
+<link href="{{ asset('/assets/admin/js/quilljsmention/quillmention.min.css') }}" rel="stylesheet">
+<script src="{{ asset('/assets/admin/js/quilljsmention/quillmention.min.js') }}"></script>
 <script>
     const atValues = [];
     @foreach($users as $user)

@@ -12,6 +12,7 @@ use App\Models\TaskMedia;
 use App\Models\TaskCollaborator;
 use App\Models\TeamUser;
 use App\Models\TaskLink;
+use App\Models\TaskInfo;
 use App\Models\User;
 use Auth;
 
@@ -88,6 +89,41 @@ class TaskEditController extends Controller {
             "id"=> $task->id,
             "date_delivery"=> $task->date_delivery
         ]], 200);
+    }
+
+    public function add_dependency(Request $request, Task $task, Task $dependency) {
+        $taskInfo = TaskInfo::where('task_id', $task->id)->first();
+        
+        if( $taskInfo == null ){
+            $taskInfo = new TaskInfo();
+            $taskInfo->task_id = $task->id;
+        }
+
+        $taskInfo->task_dependency_id = $dependency->id;
+        $taskInfo->save();
+
+        $params = [
+            'success' => true, 
+            'data' => [
+                "id"=> $taskInfo->id,
+                "task_id"=> $taskInfo->task_id,
+                "task_dependency_id"=> $taskInfo->task_dependency_id
+            ]
+        ];
+
+        return response()->json($params, 200);
+    }
+
+    public function delete_dependency(Request $request, Task $task, Task $dependency) {
+        $taskInfo = TaskInfo::where('task_id', $task->id)->where('task_dependency_id', $dependency->id)->first();
+        
+        if( $taskInfo ){
+            $taskInfo->task_dependency_id = null;
+            $taskInfo->save();
+            return response()->json(['success' => true], 200);
+        }
+
+        return response()->json(['success' => false], 404);
     }
 
 }

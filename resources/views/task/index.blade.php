@@ -41,35 +41,35 @@
             <li class="nav-item" role="presentation">
                 <a href="{{ route('task.index') }}?status=TOSTART" class="nav-link @if( $status == 'TOSTART') active @endif" aria-selected="true">
                 <span class="d-none d-sm-inline-flex align-items-center">
-                    Sin empezar <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-warning ms-2">{{ $counters['TOSTART'] }}</span>
+                    Sin empezar <span id="statusLabel-TOSTART" class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-warning ms-2">{{ $counters['TOSTART'] }}</span>
                 </span>
                 </a>
             </li>
             <li class="nav-item" role="presentation">
                 <a href="{{ route('task.index') }}?status=PROCESS" class="nav-link @if( $status == 'PROCESS') active @endif" aria-selected="true">
                 <span class="d-none d-sm-inline-flex align-items-center">
-                    En proceso <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-info ms-2">{{ $counters['PROCESS'] }}</span>
+                    En proceso <span id="statusLabel-PROCESS" class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-info ms-2">{{ $counters['PROCESS'] }}</span>
                 </span>
                 </a>
             </li>
             <li class="nav-item" role="presentation">
                 <a href="{{ route('task.index') }}?status=DELAY" class="nav-link @if( $status == 'DELAY') active @endif" aria-selected="true">
                 <span class="d-none d-sm-inline-flex align-items-center">
-                    Retraso <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-danger ms-2">{{ $counters['DELAY'] }}</span>
+                    Retraso <span id="statusLabel-DELAY" class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-danger ms-2">{{ $counters['DELAY'] }}</span>
                 </span>
                 </a>
             </li>
             <li class="nav-item" role="presentation">
                 <a href="{{ route('task.index') }}?status=PAUSED" class="nav-link @if( $status == 'PAUSED') active @endif" aria-selected="true">
                 <span class="d-none d-sm-inline-flex align-items-center">
-                    Pausado <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-danger ms-2">{{ $counters['PAUSED'] }}</span>
+                    Pausado <span id="statusLabel-PAUSED" class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-danger ms-2">{{ $counters['PAUSED'] }}</span>
                 </span>
                 </a>
             </li>
             <li class="nav-item" role="presentation">
                 <a href="{{ route('task.index') }}?status=FINALIZED" class="nav-link @if( $status == 'FINALIZED') active @endif" aria-selected="true">
                 <span class="d-none d-sm-inline-flex align-items-center">
-                    Finalizado <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-success ms-2">{{ $counters['FINALIZED'] }}</span>
+                    Finalizado <span id="statusLabel-FINALIZED" class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-success ms-2">{{ $counters['FINALIZED'] }}</span>
                 </span>
                 </a>
             </li>
@@ -796,6 +796,7 @@
         })
         .then(response => response.json())
         .then(data => {
+            //console.log("Data", data);
             if( data.status == 'success' ){
                 renderTaskUpdateOrDelete(data.data);
             };
@@ -811,6 +812,7 @@
         if( taskElement ){
             if( data.action == 'DELETE' ){
                 taskElement.classList.add('bg-label-danger');
+                adjustCountStatusLabel(data.status);
             }
             if( data.action == 'FINALIZED' ){
                 taskElement.classList.add('bg-label-success');
@@ -818,6 +820,15 @@
             setTimeout(() => {
                 taskElement.remove();
             }, 1500);
+        }
+    }
+
+    function adjustCountStatusLabel(status){
+        let label = document.querySelector('#statusLabel-' + status);
+        if( label ){
+            let count = parseInt(label.innerHTML);
+            count = count - 1;
+            label.innerHTML = count;
         }
     }
 

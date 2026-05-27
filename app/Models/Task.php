@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Carbon\Carbon;
 
@@ -51,6 +52,11 @@ class Task extends Model
     public function order(): HasMany
     {
         return $this->hasMany(TaskOrderUser::class);
+    }
+
+    public function info(): HasOne
+    {
+        return $this->hasOne(TaskInfo::class);
     }
 
 
