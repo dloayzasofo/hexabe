@@ -27,13 +27,14 @@ class NotificationHelper {
      * @param string|null $priority the priority of the notification (optional) (e.g., 'HIGH', 'MEDIUM', 'LOW')
      * 
      */
-    public static function send(User $user, $title, $message, $type, User $user_origin=null, $link=null, $priority=null) {
+    public static function send(User $user, $title, $message, $type, $taskId=null, User $user_origin=null, $link=null, $priority=null) {
         $notification = new Notification();
         $notification->user_id = $user->id;
         $notification->user_origin_id = $user_origin != null ? $user_origin->id : null;
         $notification->title = $title;
         $notification->message = $message;
         $notification->type = $type;
+        $notification->task_id = $taskId;
         $notification->link = $link;
         $notification->priority = $priority;
         $notification->save();

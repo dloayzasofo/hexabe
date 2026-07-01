@@ -2,8 +2,8 @@
 
 @section('main')
     <div class="btn-add-task"> 
-        <button id="btnCreate" class="btn rounded-pill btn-icon btn-primary" title="Crear nueva tarea">
-            <span><i class="bx bx-plus"></i></span>
+        <button id="btnCreate" class="btn btn-primary" title="Crear nueva tarea">
+            <span><i class="bx bx-plus"></i></span> Crear tarea
         </button> 
     </div>
 
@@ -45,18 +45,18 @@
             </li>
         </ul>
 
-        <ul class="nav nav-tabs nav-fill" role="tablist">
+        <ul class="nav nav-tabs nav-fill tabs-status" role="tablist">
             <li class="nav-item" role="presentation">
                 <a href="{{ route('task.user.list', $user->id) }}?status=TOSTART" class="nav-link @if( $status == 'TOSTART') active @endif" aria-selected="true">
                 <span class="d-none d-sm-inline-flex align-items-center">
-                    Sin empezar <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-warning ms-2">{{ $counters['TOSTART'] }}</span>
+                    Sin empezar <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-info ms-2">{{ $counters['TOSTART'] }}</span>
                 </span>
                 </a>
             </li>
             <li class="nav-item" role="presentation">
                 <a href="{{ route('task.user.list', $user->id) }}?status=PROCESS" class="nav-link @if( $status == 'PROCESS') active @endif" aria-selected="true">
                 <span class="d-none d-sm-inline-flex align-items-center">
-                    En proceso <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-info ms-2">{{ $counters['PROCESS'] }}</span>
+                    En proceso <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-purple ms-2">{{ $counters['PROCESS'] }}</span>
                 </span>
                 </a>
             </li>
@@ -70,7 +70,7 @@
             <li class="nav-item" role="presentation">
                 <a href="{{ route('task.user.list', $user->id) }}?status=PAUSED" class="nav-link @if( $status == 'PAUSED') active @endif" aria-selected="true">
                 <span class="d-none d-sm-inline-flex align-items-center">
-                    Pausado <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-danger ms-2">{{ $counters['PAUSED'] }}</span>
+                    Pausado <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-warning ms-2">{{ $counters['PAUSED'] }}</span>
                 </span>
                 </a>
             </li>
@@ -86,31 +86,49 @@
 
     <div class="task-list-item task-list-header d-flex no-wrap">
         <div>
-            TAREAS
+            Tarea
         </div>
         <div>
-            PRIORIDAD
+            Marca
         </div>
         <div>
-            PROGRESO
+            Estado
         </div>
         <div>
-            EQUIPO
+            Prioridad
         </div>
         <div>
-            <i class="bx bx-paperclip"></i>
+            Equipo
         </div>
         <div>
-            <i class="bx bx-message"></i>
+            Fecha de entrega
         </div>
         <div>
-            FECHA
+            Acciones
         </div>
-        <div></div>
     </div>
 
     @foreach($tasks as $task)
     <div class="task-list-item d-flex no-wrap">
+        <div class="d-flex justify-content-start align-items-center user-name">
+            <div class="avatar-wrapper">
+                <a href="{{ route('task.view', ['task'=> $task]) }}" class="text-heading">
+                    <div class="avatar avatar-sm me-2">
+                        @if( isset($task->assign->image) )
+                            <img class="rounded-circle" src="{{ $task->assign->image }}" alt="{{ $task->assign->name }}">
+                        @else
+                            <span class="avatar-initial rounded-circle bg-label-primary">{{ $task->assign->nameInitial }}</span>
+                        @endif
+                    </div>
+                </a>
+            </div>
+            <div class="d-flex flex-column">
+                <a href="{{ route('task.view', ['task'=> $task]) }}" class="text-heading">
+                    <span class="fw-medium">{{ $task->title }}</span>
+                </a>
+            </div>
+        </div>
+
         <div class="d-flex justify-content-start align-items-center user-name">
             <div class="avatar-wrapper">
                 <div class="avatar avatar-sm me-2">
@@ -118,55 +136,47 @@
                 </div>
             </div>
             <div class="d-flex flex-column">
-                <a href="{{ route('task.view', ['task'=> $task]) }}" class="text-heading">
-                    <span class="fw-medium">{{ $task->title }}</span>
+                <a href="{{ route('brand.view', ['brand'=> $task->brand->id]) }}" class="text-heading">
+                    <span class="fw-medium">{{ strtoupper($task->brand->name) }}</span>
                 </a>
-                <small>{{ strtoupper($task->brand->name) }}</small>
             </div>
-        </div>  
-
-        <div>
-            @if( $task->priority == 'high' )
-            <span class="badge rounded-pill bg-label-danger">ALTA</span>
-            @endif
-            @if( $task->priority == 'medium' )
-            <span class="badge rounded-pill bg-label-warning">MEDIA</span>
-            @endif
-            @if( $task->priority == 'low' )
-            <span class="badge rounded-pill bg-label-primary">BAJA</span>
-            @endif
         </div>
 
-        <div>
-            <div>
-                @if( $task->childs_count > 0 )
-                <div class="d-flex justify-content-between mb-1">
-                    <div>
-                        Subtareas
-                    </div>
-                    <div class="text-primary fw-bold">
-                        {{ $task->childs_done }}/{{ $task->childs_count }}
-                    </div>
-                    
+        <div class="d-flex justify-content-center">
+            <div class="ct-select {{ $task->status }}" data-value="{{ $task->status }}" data-task="{{ $task->id }}" data-type="status">
+                <div class="ct-select-view readonly">
+                    @if( $task->status == 'TOSTART' )
+                        Sin empezar
+                    @elseif( $task->status == 'PROCESS' )
+                        En proceso
+                    @elseif( $task->status == 'DELAY' )
+                        Retraso
+                    @elseif( $task->status == 'PAUSED' )
+                        Pausado
+                    @elseif( $task->status == 'FINALIZED' )
+                        Finalizado
+                    @endif
                 </div>
-                <div>
-                    <div class="progress" style="height: 16px;">
-                        <div class="progress-bar" role="progressbar" style="width: {{ $task->progress }}%;" aria-valuenow="{{ $task->progress }}" aria-valuemin="0" aria-valuemax="100">
-                            {{ $task->progress }}%
-                        </div>
-                    </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center">
+            <div class="ct-select {{ $task->priority }}" data-value="{{ $task->priority }}" data-task="{{ $task->id }}" data-type="priority">
+                <div class="ct-select-view readonly">
+                    @if( $task->priority == 'high' )
+                        ALTA
+                    @elseif( $task->priority == 'medium' )
+                        MEDIA
+                    @elseif( $task->priority == 'low' )
+                        BAJA
+                    @endif
                 </div>
-                @else
-                <div>
-                    Sin Subtareas
-                </div>
-                @endif
             </div>
         </div>
 
         <div>
-            <div class="d-flex flex-wrap align-items-center">
-                <ul class="list-unstyled users-list d-flex align-items-center avatar-group m-0 me-2">
+            <div class="d-flex flex-wrap align-items-center justify-content-center">
+                <ul class="list-unstyled users-list d-flex align-items-center avatar-group mb-0">
 
                     <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar pull-up" aria-label="{{ $task->assign->name }}" data-bs-original-title="{{ $task->assign->name }}">
                         <a href="{{ route('task.user.list', [$task->assign]) }}">
@@ -207,19 +217,31 @@
                 </ul>
             </div>
         </div>
-        <div> {{ $task->medias_count == 0 ? '-' : $task->medias_count }} </div>
-        <div> - </div>
-        <div> {{ $task->register_at}} </div>
+
+        <div> {{ $task->register_at }} </div>
+
         <div>
-            <button data-href="{{ route('task.view', [$task]) }}" 
-                data-bs-toggle="tooltip" 
-                class="btn btn-icon delete-record text-primary btnCopyLink"
-                data-bs-placement="top" 
-                data-task="{{ $task->title }}"
-                aria-label="Copiar enlace" 
-                data-bs-original-title="Copiar enlace">
-                <i class="icon-base bx bx-link icon-md"></i>
-            </button>
+            <div class="d-flex align-items-center justify-content-end">
+                <a href="{{ route('task.view', [$task]) }}"
+                    data-bs-toggle="tooltip"
+                    class="btn btn-icon delete-record text-primary"
+                    data-bs-placement="top" 
+                    data-task="{{ $task->title }}"
+                    aria-label="Ver tarea"
+                    data-bs-original-title="Ver tarea">
+                    <i class="bx bx-chevron-right"></i>
+                </a>
+
+                <button data-href="{{ route('task.view', [$task]) }}" 
+                    data-bs-toggle="tooltip"
+                    class="btn btn-icon delete-record text-primary btnCopyLink"
+                    data-bs-placement="top" 
+                    data-task="{{ $task->title }}"
+                    aria-label="Copiar enlace"
+                    data-bs-original-title="Copiar enlace">
+                    <i class="icon-base bx bx-link icon-md"></i>
+                </button>
+            </div>
         </div>
     </div>
     @endforeach

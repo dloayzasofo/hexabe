@@ -342,6 +342,7 @@ CREATE TABLE notifications(
 	type VARCHAR(255), -- MENTION, TASK, CRON, COMMENT
 	link VARCHAR(255) NULL,
 	user_origin_id bigint(20) UNSIGNED null,
+	task_id bigint(20) UNSIGNED null,
 	user_id bigint(20) UNSIGNED,
 	read_at timestamp NULL DEFAULT NULL,
 	created_at timestamp NULL DEFAULT now(),
@@ -350,6 +351,8 @@ CREATE TABLE notifications(
    foreign key (user_id) references users(id) on delete cascade on update no ACTION,
    foreign key (user_origin_id) references users(id) on delete SET null on update no action
 );
+ALTER TABLE notifications ADD COLUMN task_id bigint(20) UNSIGNED NULL AFTER user_origin_id;
+
 
 CREATE TABLE `popups` (
   `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,

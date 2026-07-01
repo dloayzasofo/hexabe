@@ -21,13 +21,15 @@ class TaskEditController extends Controller {
     public function status(Request $request, Task $task) {
         $task->status = $request->status;
         $task->save();
-        return response()->json(['success' => true, 'data' => ["status"=> $task->status]], 200);
+        $message = Str::limit($task->title, 50) . ": Estado de la tarea actualizado";
+        return response()->json(['success' => true, 'data' => ["id"=> $task->id, "status"=> $task->status], 'message' => $message], 200);
     }
 
     public function priority(Request $request, Task $task) {
         $task->priority = $request->priority;
         $task->save();
-        return response()->json(['success' => true, 'data' => ["priority"=> $task->priority]], 200);
+        $message = Str::limit($task->title, 50) . ": Prioridad de la tarea actualizada";
+        return response()->json(['success' => true, 'data' => ["id"=> $task->id, "priority"=> $task->priority], 'message' => $message], 200);
     }
 
     public function title(Request $request, Task $task) {
@@ -67,6 +69,7 @@ class TaskEditController extends Controller {
                 'Tienes una tarea por realizar', 
                 $task->title, 
                 'TASK',
+                $task->id,
                 $user,
                 route('task.view', ['task' => $task->id]),
                 $task->priority

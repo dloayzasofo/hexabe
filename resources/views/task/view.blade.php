@@ -1,6 +1,8 @@
 @extends('layout')
 
 @section('main')
+    <div class="wrap-toast"></div>
+
     @if(Session::has('task.success'))
     <div class="alert alert-success alert-dismissible" role="alert">
         {{ Session::get('task.success') }}
@@ -9,62 +11,75 @@
     </div>
     @endif
 
-    <div class="btn-add-task"> 
-        <button id="btnCreate" class="btn rounded-pill btn-icon btn-primary" title="Crear sub tarea"
-            data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" aria-label="Crear sub tarea" data-bs-original-title="Crear sub tarea">
-            <span><i class="bx bx-plus"></i></span>
-        </button> 
-    </div>
 
     <div class="row sm-vl-base mb-4">
-        <div class="col-md-12">
-            <div class="d-flex mb-3">
+        <div class="col-md-8">
+            <div class="d-flex mb-3 align-items-center">
                 @if(url()->previous() !== url()->current())
-                    <a href="{{ url()->previous() }}" class="btn rounded-pill btn-icon btn-primary me-2" title="Atras" data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" aria-label="Atras" data-bs-original-title="Atras">
+                    <a href="{{ url()->previous() }}" class="btn rounded-pill btn-icon btn-primary me-2" title="Atras" data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" aria-label="Atras" data-bs-original-title="Atras" style="background:#3C8AEC;border-color:#3C8AEC;">
                         <i class="bx bx-chevron-left"></i>
                     </a>
                 @else
-                    <a href="{{ route('task.index') }}" class="btn rounded-pill btn-icon btn-primary me-2" title="Atras" data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" aria-label="Atras" data-bs-original-title="Atras">
+                    <a href="{{ route('task.index') }}" class="btn rounded-pill btn-icon btn-primary me-2" title="Atras" data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" aria-label="Atras" data-bs-original-title="Atras" style="background:#3C8AEC;border-color:#3C8AEC;">
                         <i class="bx bx-chevron-left"></i>
                     </a>
                 @endif
-
-                <span class="me-2 hoverEdit">
-                    <span id="modelStatus" class="badge rounded-pill 
-                        @if( $task->status == 'TOSTART' ) bg-label-secondary
-                        @elseif( $task->status == 'PROCESS' ) bg-label-primary
-                        @elseif( $task->status == 'DELAY' ) bg-label-danger
-                        @elseif( $task->status == 'PAUSED' ) bg-label-warning
-                        @elseif( $task->status == 'FINALIZED' ) bg-label-success @endif">
-                            @if( $task->status == 'TOSTART' ) Sin empezar
-                            @elseif( $task->status == 'PROCESS' ) En proceso
-                            @elseif( $task->status == 'DELAY' ) Retrasado
-                            @elseif( $task->status == 'PAUSED' ) Pausado
-                            @elseif( $task->status == 'FINALIZED' ) Finalizado @endif
-                    </span> 
-                    @if( in_array(Auth::user()->id, [$task->user_id, $task->user_assign]) )
-                    <button id="btnEditStatus" class="btn rounded-pill btn-icon btn-outline-secondary btnTaskEdit" data-bs-toggle="modal" data-bs-target="#statusModal"> 
-                        <i class="bx bx-pencil"></i>
-                    </button>
-                    @endif
-                </span>
                 
-                <span class="me-2 hoverEdit">
-                    <span id="modelPriority" class="badge rounded-pill 
-                        @if( $task->priority == 'low') bg-label-primary 
-                        @elseif( $task->priority == 'medium') bg-label-warning 
-                        @elseif( $task->priority == 'high') bg-label-danger @endif">
-                            Prioridad
-                            @if( $task->priority == 'low') baja
-                            @elseif( $task->priority == 'medium') media
-                            @elseif( $task->priority == 'high') alta @endif
-                    </span>
+                <div>
                     @if( in_array(Auth::user()->id, [$task->user_id, $task->user_assign]) )
-                    <button id="btnEditPriority" class="btn rounded-pill btn-icon btn-outline-secondary btnTaskEdit" data-bs-toggle="modal" data-bs-target="#priorityModal"> 
-                        <i class="bx bx-pencil"></i> 
-                    </button>
+                    <div class="ct-select" data-value="{{ $task->status }}" data-task="{{ $task->id }}" data-type="status" style="font-size:12px;">
+                        <div class="ct-select-view"></div>
+                        <ul class="list-items">
+                            <li class="list-items-item TOSTART" data-id="{{ $task->id }}" data-value="TOSTART"> Sin empezar </li>
+                            <li class="list-items-item PROCESS" data-id="{{ $task->id }}" data-value="PROCESS"> En proceso </li>
+                            <li class="list-items-item DELAY" data-id="{{ $task->id }}" data-value="DELAY"> Retraso </li>
+                            <li class="list-items-item PAUSED" data-id="{{ $task->id }}" data-value="PAUSED"> Pausado </li>
+                            <li class="list-items-item FINALIZED" data-id="{{ $task->id }}" data-value="FINALIZED"> Finalizado </li>
+                        </ul>
+                    </div>
+                    @else
+                    <div class="ct-select {{ $task->status }}" data-value="{{ $task->status }}" data-task="{{ $task->id }}" data-type="status" style="font-size:12px;">
+                        <div class="ct-select-view readonly">
+                            @if( $task->status == 'TOSTART' )
+                                Sin empezar
+                            @elseif( $task->status == 'PROCESS' )
+                                En proceso
+                            @elseif( $task->status == 'DELAY' )
+                                Retraso
+                            @elseif( $task->status == 'PAUSED' )
+                                Pausado
+                            @elseif( $task->status == 'FINALIZED' )
+                                Finalizado
+                            @endif
+                        </div>
+                    </div>
                     @endif
-                </span>
+                </div>
+
+                <div class="ms-2">
+                    @if( in_array(Auth::user()->id, [$task->user_id, $task->user_assign]) )
+                    <div class="ct-select" data-value="{{ $task->priority }}" data-task="{{ $task->id }}" data-type="priority" style="font-size:12px;">
+                        <div class="ct-select-view"></div>
+                        <ul class="list-items">
+                            <li class="list-items-item high" data-id="{{ $task->id }}" data-value="high"> Prioridad alta </li>
+                            <li class="list-items-item medium" data-id="{{ $task->id }}" data-value="medium"> Prioridad media </li>
+                            <li class="list-items-item low" data-id="{{ $task->id }}" data-value="low"> Prioridad baja </li>
+                        </ul>
+                    </div>
+                    @else
+                    <div class="ct-select {{ $task->priority }}" data-value="{{ $task->priority }}" data-task="{{ $task->id }}" data-type="priority" style="font-size:12px;">
+                        <div class="ct-select-view readonly">
+                            @if( $task->priority == 'high' )
+                                Prioridad alta
+                            @elseif( $task->priority == 'medium' )
+                                Prioridad media
+                            @elseif( $task->priority == 'low' )
+                                Prioridad baja
+                            @endif
+                        </div>
+                    </div>
+                    @endif
+                </div>
             </div>
             <div class="d-flex align-items-center w-100">
                 <div class="d-flex align-items-top hoverEdit">
@@ -73,15 +88,20 @@
                         <i class="bx bx-pencil"></i> 
                     </button>
                     @endif
-                    <h2 id="modelTitle" class="fw-bold" style="margin-bottom:4px;"> {{ $task->title }} </h2>
+                    <h2 id="modelTitle" class="fw-bold text-negro" style="margin-bottom:4px;"> {{ $task->title }} </h2>
                 </div>
             </div>
+        </div>
+        <div class="col-md-4 text-end">
+            <button id="btnCreate" class="btn btn-primary" title="Crear sub tarea">
+                <span><i class="bx bx-plus"></i></span> Crear subtarea
+            </button>
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-8">
-            <div class="mb-2"><b>Descripción:</b> </div>
+            <div class="mb-2 text-negro"><b>Descripción:</b> </div>
             <div class="border rounded p-3">
                 @if( trim($task->description) !== '' )
                 <div id="modelDescription">{!! $task->description !!}</div>
@@ -218,6 +238,8 @@
 {{-- --}} 
 <script>let urlCreate = "{{ route('task.subtask', ['task' => $task->id]) }}";</script>
 <script src="{{asset('/assets/admin/js/task.js')}}"></script>
+<script src="{{ asset('/assets/admin/js/fobo_select.js') }}"></script>
+
 
 
 {{-- COMMENTS --}}

@@ -30,9 +30,9 @@
     <link rel="stylesheet" href="{{asset('/assets/admin/vendor/fonts/boxicons.css')}}" />
     
     <!-- Core CSS -->
-    <link rel="stylesheet" href="{{asset('/assets/admin/vendor/css/core.css')}}" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="{{asset('/assets/admin/vendor/css/core.css')}}?v=1.1.13" class="template-customizer-core-css" />
     <!-- <link rel="stylesheet" href="="{{asset('/assets/admin/vendor/css/core.css')}}" class="template-customizer-core-css" /> -->
-    <link rel="stylesheet" href="{{asset('/assets/admin/vendor/css/theme-default.css')}}" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="{{asset('/assets/admin/vendor/css/theme-default.css')}}?v=1.1.13" class="template-customizer-theme-css" />
     <link rel="stylesheet" href="{{asset('/assets/admin/css/demo.css')}}" />
 
     <!-- Vendors CSS -->
@@ -63,15 +63,14 @@
 					<a href="{{ route('dashboard.index') }}" class="app-brand-link">
 						<span class="app-brand-logo demo">
 							<div class="app-brand-link gap-2 fw-bold">
-								<img src="{{ asset('assets/img/icon-push.png') }}" alt="Hexabe" style="max-height:40px;margin-right:8px;">
-								<span style='color:#243C78;font-size:32px;font-family:"Poppins",sans-serif;'>Hexa</span>
+								<img src="{{ asset('assets/img/isologo.png') }}" alt="Hexabe" style="max-height:40px;margin-right:8px;">
+								<span style='color:#ffffff;font-size:32px;font-family:"Poppins",sans-serif;'>Hexa</span>
 								<span style='color:#FE7531;font-size:32px;font-family:"Poppins",sans-serif;margin-left:-7px;'>Be</span>
 							</div>
 						</span>
 					</a>
 					<a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block">
 						<i class="bx bx-dots-vertical-rounded bx-sm align-middle"></i>
-						{{--<i class="bx bx-chevron-left bx-sm align-middle"></i>--}}
 					</a>
 				</div>
 
@@ -165,7 +164,7 @@
 					--}}
 					@endhasanyrole
 					<li id="menu-logout" class="menu-item">
-						<a href="{{ route('login.exit') }}" class="menu-link" style="color:#ff3e1d;">
+						<a href="{{ route('login.exit') }}" class="menu-link" style="color:#ffd7b2;">
 							<i class="menu-icon tf-icons bx bx-log-out"></i>
 							<div>Salir</div>
 						</a>
@@ -176,10 +175,10 @@
 				</ul>
  
 				<div class="menu-footer-fixed border-top p-2">
-					<div class="d-flex align-items-center py-3 px-4 border rounded-3 bg-label-warning">
+					<div class="d-flex align-items-center py-3 px-4 rounded-3 back-dark">
 						<div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2 align-items-center">
 							<div class="me-3">
-								<p class="mb-0 text-heading text-warning fw-bold">
+								<p class="mb-0 text-heading fw-bold text-white">
 									Vista: 
 									@switch(Auth::user()->role)
 										@case('SUPER')
@@ -197,7 +196,7 @@
 										@default
 									@endswitch
 								</p>
-								<small class="text-secondary">
+								<small class="text-secondary text-white">
 									@switch(Auth::user()->role)
 										@case('SUPER')
 											Acceso total
@@ -216,16 +215,11 @@
 								</small>
 							</div>
 						</div>
-						<div class="avatar flex-shrink-0">
-							<label class="switch switch-warning">
+						<div class="pe-3">
+							<label class="switch switch-warning" style="cursor:inherit;">
 								<input type="checkbox" class="switch-input" checked="" readonly disabled>
-								<span class="switch-toggle-slider">
-									<span class="switch-on">
-										<i class="icon-base bx bx-check"></i>
-									</span>
-									<span class="switch-off">
-										<i class="icon-base bx bx-x"></i>
-									</span>
+								<span class="switch-toggle-slider" style="opacity:1;">
+									<span class="switch-on"></span>
 								</span>
 							</label>
 						</div>
@@ -256,7 +250,7 @@
 						@yield('main')
 					</div>
 
-					<footer class="content-footer footer bg-footer-theme">
+					<footer class="content-footer footer bg-footer-theme mt-4">
 						<div class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
 							<div class="mb-2 mb-md-0">
 								©
@@ -280,7 +274,7 @@
 	</div>
     <!-- / Layout wrapper -->
 
-	<link rel="stylesheet" href="{{asset('/assets/admin/css/fobo.css')}}?v=1.3.7">
+	<link rel="stylesheet" href="{{asset('/assets/admin/css/fobo.css')}}?v=1.1.13">
 
     <script src="{{asset('/assets/admin/vendor/libs/jquery/jquery.js')}}"></script>
     <script src="{{asset('/assets/admin/vendor/js/bootstrap.js')}}"></script>

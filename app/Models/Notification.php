@@ -22,4 +22,9 @@ class Notification extends Model
     {
         return $this->belongsTo(User::class, 'user_origin_id');
     }
+
+    public function task(): BelongsTo
+    {
+        return $this->belongsTo(Task::class);
+    }
 }

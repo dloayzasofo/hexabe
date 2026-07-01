@@ -88,6 +88,7 @@ class CommentController extends Controller {
                 'Te han mencionado en un comentario tarea: ' . Str::limit($task->title, 25),
                 Str::limit(strip_tags($comment->description), 80),
                 'MENTION',
+                $task->id,
                 $user,
                 route('task.view', ['task' => $task->id]) . '#comment-' . $comment->id,
                 'medium'
@@ -107,6 +108,7 @@ class CommentController extends Controller {
             $user->name . ' ha comentado la tarea: ' . Str::limit($task->title, 25),
             $comment->description, 
             'COMMENT',
+            $task->id,
             $user,
             route('task.view', ['task' => $task->id]),
             'medium'
@@ -119,6 +121,7 @@ class CommentController extends Controller {
                 $user->name . ' ha comentado la tarea: ' . Str::limit($task->title, 25),
                 $comment->description, 
                 'COMMENT',
+                $task->id,
                 $user,
                 route('task.view', ['task' => $task->id]),
                 'medium'

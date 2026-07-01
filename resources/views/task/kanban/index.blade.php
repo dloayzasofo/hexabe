@@ -2,13 +2,13 @@
 
 @section('main')
 	<div class="wrap-toast"></div>
-  <div class="btn-add-task"> 
-      <button id="btnCreate" class="btn rounded-pill btn-icon btn-primary" title="Crear nueva tarea">
-          <span><i class="bx bx-plus"></i></span>
-      </button> 
-  </div>
+	<div class="btn-add-task"> 
+		<button id="btnCreate" class="btn rounded-pill btn-icon btn-primary" title="Crear nueva tarea">
+			<span><i class="bx bx-plus"></i></span>
+		</button> 
+	</div>
 
-  @include('task._form_search', ['title' => 'Mis tareas'])
+  	@include('task._form_search', ['title' => 'Mis tareas'])
 
 	@if(Session::has('task.success'))
 	<div class="alert alert-success alert-dismissible" role="alert">

@@ -31,6 +31,7 @@ class DelayTasksController extends Controller {
                 'Tarea "' . Str::limit($task->title, 12) . '" ha sido marcada como Retrasada.', 
                 $task->title,
                 'CRON',
+                $task->id,
                 null,
                 route('task.view', ['task' => $task->id]),
                 $task->priority

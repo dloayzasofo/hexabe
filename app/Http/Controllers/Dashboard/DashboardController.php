@@ -12,6 +12,8 @@ use App\Http\Helper\HistoryHelper;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\Brand;
+use App\Models\Team;
+use App\Models\TeamUser;
 use Spatie\Permission\Models\Role;
 use Auth;
 
@@ -19,8 +21,20 @@ class DashboardController extends Controller {
  
     public function index() {
         $user = Auth::user();
-        $brands = Brand::where('business_id', $user->business_id)->limit(5)->orderBy('id', 'desc')->get();
-        $task = Task::with('brand', 'assign', 'collaborators')
+        $brands = Brand::where('business_id', $user->business_id)->limit(5)
+            ->orderBy('id', 'desc')
+            ->get();
+
+        $teams = Team::with('teamuser')
+            ->where('business_id', $user->business_id) 
+            ->whereHas('teamuser', function($query) use($user){
+                $query->where('user_id', $user->id);
+            })
+            ->limit(5)
+            ->orderBy('id', 'desc')
+            ->get();
+
+        $tasks = Task::with('brand', 'assign', 'collaborators')
             ->withCount('medias')
             ->withCount('childs')
             ->withCount('comments')
@@ -29,8 +43,8 @@ class DashboardController extends Controller {
                       ->orWhere('user_id', $user->id)
                       ->orWhereRaw('id in (SELECT task_id FROM task_collaborators WHERE user_id = ?)', [$user->id]);
             })
-            ->whereIn('status', ['DELAY', 'TOSTART'])
-            ->limit(3)
+            ->whereIn('status', ['DELAY', 'TOSTART', 'PROCESS'])
+            //->limit(3)
             ->orderBy('date_delivery', 'asc')
             ->get();
 
@@ -47,12 +61,11 @@ class DashboardController extends Controller {
             'FINALIZED' => Task::where('user_assign', $user->id)->where('status', 'FINALIZED')->count(),
         ];
 
-        
-
         $params = [
-            'brands' => $brands,                        
-            'tasks' => $task,
-            'taskCategories' => $taskCategories
+            'tasks' => $tasks,
+            'taskCategories' => $taskCategories,
+            'brands' => $brands,
+            'teams' => $teams
         ];
         
         HistoryHelper::save(Auth::user(), 'dashboard');

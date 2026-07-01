@@ -55,6 +55,7 @@ class TaskController extends Controller {
                       ->orWhereRaw('id in (SELECT task_id FROM task_collaborators WHERE user_id = ?)', [$user->id]);
             })
             ->where('status', $status)
+            ->orderBy('updated_at', 'desc')
             ->get();
         
         $params = [
@@ -97,6 +98,7 @@ class TaskController extends Controller {
                 'Tarea "' . Str::limit($task->title, 12) . '" ha sido marcada como finalizada.', 
                 $task->title,
                 'TASK',
+                $task->id,
                 $user,
                 route('task.view', ['task' => $task->id]),
                 $task->priority
@@ -110,6 +112,7 @@ class TaskController extends Controller {
                 'Tarea "' . Str::limit($taskDependency->task->title, 12) . '" ha sido desbloqueada.', 
                 $taskDependency->task->title,
                 'TASK',
+                $task->id,
                 $user,
                 route('task.view', ['task' => $taskDependency->task->id]),
                 $taskDependency->task->priority
@@ -138,6 +141,7 @@ class TaskController extends Controller {
                 'Tarea "' . Str::limit($task->title, 12) . '" ha sido marcada como finalizada.', 
                 $task->title,
                 'TASK',
+                $task->id,
                 $user,
                 route('task.view', ['task' => $task->id]),
                 $task->priority
@@ -151,6 +155,7 @@ class TaskController extends Controller {
                 'Tarea "' . Str::limit($taskDependency->task->title, 12) . '" ha sido desbloqueada.', 
                 $taskDependency->task->title,
                 'TASK',
+                $task->id,
                 $user,
                 route('task.view', ['task' => $taskDependency->task->id]),
                 $taskDependency->task->priority
@@ -182,6 +187,7 @@ class TaskController extends Controller {
             'Tarea "' . Str::limit($title, 12) . '" ha sido eliminada', 
             $title,
             'TASK',
+            null,
             null,
             null,
             'high'
@@ -292,6 +298,7 @@ class TaskController extends Controller {
             'Tienes una tarea por realizar', 
             $task->title, 
             'TASK',
+            $task->id,
             $user,
             route('task.view', ['task' => $task->id]),
             $task->priority

@@ -47,13 +47,13 @@
 
 @if( count($taskLinks) > 0 )
     @foreach( $taskLinks as $taskLink )
-        <a href="{{ $taskLink->url }}" class="block" target="_blank">
+        <a href="{{ $taskLink->url }}" class="block task-link" target="_blank">
             <div class="card mt-2" style="background:transparent;box-shadow:none; border: 1px solid #e2e8f0;">
                 <div class="card-body" style="padding:10px;">
                     <div class="d-flex justify-content-start align-items-center user-name">
                         <div class="avatar-wrapper">
                             <div class="avatar avatar-md me-3">
-                                <span class="avatar-initial rounded bg-label-danger"><i class="icon-base bx bx-link icon-lg"></i></span>
+                                <span class="avatar-initial rounded bg-label-info"><i class="icon-base bx bx-link icon-lg"></i></span>
                             </div>
                         </div>
                         <div class="d-flex flex-column">
