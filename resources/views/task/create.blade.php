@@ -10,7 +10,7 @@
     <div class="modal-footer">
         <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Cancelar</button>
         @if( isset($task) )
-            <button type="button" class="btn btn-warning btnSaveTask">Crear sub tarea</button>
+            <button type="button" class="btn btn-warning btnSaveTask">Crear subtarea</button>
         @else
             <button type="button" class="btn btn-warning btnSaveTask">Crear tarea</button>
         @endif

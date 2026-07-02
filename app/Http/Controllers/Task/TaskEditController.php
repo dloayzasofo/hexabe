@@ -13,6 +13,7 @@ use App\Models\TaskCollaborator;
 use App\Models\TeamUser;
 use App\Models\TaskLink;
 use App\Models\TaskInfo;
+use App\Models\TimeControl;
 use App\Models\User;
 use Auth;
 
@@ -22,6 +23,13 @@ class TaskEditController extends Controller {
         $task->status = $request->status;
         $task->save();
         $message = Str::limit($task->title, 50) . ": Estado de la tarea actualizado";
+
+        $timeControl = new TimeControl();
+        $timeControl->task_id = $task->id;
+        $timeControl->user_id = Auth::user()->id;
+        $timeControl->status = $task->status;
+        $timeControl->save();
+        
         return response()->json(['success' => true, 'data' => ["id"=> $task->id, "status"=> $task->status], 'message' => $message], 200);
     }
 

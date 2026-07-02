@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Helper\NotificationHelper;
 use Illuminate\Support\Str;
 use App\Models\Task;
+use App\Models\TimeControl;
 use Auth;
 
 class DelayTasksController extends Controller {
@@ -36,6 +37,12 @@ class DelayTasksController extends Controller {
                 route('task.view', ['task' => $task->id]),
                 $task->priority
             );
+
+            $timeControl = new TimeControl();
+            $timeControl->task_id = $task->id;
+            $timeControl->user_id = null;
+            $timeControl->status = $task->status;
+            $timeControl->save();
         }
 
         echo $count . ' Tareas marcadas como retrasadas';

@@ -79,8 +79,8 @@ class TaskUserController extends Controller {
             ->whereBetween('date_delivery', [$dateIni, $dateEnd])
             ->where(function($query)use($user){
                 $query->where('user_assign', $user->id)
-                      ->orWhere('user_id', $user->id)
-                      ->orWhereRaw('id in (SELECT task_id FROM task_collaborators WHERE user_id = ?)', [$user->id]);
+                      ->orWhere('user_id', $user->id);
+                      //->orWhereRaw('id in (SELECT task_id FROM task_collaborators WHERE user_id = ?)', [$user->id]);
             })
             ->orderBy('position', 'asc')
             ->get();

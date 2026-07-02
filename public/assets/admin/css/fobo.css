@@ -640,6 +640,15 @@ textarea{
     border: 1px solid #1414B81A;
     box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
 }
+.layout-menu-collapsed .app-brand.justify-content-center{
+    justify-content: flex-start !important;
+}
+.layout-menu-collapsed .app-brand.justify-content-center .app-brand-logo img{
+    margin-right: 20px !important;
+}
+.layout-menu-collapsed.layout-menu-hover .app-brand.justify-content-center .app-brand-logo img{
+    margin-right: 0px !important;
+}
 .list-group-item{
     padding-left: 0px;
     padding-right: 0px;

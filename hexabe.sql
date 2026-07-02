@@ -392,7 +392,20 @@ CREATE TABLE `firebase`(
   PRIMARY KEY (`id`)	
 );
 
--- DROP TABLE notifications;
+CREATE TABLE `time_controls`(
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `status` VARCHAR(20),
+  `task_id` bigint UNSIGNED,
+  `user_id` bigint UNSIGNED null,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  FOREIGN KEY(task_id) REFERENCES tasks(id) ON DELETE CASCADE ON UPDATE NO ACTION,
+  FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE SET NULL ON UPDATE NO ACTION,
+  PRIMARY KEY (`id`)	
+);
+
+-- DROP TABLE time_control;
 -- INSERT USERS
 insert into users(name, last_name, email, password, role, status) values
 ('deiby', 'loayza', 'dloayza@sofopolis.com', '$2y$12$fX6ExEKahoArXVPFMYhW5uDpTkDv1nW6DxzAocGRis67ZSNM19RiO', 'ADMIN', 'ACTIVE'); -- 123123

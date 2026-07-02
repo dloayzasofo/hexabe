@@ -20,7 +20,7 @@
             
             <div>
                 @foreach ($childs as $child)
-                <div class="d-flex align-items-center border-primary py-3 px-4 border rounded mt-2" style="border-color:#F1F5F9 !important;">
+                <div class="d-flex align-items-center border-primary py-1 px-2 border rounded mt-2" style="border-color:#F1F5F9 !important;">
                     <div class="me-3">
                         <span class="timeline-indicator-advanced timeline-indicator-success border-0 shadow-none" 
                             @if( $child->status == 'FINALIZED' ) style="color:#22C55E;" @endif>

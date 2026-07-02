@@ -40,11 +40,11 @@ class DashboardController extends Controller {
             ->withCount('comments')
             ->where(function($query)use($user){
                 $query->where('user_assign', $user->id)
-                      ->orWhere('user_id', $user->id)
-                      ->orWhereRaw('id in (SELECT task_id FROM task_collaborators WHERE user_id = ?)', [$user->id]);
+                      ->orWhere('user_id', $user->id);
+                      //->orWhereRaw('id in (SELECT task_id FROM task_collaborators WHERE user_id = ?)', [$user->id]);
             })
             ->whereIn('status', ['DELAY', 'TOSTART', 'PROCESS'])
-            //->limit(3)
+            ->limit(10)
             ->orderBy('date_delivery', 'asc')
             ->get();
 

@@ -92,13 +92,16 @@
             Marca
         </div>
         <div>
+            Responsable
+        </div>
+        <div>
             Estado
         </div>
         <div>
             Prioridad
         </div>
         <div>
-            Equipo
+            Progreso
         </div>
         <div>
             Fecha de entrega
@@ -107,21 +110,9 @@
             Acciones
         </div>
     </div>
-
     @foreach($tasks as $task)
-    <div class="task-list-item d-flex no-wrap">
-        <div class="d-flex justify-content-start align-items-center user-name">
-            <div class="avatar-wrapper">
-                <a href="{{ route('task.view', ['task'=> $task]) }}" class="text-heading">
-                    <div class="avatar avatar-sm me-2">
-                        @if( isset($task->assign->image) )
-                            <img class="rounded-circle" src="{{ $task->assign->image }}" alt="{{ $task->assign->name }}">
-                        @else
-                            <span class="avatar-initial rounded-circle bg-label-primary">{{ $task->assign->nameInitial }}</span>
-                        @endif
-                    </div>
-                </a>
-            </div>
+    <div id="task-{{ $task->id }}" class="task-list-item d-flex no-wrap">
+        <div>
             <div class="d-flex flex-column">
                 <a href="{{ route('task.view', ['task'=> $task]) }}" class="text-heading">
                     <span class="fw-medium">{{ $task->title }}</span>
@@ -142,79 +133,68 @@
             </div>
         </div>
 
-        <div class="d-flex justify-content-center">
-            <div class="ct-select {{ $task->status }}" data-value="{{ $task->status }}" data-task="{{ $task->id }}" data-type="status">
-                <div class="ct-select-view readonly">
-                    @if( $task->status == 'TOSTART' )
-                        Sin empezar
-                    @elseif( $task->status == 'PROCESS' )
-                        En proceso
-                    @elseif( $task->status == 'DELAY' )
-                        Retraso
-                    @elseif( $task->status == 'PAUSED' )
-                        Pausado
-                    @elseif( $task->status == 'FINALIZED' )
-                        Finalizado
-                    @endif
-                </div>
+        <div class="d-flex justify-content-center align-items-center user-name">
+            <div class="avatar-wrapper">
+                <a href="{{ route('task.view', ['task'=> $task]) }}" class="text-heading">
+                    <div class="avatar avatar-sm">
+                        @if( isset($task->assign->image) )
+                            <img class="rounded-circle" src="{{ $task->assign->image }}" alt="{{ $task->assign->name }}">
+                        @else
+                            <span class="avatar-initial rounded-circle bg-label-primary">{{ $task->assign->nameInitial }}</span>
+                        @endif
+                    </div>
+                </a>
             </div>
         </div>
 
         <div class="d-flex justify-content-center">
-            <div class="ct-select {{ $task->priority }}" data-value="{{ $task->priority }}" data-task="{{ $task->id }}" data-type="priority">
-                <div class="ct-select-view readonly">
-                    @if( $task->priority == 'high' )
-                        ALTA
-                    @elseif( $task->priority == 'medium' )
-                        MEDIA
-                    @elseif( $task->priority == 'low' )
-                        BAJA
-                    @endif
-                </div>
+            <div class="ct-select" data-value="{{ $task->status }}" data-task="{{ $task->id }}" data-type="status">
+                <div class="ct-select-view"></div>
+                <ul class="list-items">
+                    <li class="list-items-item TOSTART" data-id="{{ $task->id }}" data-value="TOSTART"> Sin empezar </li>
+                    <li class="list-items-item PROCESS" data-id="{{ $task->id }}" data-value="PROCESS"> En proceso </li>
+                    <li class="list-items-item DELAY" data-id="{{ $task->id }}" data-value="DELAY"> Retraso </li>
+                    <li class="list-items-item PAUSED" data-id="{{ $task->id }}" data-value="PAUSED"> Pausado </li>
+                    <li class="list-items-item FINALIZED" data-id="{{ $task->id }}" data-value="FINALIZED"> Finalizado </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center">
+            <div class="ct-select" data-value="{{ $task->priority }}" data-task="{{ $task->id }}" data-type="priority">
+                <div class="ct-select-view"></div>
+                <ul class="list-items">
+                    <li class="list-items-item high" data-id="{{ $task->id }}" data-value="high"> ALTA </li>
+                    <li class="list-items-item medium" data-id="{{ $task->id }}" data-value="medium"> MEDIA </li>
+                    <li class="list-items-item low" data-id="{{ $task->id }}" data-value="low"> BAJA </li>
+                </ul>
             </div>
         </div>
 
         <div>
-            <div class="d-flex flex-wrap align-items-center justify-content-center">
-                <ul class="list-unstyled users-list d-flex align-items-center avatar-group mb-0">
-
-                    <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar pull-up" aria-label="{{ $task->assign->name }}" data-bs-original-title="{{ $task->assign->name }}">
-                        <a href="{{ route('task.user.list', [$task->assign]) }}">
-                            @if( isset($task->assign->image) )
-                                <img class="rounded-circle" src="{{ $task->assign->image }}" alt="{{ $task->assign->name }}">
-                            @else
-                                <span class="avatar-initial rounded-circle bg-label-primary">{{ $task->assign->nameInitial }}</span>
-                            @endif
-                        </a>
-                    </li>
-
-                    @foreach($task->collaborators as $index => $collaborator)
-                        @if( $index >= 2)
-                            @break
-                        @endif
-
-                        <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar pull-up" aria-label="{{ $collaborator->user->name }}" data-bs-original-title="{{ $collaborator->user->name }}">
-                            <a href="{{ route('task.user.list', [$collaborator->user]) }}">
-                                @if( isset($collaborator->user->image) )
-                                    <img class="rounded-circle" src="{{ $collaborator->user->image }}" alt="{{ $collaborator->user->name }}">
-                                @else
-                                    <span class="avatar-initial rounded-circle bg-label-primary">{{ $collaborator->user->nameInitial }}</span>
-                                @endif
-                            </a>
-                        </li>
-                    @endforeach
-
-                    @if( $task->collaborators_count >= 3 )
-                        <li class="avatar">
-                            <span class="avatar-initial rounded-circle pull-up text-heading" 
-                                data-bs-toggle="tooltip" 
-                                data-bs-placement="bottom" 
-                                data-bs-original-title="{{ 3 - $task->collaborators_count }} más">
-                                +{{ 3 - $task->collaborators_count }}
-                            </span>
-                        </li>
-                    @endif
-                </ul>
+            <div>
+                @if( $task->childs_count > 0 )
+                <div class="d-flex justify-content-between mb-1">
+                    <div>
+                        Subtareas
+                    </div>
+                    <div class="text-primary fw-bold">
+                        {{ $task->childs_done }}/{{ $task->childs_count }}
+                    </div>
+                    
+                </div>
+                <div>
+                    <div class="progress" style="height: 16px;">
+                        <div class="progress-bar" role="progressbar" style="width: {{ $task->progress }}%;" aria-valuenow="{{ $task->progress }}" aria-valuemin="0" aria-valuemax="100">
+                            {{ $task->progress }}%
+                        </div>
+                    </div>
+                </div>
+                @else
+                <div>
+                    Sin Subtareas
+                </div>
+                @endif
             </div>
         </div>
 
@@ -241,11 +221,21 @@
                     data-bs-original-title="Copiar enlace">
                     <i class="icon-base bx bx-link icon-md"></i>
                 </button>
+                
+                <a href="javascript:;" data-href="{{ route('task.api.delete', [$task]) }}" 
+                    data-bs-toggle="tooltip" 
+                    class="btn btn-icon delete-record text-danger openModalMessage" 
+                    data-bs-placement="top" 
+                    aria-label="Delete" 
+                    data-mode="DELETE"
+                    data-bs-original-title="Eliminar tarea"
+                    data-message="<mark>eliminar</mark> la tarea <b>{{$task->title}}</b>.">
+                    <i class="icon-base bx bx-trash icon-md"></i>
+                </a>
             </div>
         </div>
     </div>
     @endforeach
-
 
     <div class="modal fade " id="modalCenter" tabindex="-1" aria-modal="true" role="dialog" data-bs-keyboard="false" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered" role="document">

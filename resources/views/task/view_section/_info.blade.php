@@ -108,6 +108,22 @@
                 </button>
             </div>
         </div>
+
+        @hasanyrole('SUPER|ADMIN')
+        @if( $task->status == 'FINALIZED' AND $task->hoursWorked != null )
+        <div class="mb-2 mt-4"><small>TIEMPO</small></div>
+        <div class="d-flex justify-content-between hoverEdit">
+            <div class="d-flex align-items-center">
+                <div class="me-2">
+                    <i class="bx bx-stopwatch"></i> 
+                </div>
+                <div id="modelDate">
+                    {{ $task->hoursWorked }}
+                </div>
+            </div>
+        </div>
+        @endif
+		@endhasanyrole
     </div>
 </div>
 

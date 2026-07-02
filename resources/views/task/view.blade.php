@@ -88,12 +88,12 @@
                         <i class="bx bx-pencil"></i> 
                     </button>
                     @endif
-                    <h2 id="modelTitle" class="fw-bold text-negro" style="margin-bottom:4px;"> {{ $task->title }} </h2>
+                    <h2 id="modelTitle" class="fw-bold text-negro" style="margin-bottom:4px;"> {{ $task->title }} </h2> 
                 </div>
             </div>
         </div>
         <div class="col-md-4 text-end">
-            <button id="btnCreate" class="btn btn-primary" title="Crear sub tarea">
+            <button id="btnCreate" class="btn btn-primary" title="Crear subtarea">
                 <span><i class="bx bx-plus"></i></span> Crear subtarea
             </button>
         </div>

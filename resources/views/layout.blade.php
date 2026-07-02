@@ -59,13 +59,12 @@
       	<div class="layout-container">
 			<!-- Menu -->
 			<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
-				<div class="app-brand demo">
+				<div class="app-brand demo justify-content-center">
 					<a href="{{ route('dashboard.index') }}" class="app-brand-link">
 						<span class="app-brand-logo demo">
 							<div class="app-brand-link gap-2 fw-bold">
-								<img src="{{ asset('assets/img/isologo.png') }}" alt="Hexabe" style="max-height:40px;margin-right:8px;">
-								<span style='color:#ffffff;font-size:32px;font-family:"Poppins",sans-serif;'>Hexa</span>
-								<span style='color:#FE7531;font-size:32px;font-family:"Poppins",sans-serif;margin-left:-7px;'>Be</span>
+								<img src="{{ asset('assets/img/logo-h.png') }}" alt="Hexabe" style="max-height:40px;">
+								<span style='color:#ffffff;font-size:32px;font-family:"Poppins",sans-serif;'>exa</span>
 							</div>
 						</span>
 					</a>
