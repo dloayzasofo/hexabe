@@ -14,6 +14,8 @@ class Task extends Model
     use SoftDeletes;
     protected $table = 'tasks';
 
+    protected $appends = ['hoursWorkedLiteral', 'progress', 'childs_done'];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -127,6 +129,44 @@ class Task extends Model
         return $count;
     }
 
+    public function getHoursWorkedLiteralAttribute(){
+        $countHours = $this->hoursWorked;
+
+        if($countHours > 8){
+            $days = floor($countHours / 8);
+            $hours = $countHours % 8;
+
+            $countHours = round($countHours, 2);
+            $hour = floor($countHours);
+
+            $minutes = ($countHours - $hour) * 60;
+            $result = $days . "d ";
+
+
+            if( $hours > 0 OR $minutes > 0 ){
+                $result .= $hours . "h";
+            }
+            if( $minutes > 0 ){
+                $result .= " " . intval($minutes) . "m";
+            }
+            return $result;
+        }
+        
+        $countHours = round($countHours, 2);
+        $hour = floor($countHours);
+
+        $minutes = ($countHours - $hour) * 60;
+        $result = "";
+
+        if( $hour > 0 ){
+            $result = $hour . "h "; 
+        }
+        if( $minutes > 0 ){
+            $result .= intval($minutes) . "m";
+        }
+        return $result;
+    }
+
     /**
      * Function to get hours worked on a task, based on the time control table
      * if hours is greater than 24, it will return the number of days and hours
@@ -169,6 +209,8 @@ class Task extends Model
             $resultBetween = $this->checkStatusBetweenDates($process, $finalized);
             $countHours += $resultBetween;
         }
+
+        return $countHours;
 
         if($countHours > 8){
             $days = floor($countHours / 8);
@@ -253,14 +295,4 @@ class Task extends Model
         return $countHours;
     }
 
-    function checkIfArrayStatusContainDate($arrayStatus, $date){
-        $date = Carbon::parse($date);
-        foreach ($arrayStatus as $status) {
-            $itemData = Carbon::parse($status['hours']);
-            if( $itemData->isSameDay($date) ){
-                return $status;
-            }
-        }
-        return null;
-    }
 }

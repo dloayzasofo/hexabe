@@ -73,11 +73,12 @@ function setActiveToMenuByUrl(){
         'group': "menu-group",
         'service': "menu-forms-service",
         'performance': "menu-performance",
+        'resume': "menu-resume",
     };
 
     var keys = Object.keys(menu);
     var url = location.pathname;
-    console.log(url);
+    ///console.log(url);
 
     if( url.endsWith('/') ){
         $('#menu-admin').addClass('active');

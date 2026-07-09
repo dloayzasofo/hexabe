@@ -99,6 +99,11 @@
 							<div class="text-truncate">Reportes</div>
 						</a>
 						<ul class="menu-sub">
+							<li id="menu-resume" class="menu-item">
+								<a href="{{ route('report.resume') }}" class="menu-link">
+									Resumen
+								</a>
+							</li>
 							<li id="menu-performance" class="menu-item">
 								<a href="{{ route('report.index') }}" class="menu-link">
 									Rendimiento
@@ -229,6 +234,7 @@
 
 			<!-- Layout container -->
 			<div class="layout-page">
+				{{-- 
 				<div class="d-flex justify-content-between align-items-center menu-fixed-wrap">
 					<div>
 						<a href="{{ route('dashboard.index') }}">
@@ -243,6 +249,7 @@
 						</div>
 					</div>
 				</div>
+				--}}
 
 				<div class="content-wrapper">
 					<div class="container-xxl flex-grow-1 container-p-y">

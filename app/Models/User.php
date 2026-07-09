@@ -40,7 +40,7 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    protected $appends = ['image'];
+    protected $appends = ['image','nameInitial'];
 
     /**
      * Get the attributes that should be cast.
