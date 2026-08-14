@@ -45,6 +45,18 @@
             </div>
         </div>
 
+        <div class="mb-2 mt-4"><small>FECHA CREACIÓN</small></div>
+        <div class="d-flex justify-content-between hoverEdit">
+            <div class="d-flex align-items-center">
+                <div class="me-2">
+                    <i class="bx bx-calendar"></i>
+                </div>
+                <div id="modelDate">
+                    {{ Carbon\Carbon::parse($task->created_at)->format('d/m/Y H:i') }}
+                </div>
+            </div>
+        </div>
+
         <div class="mb-2 mt-4"><small>FECHA LÍMITE</small></div>
         <div class="d-flex justify-content-between hoverEdit">
             <div class="d-flex align-items-center">

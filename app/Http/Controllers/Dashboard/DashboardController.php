@@ -35,6 +35,7 @@ class DashboardController extends Controller {
             ->get();
 
         $tasks = Task::with('brand', 'assign', 'collaborators')
+            ->whereHas('assign')
             ->withCount('medias')
             ->withCount('childs')
             ->withCount('comments')

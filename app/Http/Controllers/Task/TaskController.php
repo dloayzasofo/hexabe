@@ -122,7 +122,6 @@ class TaskController extends Controller {
         $request->session()->flash('task.success', 'La tarea ha sido marcada como finalizada.');
         return redirect()->route('task.view', ['task' => $task->id]);
     }
-
     public function apifinish(Request $request, Task $task) {
         $task->status = 'FINALIZED';
         $task->finalized_at = date('Y-m-d H:i:s');
@@ -173,7 +172,6 @@ class TaskController extends Controller {
             ]
         ]);
     }
-
     public function apidelete(Request $request, Task $task) {
         $id = $task->id;
         $title = $task->title;
@@ -239,8 +237,6 @@ class TaskController extends Controller {
         $medias = $request->medias;
         $members = $request->members;
         $links = $request->links;
-
-        
 
         $task = new Task();
         $task->title = $title;
@@ -331,6 +327,7 @@ class TaskController extends Controller {
         $taskMedias = TaskMedia::with('media')->where('task_id', $task->id)->get();
         $taskLinks = TaskLink::where('task_id', $task->id)->get();
         $taskCollaboratos = TaskCollaborator::where('task_id', $task->id)->get();
+        
         $childs = Task::where('parent_id', $task->id)->orderBy('date_delivery', 'asc')->get();
         $comments = $task->comments()->with('user')->with('commentmedias')->orderBy('created_at', 'desc')->get();
         $brands = Brand::orderBy('name', 'asc')->get();
@@ -343,10 +340,14 @@ class TaskController extends Controller {
         if( $task->user_id == $user->id || $task->user_assign == $user->id ) $userIsPartOfTask = true;
 
         $parent = null;
+        $taskParentLinks = [];
+        $taskParentCollaboratos = [];
         if( $task->parent != null ){
             $parent = [
                 'parent' => $task->parent,
-                'childs' => Task::with('assign')->where('parent_id', $task->parent->id)->orderBy('date_delivery', 'asc')->get()
+                'childs' => Task::with('assign')->where('parent_id', $task->parent->id)->orderBy('date_delivery', 'asc')->get(),
+                'taskMedias' => TaskMedia::with('media')->where('task_id', $task->parent->id)->get(),
+                'taskLinks' => TaskLink::where('task_id', $task->parent->id)->get(),
             ];
         }
 

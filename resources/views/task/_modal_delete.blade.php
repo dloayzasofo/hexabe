@@ -14,7 +14,7 @@
                 <div class="row">
                     <div class="col mb-3">
                         <p> ¿Esta seguro que quiere <span class="modal-message"></span>?</p>
-                        <p>Presione <b>Continuar</b> para seguir con el proceso de eliminación.</p>
+                        <p>Presione <b>Continuar</b> para seguir con el proceso.</p>
                     </div>
                 </div>
             </div>

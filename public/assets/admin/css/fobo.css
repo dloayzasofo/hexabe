@@ -690,19 +690,14 @@ textarea{
 .menu-fixed-wrap{
     display: none !important;
 }
-
 .modal-header .btn-close{
     position: absolute;
     right: 20px;
     top: 30px;
 }
-/*
-.nav-tabs .nav-link.active, .nav-tabs .nav-link.active:hover, .nav-tabs .nav-link.active:focus, .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-item.show .nav-link:hover, .nav-tabs .nav-item.show .nav-link:focus {
-    background: transparent !important;
-    color: var(--bs-primary) !important;
-    box-shadow: 0 -2px 0 var(--bs-primary) inset;
+#modelDescription.ql-editor ol{
+    padding-left: 0px;
 }
-*/
 .nav-tabs .nav-item .nav-link:not(.active){
     background-color: transparent !important;
 }

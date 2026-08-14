@@ -249,21 +249,21 @@
         <div class="d-flex justify-content-between align-items-center report-nav">
             <div class="d-flex justify-content-start report-nav">
                 <div class="nav-item tab-filter-footer" role="presentation" data-id="table-members">
-                    <a href="{{ route('task.index') }}?status=TOSTART" class="active" aria-selected="true">
+                    <a class="active" aria-selected="true">
                     <span class="d-none d-sm-inline-flex align-items-center">
                         Por miembro
                     </span>
                     </a>
                 </div>
                 <div class="nav-item tab-filter-footer" role="presentation" data-id="table-teams">
-                    <a href="{{ route('task.index') }}?status=PROCESS" class="" aria-selected="true">
+                    <a class="" aria-selected="true">
                     <span class="d-none d-sm-inline-flex align-items-center">
                         Por equipo
                     </span>
                     </a>
                 </div>
                 <div class="nav-item tab-filter-footer" role="presentation" data-id="table-brands">
-                    <a href="{{ route('task.index') }}?status=DELAY" class="" aria-selected="true">
+                    <a class="" aria-selected="true">
                     <span class="d-none d-sm-inline-flex align-items-center">
                         Por marca
                     </span>
@@ -384,22 +384,6 @@
         }
     );
     picker.show();
-
-    document.addEventListener('click', function (event) {
-        const link = event.target.closest('a[href], a[data-href]');
-        if (!link) {
-            return;
-        }
-
-        const targetHref = link.getAttribute('href') || link.getAttribute('data-href');
-        if (!targetHref || targetHref === '#' || targetHref.startsWith('javascript:')) {
-            return;
-        }
-
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        window.location.assign(targetHref);
-    }, true);
 </script>
 
 {{-- Grafica --}}
@@ -932,6 +916,9 @@
         if( closestDateItem == null ){
             closestDateItem = e.target.closest('.calendar-cell');
         }
+        if( closestDateItem == null ){
+            closestDateItem = e.target.closest('.calendar-nav-btn');
+        }
 
 
         if( closestDateItem == null ){
@@ -1076,14 +1063,14 @@
                 <div id="user-${item.id}" class="task-list-item members d-flex no-wrap ${ i >= 4 ? 'hide' : '' }">
                     <div class="d-flex justify-content-start align-items-center user-name">
                         <div class="avatar-wrapper">
-                            <a href="./task/staff/list/${item.id}" class="text-heading">
+                            <a href="/task/staff/list/${item.id}" class="text-heading">
                                 <div class="avatar avatar-sm me-2">
                                     ${ imageHtml }
                                 </div>
                             </a>
                         </div>
                         <div class="d-flex flex-column">
-                            <a href="./task/staff/list/${item.id}" class="text-heading">
+                            <a href="/task/staff/list/${item.id}" class="text-heading">
                                 <span class="fw-medium">${item.name} ${item.last_name}</span>
                             </a>
                             <small>${positionHtml}</small>

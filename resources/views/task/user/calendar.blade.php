@@ -81,10 +81,10 @@
 	</div>
 @endsection
 @section('script')
-<link href="{{ asset('/assets/admin/js/quilljs/quill.css') }}" rel="stylesheet">
+<link href="{{ asset('/assets/admin/js/quilljs/quill.css') }}?v=1" rel="stylesheet">
 <link href="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css" rel="stylesheet" type="text/css" />
 
-<script src="{{ asset('/assets/admin/js/quilljs/quill.js') }}"></script>
+<script src="{{ asset('/assets/admin/js/quilljs/quill.js') }}?v=1"></script>
 <script src="{{asset('/assets/admin/js/mieditor.js')}}"></script>
 <script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
 <script>let urlCreate = "{{ route('task.create') }}";</script>

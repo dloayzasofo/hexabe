@@ -16,7 +16,14 @@
         <div class="col-md-8">
             <div class="d-flex mb-3 align-items-center">
                 @if(url()->previous() !== url()->current())
-                    <a href="{{ url()->previous() }}" class="btn rounded-pill btn-icon btn-primary me-2" title="Atras" data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" aria-label="Atras" data-bs-original-title="Atras" style="background:#3C8AEC;border-color:#3C8AEC;">
+                    <a href="{{ url()->previous() }}" 
+                        class="btn rounded-pill btn-icon btn-primary me-2" 
+                        title="Atras" data-bs-toggle="tooltip" 
+                        data-popup="tooltip-custom" 
+                        data-bs-placement="top" 
+                        aria-label="Atras" 
+                        data-bs-original-title="Atras" 
+                        style="background:#3C8AEC;border-color:#3C8AEC;">
                         <i class="bx bx-chevron-left"></i>
                     </a>
                 @else
@@ -104,7 +111,7 @@
             <div class="mb-2 text-negro"><b>Descripción:</b> </div>
             <div class="border rounded p-3">
                 @if( trim($task->description) !== '' )
-                <div id="modelDescription">{!! $task->description !!}</div>
+                <div id="modelDescription" class="ql-editor">{!! $task->description !!}</div>
                 @else
                 <div id="modelDescription"> S/N </div>
                 @endif
@@ -226,13 +233,14 @@
     @include('task.view._brand')
     @include('task.view._user')
     @include('task.view._date')
+    @include('task._modal_delete')
 @endsection
 
 @section('script')
-<link href="{{ asset('/assets/admin/js/quilljs/quill.css') }}" rel="stylesheet">
+<link href="{{ asset('/assets/admin/js/quilljs/quill.css') }}?v=1" rel="stylesheet">
 <link href="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css" rel="stylesheet" type="text/css" />
 
-<script src="{{ asset('/assets/admin/js/quilljs/quill.js') }}"></script>
+<script src="{{ asset('/assets/admin/js/quilljs/quill.js') }}?v=1"></script>
 <script src="{{asset('/assets/admin/js/mieditor.js')}}"></script>
 <script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
 {{-- --}} 
@@ -240,13 +248,7 @@
 <script src="{{asset('/assets/admin/js/task.js')}}"></script>
 <script src="{{ asset('/assets/admin/js/fobo_select.js') }}"></script>
 
-
-
 {{-- COMMENTS --}}
-{{--
-<link href="https://cdn.jsdelivr.net/npm/quill-mention@2.2.6/dist/quill.mention.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/quill-mention@2.2.6/dist/quill.mention.min.js"></script>
---}}
 <link href="{{ asset('/assets/admin/js/quilljsmention/quillmention.min.css') }}" rel="stylesheet">
 <script src="{{ asset('/assets/admin/js/quilljsmention/quillmention.min.js') }}"></script>
 <script>
@@ -445,6 +447,127 @@
 
         let wrapFiles = document.querySelector('#wrapCommentFiles');
         wrapFiles.innerHTML = '';
+    }
+</script>
+<script>
+    let modalOpenMode = '';
+
+    window.addEventListener('load', () => {
+        let openModals = document.querySelectorAll('.openModalMessage');
+        for(let i=0; i < openModals.length; i++){
+            openModals[i].addEventListener('click', handleOpenModal);
+        }
+        document.querySelector('.modal-link').addEventListener('click', serverModalStatus);
+    });
+
+    function handleOpenModal(){
+        modalOpenMode = this.dataset.mode;
+        let message = this.dataset.message;
+        let href = this.dataset.href;
+        $('.modal').find('.modal-message').html(message);
+        if( modalOpenMode == 'DELETE' ){
+            $('.modal').find('.modal-link').addClass('btn-danger');
+            $('.modal').find('.modal-link').removeClass('btn-primary');
+        }else{
+            $('.modal').find('.modal-link').removeClass('btn-danger');
+            $('.modal').find('.modal-link').addClass('btn-primary');
+        }
+        $('.modal').find('.modal-link').attr('data-href', href);
+
+        $('#confirmModal').modal('show');
+    }
+
+    function serverModalStatus(){
+        let taskId = this.getAttribute('data-href');
+        let url = "/task/api/edit/status/:id".replace(':id', taskId);
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                status: 'FINALIZED'
+            })
+        }).then(response => response.json())
+        .then(data => {
+            showSelectToast(data);
+        });
+    }
+
+    function showSelectToast(data){
+        if( data.success ) {
+            $('#confirmModal').modal('hide');
+
+            const wrapToast = document.querySelector('.wrap-toast');
+            let classAlert = data.success ? 'bg-success' : 'bg-danger';
+            let idRandom = Math.random().toString(36).substring(2, 9);
+            let html = `
+            <div id="${idRandom}" class="bs-toast toast fade hide ${classAlert}" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="3000">
+                <div class="toast-header">
+                <i class="icon-base bx bx-bell me-2"></i>
+                <div class="me-auto fw-medium">Notificación</div>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">${ data.message }</div>
+            </div>
+            `;
+
+            wrapToast.insertAdjacentHTML('beforeend', html);
+            setTimeout(() => {
+            const toastElement = document.getElementById(idRandom);
+            if (toastElement) {
+                const toast = new bootstrap.Toast(toastElement);
+                toast.show();
+            }
+            }, 150);
+
+            let subTaskElement = document.querySelector('#taskStatus-' + data.data.id);
+            if( subTaskElement ){
+                subTaskElement.style.color = '#22C55E';
+                let iconElement = subTaskElement.querySelector('.icon-base');
+                if( iconElement ){
+                    iconElement.classList.remove('bx-circle');
+                    iconElement.classList.add('bx-check-circle');
+                }
+            }
+        }
+    }
+
+    let btnsCopyLink = document.querySelectorAll('.btnCopyLink');
+    for(let i=0; i < btnsCopyLink.length; i++){
+        btnsCopyLink[i].addEventListener('click', handleCopyLink);
+    }
+
+    function handleCopyLink(){
+        let href = this.dataset.href;
+        let task = this.dataset.task;
+        navigator.clipboard.writeText(href);
+
+        let toastElement = document.createElement('div');
+        toastElement.classList.add('bs-toast', 'toast', 'fade', 'bg-success');
+        toastElement.setAttribute('role', 'alert');
+        toastElement.setAttribute('aria-live', 'assertive');
+        toastElement.setAttribute('aria-atomic', 'true');
+        toastElement.setAttribute('data-bs-autohide', 'true');
+        toastElement.setAttribute('data-bs-delay', '2000');
+        toastElement.innerHTML = `
+            <div class="toast-header">
+                <i class="icon-base bx bx-bell me-2"></i>
+                <div class="me-auto fw-medium">Enlace copiado</div>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">Tarea: ${task}</div>
+        `;
+
+        let wrapToast = document.querySelector('.wrap-toast');
+        wrapToast.appendChild(toastElement);
+        const toast = new bootstrap.Toast(toastElement, {
+            autohide: true,
+            delay: 2000 // 2 seconds
+        });
+
+        toast.show();
     }
 </script>
 @endsection
