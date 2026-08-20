@@ -17,7 +17,7 @@ class ReportResumeController extends Controller {
  
     public function index(Request $request) {
         $user = Auth::user();
-        $statuses = ['TOSTART'=> 'Sin empezar', 'PROCESS'=> 'En proceso', 'FINALIZED'=> 'Finalizado', 'DELAY'=> 'Atrasado', 'PAUSED'=> 'Pausado'];
+        $statuses = ['TOSTART'=> 'Sin empezar', 'PROCESS'=> 'En proceso', 'FINALIZED'=> 'Finalizado', 'DELAY'=> 'Atrasado', 'PAUSED'=> 'Pausado', 'FINALIZED_DELAY'=> 'Finalizado con retraso'];
         $users = User::select('id', 'name', 'last_name', 'media_id')->where('business_id', $user->business_id)->orderBy('name', 'asc')->orderBy('last_name', 'asc')->get();
         $teams = Team::select('id', 'name', 'media_id')->where('business_id', $user->business_id)->orderBy('name', 'asc')->get();
         $brands = Brand::select('id', 'name', 'media_id')->where('business_id', $user->business_id)->orderBy('name', 'asc')->get();
@@ -33,7 +33,7 @@ class ReportResumeController extends Controller {
     }
 
     public function stats(Request $request) {
-        $statuses = ['TOSTART'=> 'Sin empezar', 'PROCESS'=> 'En proceso', 'FINALIZED'=> 'Finalizado', 'DELAY'=> 'Atrasado', 'PAUSED'=> 'Pausado'];
+        $statuses = ['TOSTART'=> 'Sin empezar', 'PROCESS'=> 'En proceso', 'FINALIZED'=> 'Finalizado', 'DELAY'=> 'Atrasado', 'PAUSED'=> 'Pausado', 'FINALIZED_DELAY'=> 'Finalizado con retraso'];
         $date = $request->query('date');
         $member = $request->query('member');
         $team = $request->query('team');
@@ -123,13 +123,10 @@ class ReportResumeController extends Controller {
         $query = $query->where('date_delivery', '>=', $date_ini)
                 ->where('date_delivery', '<=', $date_end);
 
-        //var_dump($request->query('start') . ' ' . $request->query('end'));
-        //var_dump($date_ini->format('Y-m-d') . ' ' . $date_end->format('Y-m-d'));
-        //var_dump($query->toRawSql());exit();
-
         $queryStatusTostart = clone $query;
         $queryStatusProcess = clone $query;
         $queryStatusFinalized = clone $query;
+        $queryStatusFinalizedDelay = clone $query;
         $queryStatusDelay = clone $query;
         $queryStatusPaused = clone $query;
         $tasksPaginate = clone $query;
@@ -139,6 +136,7 @@ class ReportResumeController extends Controller {
         $queryTostart = $queryStatusTostart->where('status', 'TOSTART')->count();
         $queryProcess = $queryStatusProcess->where('status', 'PROCESS')->count();
         $queryFinalized = $queryStatusFinalized->where('status', 'FINALIZED')->count();
+        $queryFinalizedDelay = $queryStatusFinalizedDelay->where('status', 'FINALIZED_DELAY')->count();
         $queryDelay = $queryStatusDelay->where('status', 'DELAY')->count();
         $queryPaused = $queryStatusPaused->where('status', 'PAUSED')->count();
         $queryTotal = count($taskTotals);
@@ -159,7 +157,8 @@ class ReportResumeController extends Controller {
                 "process" => $queryProcess,
                 "delay" => $queryDelay,
                 "paused" => $queryPaused,
-                "finalized" => $queryFinalized
+                "finalized" => $queryFinalized,
+                "finalized_delay" => $queryFinalizedDelay
             ],
 
             "graph" => $graph,
@@ -324,7 +323,6 @@ class ReportResumeController extends Controller {
      * @return array [[month=>1, total=>4, tostart=>1, process=>2, finalized=>1, delay=>1, paused=>1], ...]
      */
     private function getStatByYear($query){
-        //var_dump($query->toSql());exit();
         $months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
         $result = [];
         $year = Carbon::now()->year;
@@ -378,6 +376,7 @@ class ReportResumeController extends Controller {
         $tostart = $queryTostart->where('status', 'TOSTART')->count();
         $process = $queryProcess->where('status', 'PROCESS')->count();
         $finalized = $queryFinalized->where('status', 'FINALIZED')->count();
+        $finalizedDelay = $queryFinalized->where('status', 'FINALIZED_DELAY')->count();
         $delay = $queryDelay->where('status', 'DELAY')->count();
         $paused = $queryPaused->where('status', 'PAUSED')->count();
         $result[] = [
@@ -387,13 +386,13 @@ class ReportResumeController extends Controller {
             "process" => $process, //($total == 0) ? 0 : $process * 100 / $total,
             "delay" => $delay, //($total == 0) ? 0 : $delay * 100 / $total,
             "paused" => $paused, //($total == 0) ? 0 : $paused * 100 / $total,
-            "finalized" => $finalized //($total == 0) ? 0 : $finalized * 100 / $total
+            "finalized" => $finalized, //($total == 0) ? 0 : $finalized * 100 / $total
+            "finalized_delay" => $finalizedDelay, //($total == 0) ? 0 : $finalized * 100 / $total
         ];
         return $result;
     }
 
     private function getStatByWeek($query){
-        $months = [1, 2, 3, 4, 5, 6, 7];
         $result = [];
 
         $dayInitial = Carbon::now()->startOfWeek();
@@ -402,11 +401,12 @@ class ReportResumeController extends Controller {
         while( $dayInitial <= $dayFinal ){
             $queryDay = clone $query;
             $day = $dayInitial->format('d-m-Y');
-            $queryDay = $queryDay->where('date_delivery', $dayInitial->format('Y-m-d'));
+            $queryDay = $queryDay->whereDate('date_delivery', $dayInitial->format('Y-m-d'));
             
             $queryTostart = clone $queryDay;
             $queryProcess = clone $queryDay;
             $queryFinalized = clone $queryDay;
+            $queryFinalizedDelay = clone $queryDay;
             $queryDelay = clone $queryDay;
             $queryPaused = clone $queryDay;
 
@@ -414,6 +414,7 @@ class ReportResumeController extends Controller {
             $tostart = $queryTostart->where('status', 'TOSTART')->count();
             $process = $queryProcess->where('status', 'PROCESS')->count();
             $finalized = $queryFinalized->where('status', 'FINALIZED')->count();
+            $finalizedDelay = $queryFinalizedDelay->where('status', 'FINALIZED_DELAY')->count();
             $delay = $queryDelay->where('status', 'DELAY')->count();
             $paused = $queryPaused->where('status', 'PAUSED')->count();
 
@@ -424,7 +425,8 @@ class ReportResumeController extends Controller {
                 "process" => $process, //($total == 0) ? 0 : $process * 100 / $total,
                 "delay" => $delay, //($total == 0) ? 0 : $delay * 100 / $total,
                 "paused" => $paused, //($total == 0) ? 0 : $paused * 100 / $total,
-                "finalized" => $finalized //($total == 0) ? 0 : $finalized * 100 / $total
+                "finalized" => $finalized, //($total == 0) ? 0 : $finalized * 100 / $total
+                "finalized_delay" => $finalizedDelay //($total == 0) ? 0 : $finalized * 100 / $total
             ];
             
 
@@ -447,6 +449,7 @@ class ReportResumeController extends Controller {
         $tostart = $queryTostart->where('status', 'TOSTART')->count();
         $process = $queryProcess->where('status', 'PROCESS')->count();
         $finalized = $queryFinalized->where('status', 'FINALIZED')->count();
+        $finalizedDelay = $queryFinalized->where('status', 'FINALIZED_DELAY')->count();
         $delay = $queryDelay->where('status', 'DELAY')->count();
         $paused = $queryPaused->where('status', 'PAUSED')->count();
 
@@ -457,7 +460,8 @@ class ReportResumeController extends Controller {
             "process" => $process, //($total == 0) ? 0 : $process * 100 / $total,
             "delay" => $delay, //($total == 0) ? 0 : $delay * 100 / $total,
             "paused" => $paused, //($total == 0) ? 0 : $paused * 100 / $total,
-            "finalized" => $finalized //($total == 0) ? 0 : $finalized * 100 / $total
+            "finalized" => $finalized, //($total == 0) ? 0 : $finalized * 100 / $total
+            "finalized_delay" => $finalizedDelay //($total == 0) ? 0 : $finalized * 100 / $total
         ];
 
         return $result;
@@ -476,6 +480,7 @@ class ReportResumeController extends Controller {
             $queryTostart = clone $queryDay;
             $queryProcess = clone $queryDay;
             $queryFinalized = clone $queryDay;
+            $queryFinalizedDelay = clone $queryDay;
             $queryDelay = clone $queryDay;
             $queryPaused = clone $queryDay;
 
@@ -483,6 +488,7 @@ class ReportResumeController extends Controller {
             $tostart = $queryTostart->where('status', 'TOSTART')->count();
             $process = $queryProcess->where('status', 'PROCESS')->count();
             $finalized = $queryFinalized->where('status', 'FINALIZED')->count();
+            $finalizedDelay = $queryFinalizedDelay->where('status', 'FINALIZED_DELAY')->count();
             $delay = $queryDelay->where('status', 'DELAY')->count();
             $paused = $queryPaused->where('status', 'PAUSED')->count();
 
@@ -493,7 +499,8 @@ class ReportResumeController extends Controller {
                 "process" => $process, //($total == 0) ? 0 : $process * 100 / $total,
                 "delay" => $delay, //($total == 0) ? 0 : $delay * 100 / $total,
                 "paused" => $paused, //($total == 0) ? 0 : $paused * 100 / $total,
-                "finalized" => $finalized //($total == 0) ? 0 : $finalized * 100 / $total
+                "finalized" => $finalized, //($total == 0) ? 0 : $finalized * 100 / $total
+                "finalized_delay" => $finalizedDelay //($total == 0) ? 0 : $finalized * 100 / $total
             ];
             
 
@@ -509,7 +516,8 @@ class ReportResumeController extends Controller {
             "process" => 0,
             "delay" => 0,
             "paused" => 0,
-            "finalized" => 0
+            "finalized" => 0,
+            "finalized_delay" => 0
         ];
 
         foreach($tasks as $task){
@@ -528,6 +536,9 @@ class ReportResumeController extends Controller {
                     break;
                 case "FINALIZED":
                     $result['finalized'] += 1;
+                    break;
+                case "FINALIZED_DELAY":
+                    $result['finalized_delay'] += 1;
                     break;
             }
         }

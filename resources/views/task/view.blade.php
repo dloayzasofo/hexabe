@@ -35,12 +35,33 @@
                 <div>
                     @if( in_array(Auth::user()->id, [$task->user_id, $task->user_assign]) )
                     <div class="ct-select" data-value="{{ $task->status }}" data-task="{{ $task->id }}" data-type="status" style="font-size:12px;">
-                        <div class="ct-select-view"></div>
+                        <div class="ct-select-view">
+                            @switch($task->status)
+                                @case('TOSTART')
+                                    Sin empezar
+                                    @break
+                                @case('PROCESS')
+                                    En proceso
+                                    @break
+                                @case('DELAY')
+                                    Retraso
+                                    @break
+                                @case('PAUSED')
+                                    Pausado
+                                    @break
+                                @case('FINALIZED')
+                                    Finalizado
+                                    @break
+                                @case('FINALIZED_DELAY')
+                                    Finalizado
+                                    @break
+                            @endswitch
+                        </div>
                         <ul class="list-items">
-                            <li class="list-items-item TOSTART" data-id="{{ $task->id }}" data-value="TOSTART"> Sin empezar </li>
+                            {{--<li class="list-items-item TOSTART" data-id="{{ $task->id }}" data-value="TOSTART"> Sin empezar </li>--}}
                             <li class="list-items-item PROCESS" data-id="{{ $task->id }}" data-value="PROCESS"> En proceso </li>
-                            <li class="list-items-item DELAY" data-id="{{ $task->id }}" data-value="DELAY"> Retraso </li>
-                            <li class="list-items-item PAUSED" data-id="{{ $task->id }}" data-value="PAUSED"> Pausado </li>
+                            {{--<li class="list-items-item DELAY" data-id="{{ $task->id }}" data-value="DELAY"> Retraso </li>--}}
+                            {{--<li class="list-items-item PAUSED" data-id="{{ $task->id }}" data-value="PAUSED"> Pausado </li>--}}
                             <li class="list-items-item FINALIZED" data-id="{{ $task->id }}" data-value="FINALIZED"> Finalizado </li>
                         </ul>
                     </div>
@@ -57,31 +78,8 @@
                                 Pausado
                             @elseif( $task->status == 'FINALIZED' )
                                 Finalizado
-                            @endif
-                        </div>
-                    </div>
-                    @endif
-                </div>
-
-                <div class="ms-2">
-                    @if( in_array(Auth::user()->id, [$task->user_id, $task->user_assign]) )
-                    <div class="ct-select" data-value="{{ $task->priority }}" data-task="{{ $task->id }}" data-type="priority" style="font-size:12px;">
-                        <div class="ct-select-view"></div>
-                        <ul class="list-items">
-                            <li class="list-items-item high" data-id="{{ $task->id }}" data-value="high"> Prioridad alta </li>
-                            <li class="list-items-item medium" data-id="{{ $task->id }}" data-value="medium"> Prioridad media </li>
-                            <li class="list-items-item low" data-id="{{ $task->id }}" data-value="low"> Prioridad baja </li>
-                        </ul>
-                    </div>
-                    @else
-                    <div class="ct-select {{ $task->priority }}" data-value="{{ $task->priority }}" data-task="{{ $task->id }}" data-type="priority" style="font-size:12px;">
-                        <div class="ct-select-view readonly">
-                            @if( $task->priority == 'high' )
-                                Prioridad alta
-                            @elseif( $task->priority == 'medium' )
-                                Prioridad media
-                            @elseif( $task->priority == 'low' )
-                                Prioridad baja
+                            @elseif( $task->status == 'FINALIZED_DELAY' )
+                                Finalizado
                             @endif
                         </div>
                     </div>
@@ -160,7 +158,7 @@
                 @endif
             </div>
 
-            @if( $task->status != 'FINALIZED' )
+            @if( $task->status != 'FINALIZED' AND $task->status != 'FINALIZED_DELAY' )
                 @if( Auth::user()->id == $task->user_assign OR Auth::user()->id == $task->user_id )
                     <div class="mt-5 mb-4">
                         <form action="{{ route('task.finish', ['task' => $task->id]) }}" method="post">
@@ -228,10 +226,11 @@
     </div>
 
     @include('task.view._status')
-    @include('task.view._priority')
+    {{--@include('task.view._priority')--}}
     @include('task.view._title')
     @include('task.view._brand')
     @include('task.view._user')
+    @include('task.view._date_ini')
     @include('task.view._date')
     @include('task._modal_delete')
 @endsection

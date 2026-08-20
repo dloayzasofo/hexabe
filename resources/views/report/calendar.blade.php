@@ -12,45 +12,6 @@
         </div>
     </div>
 
-  	<div class="btn-add-task"> 
-      	<button id="btnCreate" class="btn rounded-pill btn-icon btn-primary" title="Crear nueva tarea">
-          	<span><i class="bx bx-plus"></i></span>
-      	</button> 
-  	</div>
-
-	@include('task._form_search', ['title' => 'Mis tareas'])
-
-	@if(Session::has('task.success'))
-	<div class="alert alert-success alert-dismissible" role="alert">
-		{{ Session::get('task.success') }}
-		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-		</button>
-	</div>
-	@endif
-
-	<div class="row sm-vl-base mb-4">
-		<div>
-			<ul class="nav nav-tabs nav-fill rounded-0 timeline-indicator-advanced" role="tablist">
-				<li class="nav-item" role="presentation">
-					<a href="{{ route('task.index') }}" type="button" class="nav-link" aria-selected="false" tabindex="-1">
-                        <i class="bx bx-list-ol"></i> Lista
-                    </a>
-				</li>
-				<li class="nav-item" role="presentation">
-					<a href="{{ route('kanban.index') }}" type="button" class="nav-link" ria-selected="true">
-                        <i class="bx bx-card"></i> Tarjetas
-                    </a>
-				</li>
-				<li class="nav-item" role="presentation">
-					<a href="{{ route('calendar.index') }}" type="button" class="nav-link active" ria-selected="true">
-                        <i class="bx bx-calendar"></i> Calendario
-                    </a>
-				</li>
-			</ul>
-		</div>
-		<div id="myKanban" class="kanban"></div>
-	</div>
-
     <div>
         <div id="calendar"></div>
     </div>
@@ -71,18 +32,8 @@
 	</div>
 @endsection
 @section('script')
-<link href="{{ asset('/assets/admin/js/quilljs/quill.css') }}?v=1" rel="stylesheet">
-<link href="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css" rel="stylesheet" type="text/css" />
-
-<script src="{{ asset('/assets/admin/js/quilljs/quill.js') }}?v=1"></script>
-<script src="{{asset('/assets/admin/js/mieditor.js')}}"></script>
-<script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
-<script>let urlCreate = "{{ route('task.create') }}";</script>
-<script src="{{asset('/assets/admin/js/task.js')}}"></script>
-
 <script src="{{ asset('/assets/admin/js/fullcalendar/fullcalendar.min.js') }}"></script>
 <script>
-
     document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
         calendar = new FullCalendar.Calendar(calendarEl, {
@@ -90,6 +41,7 @@
             initialView: 'dayGridMonth',
             editable: false, // Evita modificar el evento
             events: [],
+            weekends: false,
             eventContent: function( info ) {
                 return {html: info.event.title};
             },
@@ -100,7 +52,7 @@
                 handleChangeDate(info.event);
             },
             datesSet: function(info) {
-                document.querySelector('.loading').classList.remove('hide');
+                //document.querySelector('.loading').classList.remove('hide');
                 handleChangeMonth(info.startStr, info.endStr);
             }
             //dateClick: function(info) {
@@ -111,29 +63,8 @@
         calendar.render();
     });
 
-    function handleChangeDate(event){
-        let urlChangeDate = "{{ route('calendar.draganddrop') }}";
-        let task_id = event.id;
-        let date_delivery = event.start;
-
-        fetch(urlChangeDate, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                task_id: task_id,
-                date_delivery: date_delivery
-            })
-        }).then(response => response.json())
-        .then(data => {
-            handlerSuccessChangeDate(data);
-        });
-    }
-
     function handleChangeMonth(dateIni, dateEnd){
-        let url = "{{ route('calendar.list') }}";
+        let url = "{{ route('report.calendar.list') }}";
         fetch(url, {
             method: 'POST',
             headers: {
@@ -215,7 +146,7 @@
             }
 
             const hours = task.hours == '-' ? '' : task.hours;
-            const htmlHours = '<span class="calendar-item-hours">' + hours + '</span>';
+            const htmlHours = '<span class="calendar-item-hours">' + task.hour_literal + '</span>';
 
             calendar.addEvent({
                 id: task.id,

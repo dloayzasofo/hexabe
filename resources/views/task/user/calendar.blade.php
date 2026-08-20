@@ -192,9 +192,9 @@
             }else if( task.status == 'PAUSED' ){
                 status = '<span class="badge rounded-pill bg-label-warning">Pausado</span>';
                 color = '#FFF7ED';
-            }else if( task.status == 'FINALIZED' ){
-                status = '<span class="badge rounded-pill bg-label-success">Finalizado</span>';
-                color = '#F0FDF4';
+            }else if( task.status == 'FINALIZED_DELAY' ){
+                status = '<span class="badge rounded-pill bg-label-danger">Finalizado</span>';
+                color = '#FEF2F2';
             }
 
             calendar.addEvent({

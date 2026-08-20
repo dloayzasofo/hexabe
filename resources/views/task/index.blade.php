@@ -73,6 +73,13 @@
                 </span>
                 </a>
             </li>
+            <li class="nav-item" role="presentation">
+                <a href="{{ route('task.index') }}?status=FINALIZED_DELAY" class="nav-link @if( $status == 'FINALIZED_DELAY') active @endif" aria-selected="true">
+                <span class="d-none d-sm-inline-flex align-items-center">
+                    Finalizado <span id="statusLabel-FINALIZED_DELAY" class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-danger ms-2">{{ $counters['FINALIZED_DELAY'] }}</span>
+                </span>
+                </a>
+            </li>
         </ul>
     </div>
 
@@ -89,9 +96,11 @@
         <div>
             Estado
         </div>
+        {{-- 
         <div>
             Prioridad
         </div>
+        --}}
         <div>
             Progreso
         </div>
@@ -141,17 +150,38 @@
 
         <div class="d-flex justify-content-center">
             <div class="ct-select" data-value="{{ $task->status }}" data-task="{{ $task->id }}" data-type="status">
-                <div class="ct-select-view"></div>
+                <div class="ct-select-view">
+                    @switch($task->status)
+                        @case('TOSTART')
+                            Sin empezar
+                            @break
+                        @case('PROCESS')
+                            En proceso
+                            @break
+                        @case('DELAY')
+                            Retraso
+                            @break
+                        @case('PAUSED')
+                            Pausado
+                            @break
+                        @case('FINALIZED')
+                            Finalizado
+                            @break
+                        @case('FINALIZED_DELAY')
+                            Finalizado
+                            @break
+                    @endswitch
+                </div>
                 <ul class="list-items">
-                    <li class="list-items-item TOSTART" data-id="{{ $task->id }}" data-value="TOSTART"> Sin empezar </li>
+                    {{--<li class="list-items-item TOSTART" data-id="{{ $task->id }}" data-value="TOSTART"> Sin empezar </li>--}}
                     <li class="list-items-item PROCESS" data-id="{{ $task->id }}" data-value="PROCESS"> En proceso </li>
-                    <li class="list-items-item DELAY" data-id="{{ $task->id }}" data-value="DELAY"> Retraso </li>
-                    <li class="list-items-item PAUSED" data-id="{{ $task->id }}" data-value="PAUSED"> Pausado </li>
+                    {{--<li class="list-items-item DELAY" data-id="{{ $task->id }}" data-value="DELAY"> Retraso </li>--}}
+                    {{--<li class="list-items-item PAUSED" data-id="{{ $task->id }}" data-value="PAUSED"> Pausado </li>--}}
                     <li class="list-items-item FINALIZED" data-id="{{ $task->id }}" data-value="FINALIZED"> Finalizado </li>
                 </ul>
             </div>
         </div>
-
+        {{-- 
         <div class="d-flex justify-content-center">
             <div class="ct-select" data-value="{{ $task->priority }}" data-task="{{ $task->id }}" data-type="priority">
                 <div class="ct-select-view"></div>
@@ -162,6 +192,7 @@
                 </ul>
             </div>
         </div>
+        --}}
 
         <div>
             <div>

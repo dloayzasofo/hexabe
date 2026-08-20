@@ -26,6 +26,9 @@ Route::middleware(['auth'])->prefix('task/api')->group(function () {
     Route::post('/edit/date/{task}', [TaskEditController::class, 'date_delivery'])
         ->name('task.api.edit.date');
 
+    Route::post('/edit/dateini/{task}', [TaskEditController::class, 'date_ini'])
+        ->name('task.api.edit.date_ini');
+
     Route::post('/edit/dependency/{task}/{dependency}', [TaskEditController::class, 'add_dependency'])
         ->name('task.api.edit.dependency');
 

@@ -234,7 +234,8 @@ CREATE TABLE tasks(
 	 id bigint(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     title varchar(255),
     description text,
-    date_delivery date,
+    date_ini TIMESTAMP NULL,
+    date_delivery TIMESTAMP,
     priority varchar(100), -- low, medium, high
     status varchar(100), -- TOSTART, PROCESS, DELAY, PAUSED, FINALIZED
     user_id bigint(20) UNSIGNED, -- user created
@@ -244,7 +245,7 @@ CREATE TABLE tasks(
     business_id bigint(20) unsigned,
     color VARCHAR(10) NULL,
     position INT NULL,
-    finalized_at date NULL DEFAULT NULL,
+    finalized_at TIMESTAMP NULL DEFAULT NULL,
 	 created_at timestamp NULL DEFAULT now(),
 	 updated_at timestamp NULL DEFAULT now(),
     deleted_at timestamp NULL DEFAULT NULL,
@@ -254,6 +255,9 @@ CREATE TABLE tasks(
     foreign key(parent_id) references tasks(id) on delete cascade on update no action,
     foreign key(business_id) references business(id) on delete cascade on update no action
 );
+ALTER TABLE tasks ADD COLUMN date_ini TIMESTAMP NULL AFTER DESCRIPTION;
+ALTER TABLE tasks MODIFY COLUMN date_delivery TIMESTAMP;
+ALTER TABLE tasks MODIFY COLUMN finalized_at timestamp;
 
 CREATE TABLE tasks_info(
 	 id bigint(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,

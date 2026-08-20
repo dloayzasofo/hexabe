@@ -113,6 +113,10 @@
                 <span>FINALIZADO</span>
                 <b id="taskFinalized"></b>
             </div>
+            <div class="filter-value-status-item finalized">
+                <span>FIN. RETRASO</span>
+                <b id="taskFinalizedDelay"></b>
+            </div>
             <div class="filter-value-status-item average">
                 <span>PROM. DE CIERRE</span>
                 <b id="taskHours"> </b>
@@ -181,6 +185,16 @@
                         <td align="right" style="text-align: right;">
                             <b>
                                 <span id="resumeFinalizedPercent"></span>% (<span id="resumeFinalized"></span>)
+                            </b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="badge badge-dot text-bg-primary me-1" style="background-color:#16A34A !important;">&nbsp;</span> Fin. retraso
+                        </td>
+                        <td align="right" style="text-align: right;">
+                            <b>
+                                <span id="resumeFinalizedDelayPercent"></span>% (<span id="resumeFinalizedDelay"></span>)
                             </b>
                         </td>
                     </tr>
@@ -299,6 +313,7 @@
             <div> Pausadas </div>
             <div> Atrasadas </div>
             <div> Completadas </div>
+            <div> Fin retraso </div>
             <div> Promedio </div>
         </div>
 
@@ -315,6 +330,7 @@
             <div> Pausadas </div>
             <div> Atrasadas </div>
             <div> Completadas </div>
+            <div> Fin retraso </div>
             <div> Promedio </div>
         </div>
 
@@ -395,6 +411,7 @@
     let dataDelay = [];
     let dataPaused = [];
     let dataFinalized = [];
+    let dataFinalizedDelay = [];
     let labels = [];
     let myChart = null;
 
@@ -404,6 +421,7 @@
         dataDelay = [];
         dataPaused = [];
         dataFinalized = [];
+        dataFinalizedDelay = [];
         let month = 0;
         let day = 0;
         let customLabels = [];
@@ -417,6 +435,7 @@
             dataDelay.push(item['delay']);
             dataPaused.push(item['paused']);
             dataFinalized.push(item['finalized']);
+            dataFinalizedDelay.push(item['finalized_delay']);
             if( item.date ){
                 customLabels.push(item.date);
             }
@@ -469,6 +488,11 @@
             {
                 label: 'Finalizado',
                 data: dataFinalized,
+                backgroundColor: 'rgba(22, 163, 74, .8)'
+            },
+            {
+                label: 'Fin. retraso',
+                data: dataFinalizedDelay,
                 backgroundColor: 'rgba(22, 163, 74, .8)'
             }
         ];
@@ -588,6 +612,7 @@
         document.querySelector('#taskDelay').innerHTML = data.stats.delay;
         document.querySelector('#taskPaused').innerHTML = data.stats.paused;
         document.querySelector('#taskFinalized').innerHTML = data.stats.finalized;
+        document.querySelector('#taskFinalizedDelay').innerHTML = data.stats.finalized_delay;
 
         let hoursLiteral = data.hours.days != 0 ? data.hours.days + 'd ' : '';
         hoursLiteral += data.hours.hours != 0 ? data.hours.hours + 'h ' : '';
@@ -607,11 +632,13 @@
         document.querySelector('#resumeDelayPercent').innerHTML = (Math.round(percentDelay) == percentDelay) ? percentDelay : percentDelay.toFixed (2);
         document.querySelector('#resumePausedPercent').innerHTML = (Math.round(percentPaused) == percentPaused) ? percentPaused : percentPaused.toFixed(2);
         document.querySelector('#resumeFinalizedPercent').innerHTML = (Math.round(percentFinalized) == percentFinalized) ? percentFinalized : percentFinalized.toFixed (2);
+        document.querySelector('#resumeFinalizedDelayPercent').innerHTML = (Math.round(percentFinalized) == percentFinalized) ? percentFinalized : percentFinalized.toFixed (2);
         document.querySelector('#resumeTostart').innerHTML = data.stats.tostart.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         document.querySelector('#resumeProcess').innerHTML = data.stats.process.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         document.querySelector('#resumeDelay').innerHTML = data.stats.delay.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         document.querySelector('#resumePaused').innerHTML = data.stats.paused.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         document.querySelector('#resumeFinalized').innerHTML = data.stats.finalized.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        document.querySelector('#resumeFinalizedDelay').innerHTML = data.stats.finalized_delay.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
         if( filter['page'] == null ){
             prepareChart(data.graph, data.inputs.date);
@@ -752,6 +779,8 @@
                 statusHtml += 'Pausado';
             }else if( task.status == 'FINALIZED' ){
                 statusHtml += 'Finalizado';
+            }else if( task.status == 'FINALIZED_DELAY' ){
+                statusHtml += 'Fin. retraso';
             }
             statusHtml += `</div></div>`;
             
@@ -1210,6 +1239,7 @@
                     <div class="fw-bold text-center text-negro"> ${item.stats.paused} </div>
                     <div class="fw-bold text-center text-negro"> ${item.stats.delay} </div>
                     <div class="fw-bold text-center text-negro"> ${item.stats.finalized} </div>
+                    <div class="fw-bold text-center text-negro"> ${item.stats.finalized_delay} </div>
                     <div class="fw-bold text-center text-negro"> ${hoursWorked} </div>
                 </div>
                 `;
@@ -1332,6 +1362,7 @@
                     <div class="fw-bold text-center text-negro"> ${item.stats.paused} </div>
                     <div class="fw-bold text-center text-negro"> ${item.stats.delay} </div>
                     <div class="fw-bold text-center text-negro"> ${item.stats.finalized} </div>
+                    <div class="fw-bold text-center text-negro"> ${item.stats.finalized_delay} </div>
                     <div class="fw-bold text-center text-negro"> ${hoursWorked} </div>
                 </div>
                 `;

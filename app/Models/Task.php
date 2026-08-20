@@ -74,7 +74,7 @@ class Task extends Model
      */
     public function getRegisterAtAttribute()
     {
-        $date = Carbon::parse($this->date_delivery . " 18:00:00");
+        $date = Carbon::parse($this->date_delivery);
         $now = Carbon::now();
         $now->hour = 18;
         $now->minute = 0;

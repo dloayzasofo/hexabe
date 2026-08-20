@@ -59,19 +59,39 @@ function handleClickCtSelectItem(){
     let parent = this.parentNode.parentNode;
     let type = parent.getAttribute('data-type');
     
-    if( type == 'priority' ){
-        serverCtSelectPriority(taskId, value);
-    }
+    //if( type == 'priority' ){
+    //    serverCtSelectPriority(taskId, value);
+    //}
     if( type == 'status' ){
         serverCtSelectStatus(taskId, value);
     }
 
+    let textStatus = 'Sin empezar';
+    switch(value){
+        case 'PROCESS':
+            textStatus = 'En proceso';
+            break;
+        case 'DELAY':
+            textStatus = 'Retraso';
+            break;
+        case 'PAUSED':
+            textStatus = 'Pausado';
+            break;
+        case 'FINALIZED':
+            textStatus = 'Finalizado';
+            break;
+        case 'FINALIZED_DELAY':
+            textStatus = 'Finalizado';
+            break;
+    }
+
+    console.log("STATUS", textStatus);
     let view = parent.querySelector('.ct-select-view');
-    view.innerHTML = this.innerHTML;
+    view.innerHTML = textStatus;
     parent.className = 'ct-select';
     parent.classList.add(value);
 }
-
+/*
 function serverCtSelectPriority(taskId, priority){
     let url = "/task/api/edit/priority/:id".replace(':id', taskId);
     fetch(url, {
@@ -88,7 +108,7 @@ function serverCtSelectPriority(taskId, priority){
         showCtSelectToast(data);
     });
 }
-
+*/
 function serverCtSelectStatus(taskId, status){
     let url = "/task/api/edit/status/:id".replace(':id', taskId);
     fetch(url, {

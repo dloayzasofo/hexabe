@@ -12,7 +12,9 @@ use App\Models\TaskMedia;
 use App\Models\TaskCollaborator;
 use App\Models\TaskOrderUser;
 use App\Models\TeamUser;
+use App\Models\TimeControl;
 use App\Models\User;
+use Carbon\Carbon;
 use Auth;
 
 class KanbanController extends Controller {
@@ -53,6 +55,7 @@ class KanbanController extends Controller {
         $taskToStart = (clone $query)->where('status', 'TOSTART')->orderBy('task_order_users.position', 'asc')->get();
         $taskProcess = (clone $query)->where('status', 'PROCESS')->orderBy('task_order_users.position', 'asc')->get();
         $taskFinalized = (clone $query)->where('status', 'FINALIZED')->orderBy('task_order_users.position', 'asc')->get();
+        $taskFinalizedDelay = (clone $query)->where('status', 'FINALIZED_DELAY')->orderBy('task_order_users.position', 'asc')->get();
         $taskDelay = (clone $query)->where('status', 'DELAY')->orderBy('task_order_users.position', 'asc')->get();
         $taskPaused = (clone $query)->where('status', 'PAUSED')->orderBy('task_order_users.position', 'asc')->get();
 
@@ -61,6 +64,7 @@ class KanbanController extends Controller {
             'taskToStart' => $taskToStart,
             'taskProcess' => $taskProcess,
             'taskFinalized' => $taskFinalized,
+            'taskFinalizedDelay' => $taskFinalizedDelay,
             'taskDelay' => $taskDelay,
             'taskPaused' => $taskPaused
         ];
@@ -79,7 +83,39 @@ class KanbanController extends Controller {
         $task = Task::find($taskId);
         if ($task AND $task->status != $newStatus) {
             $task->status = $newStatus;
+            if( $task->status == 'FINALIZED' ){
+                $timeEstimate = Carbon::parse($task->date_delivery);
+                $timeCurrent = Carbon::now();
+                if( $timeCurrent->gt($timeEstimate) ){
+                    $task->status = 'FINALIZED_DELAY';
+                }
+            }
+
             $task->save();
+
+            $timeControl = new TimeControl();
+            $timeControl->task_id = $task->id;
+            $timeControl->user_id = Auth::user()->id;
+            $timeControl->status = $task->status;
+            $timeControl->save();
+
+            $otherTrask = [];
+            if( $task->status == 'PROCESS' ){
+                $otherTasksInProcess = Task::where('user_id', $task->user_id)->where('status', 'PROCESS')->where('id', '!=', $task->id)->get();
+                
+                foreach( $otherTasksInProcess as $otherTask ){
+                    $otherTask->status = 'PAUSED';
+                    $otherTask->save();
+                    $otherTrask[] = ['id' => $otherTask->id, 'status' => $otherTask->status];
+
+                    $timeControl = new TimeControl();
+                    $timeControl->task_id = $otherTask->id;
+                    $timeControl->user_id = Auth::user()->id;
+                    $timeControl->status = $otherTask->status;
+                    $timeControl->save();
+                }
+            }
+
             $status = "";
             switch ($newStatus) {
                 case 'TOSTART':
@@ -106,7 +142,6 @@ class KanbanController extends Controller {
                 $id = $item['id'];
                 $position = $item['position'];
 
-                //Task::where('id', $id)->update(['position' => $position]);
                 $taskOrder = TaskOrderUser::where('task_id', $id)->where('user_id', $user->id)->first();
                 if ($taskOrder) {
                     if( $taskOrder->position != $position ) {

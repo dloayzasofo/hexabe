@@ -51,11 +51,30 @@
                 <div class="me-2">
                     <i class="bx bx-calendar"></i>
                 </div>
-                <div id="modelDate">
+                <div id="modelDateCreate">
                     {{ Carbon\Carbon::parse($task->created_at)->format('d/m/Y H:i') }}
                 </div>
             </div>
         </div>
+
+        @if( $task->date_ini )
+        <div class="mb-2 mt-4"><small>FECHA DE INICIO</small></div>
+        <div class="d-flex justify-content-between hoverEdit">
+            <div class="d-flex align-items-center">
+                <div class="me-2">
+                    <i class="bx bx-calendar"></i>
+                </div>
+                <div id="modelDateIni">
+                        {{ Carbon\Carbon::parse($task->date_ini)->format('d/m/Y') }} {{ Carbon\Carbon::parse($task->date_ini)->format('H:i') }}
+                </div>
+            </div>
+            <div>
+                <button id="btnEditDateIni" class="btn rounded-pill btn-icon btn-outline-secondary me-2 btnTaskEdit" data-bs-toggle="modal" data-bs-target="#dateModalIni"> 
+                    <i class="bx bx-pencil"></i> 
+                </button>
+            </div>
+        </div>
+        @endif
 
         <div class="mb-2 mt-4"><small>FECHA LÍMITE</small></div>
         <div class="d-flex justify-content-between hoverEdit">
@@ -64,7 +83,7 @@
                     <i class="bx bx-calendar"></i>
                 </div>
                 <div id="modelDate">
-                    {{ Carbon\Carbon::parse($task->date_delivery)->format('d/m/Y') }}
+                    {{ Carbon\Carbon::parse($task->date_delivery)->format('d/m/Y') }} {{ Carbon\Carbon::parse($task->date_delivery)->format('H:i') }}
                 </div>
             </div>
             <div>

@@ -16,14 +16,16 @@ use App\Models\TaskOrderUser;
 use App\Models\TeamUser;
 use App\Models\TaskLink;
 use App\Models\TaskInfo;
+use App\Models\TimeControl;
 use App\Models\User;
+use Carbon\Carbon;
 use Auth;
 
 class TaskController extends Controller {
  
     public function index(Request $request) {
         $status = $request->query('status');
-        if( $status == null OR !in_array($status, ['TOSTART', 'PROCESS', 'FINALIZED', 'DELAY', 'PAUSED']) ){
+        if( $status == null OR !in_array($status, ['TOSTART', 'PROCESS', 'FINALIZED', 'DELAY', 'PAUSED', 'FINALIZED_DELAY']) ){
             $status = 'TOSTART';
         }
 
@@ -32,6 +34,7 @@ class TaskController extends Controller {
             "TOSTART" => Task::getTaskCountByStatus('TOSTART', $user),
             "PROCESS" => Task::getTaskCountByStatus('PROCESS', $user),
             "FINALIZED" => Task::getTaskCountByStatus('FINALIZED', $user),
+            "FINALIZED_DELAY" => Task::getTaskCountByStatus('FINALIZED_DELAY', $user),
             "DELAY" => Task::getTaskCountByStatus('DELAY', $user),
             "PAUSED" => Task::getTaskCountByStatus('PAUSED', $user)
         ];
@@ -82,11 +85,21 @@ class TaskController extends Controller {
 
     public function finish(Request $request, Task $task) {
         $task->status = 'FINALIZED';
+        $timeEstimate = Carbon::parse($task->date_delivery);
+        $timeCurrent = Carbon::now();
+        if( $timeCurrent->gt($timeEstimate) ){
+            $task->status = 'FINALIZED_DELAY';
+        }
         $task->finalized_at = date('Y-m-d H:i:s');
         $task->save();
+
+        $timeControl = new TimeControl();
+        $timeControl->task_id = $task->id;
+        $timeControl->user_id = Auth::user()->id;
+        $timeControl->status = $task->status;
+        $timeControl->save();
         
         $user = Auth::user();
-
         $userNotify = $task->user;
         if($user->id == $task->user_id){
             $userNotify = $task->assign;
@@ -124,11 +137,21 @@ class TaskController extends Controller {
     }
     public function apifinish(Request $request, Task $task) {
         $task->status = 'FINALIZED';
+        $timeEstimate = Carbon::parse($task->date_delivery);
+        $timeCurrent = Carbon::now();
+        if( $timeCurrent->gt($timeEstimate) ){
+            $task->status = 'FINALIZED_DELAY';
+        }
         $task->finalized_at = date('Y-m-d H:i:s');
         $task->save();
 
-        $user = Auth::user();
+        $timeControl = new TimeControl();
+        $timeControl->task_id = $task->id;
+        $timeControl->user_id = Auth::user()->id;
+        $timeControl->status = $task->status;
+        $timeControl->save();
 
+        $user = Auth::user();
         $userNotify = $task->user;
         if($user->id == $task->user_id){
             $userNotify = $task->assign;
@@ -232,6 +255,9 @@ class TaskController extends Controller {
         $description = $request->description;
         $priority = $request->priority;
         $date_delivery = $request->date_delivery;
+        $time_delivery = $request->time_delivery;
+        $date_ini = $request->date_ini;
+        $time_ini = $request->time_ini;
         $brand = $request->brand;
         $user_assign = $request->user_assign;
         $medias = $request->medias;
@@ -242,7 +268,8 @@ class TaskController extends Controller {
         $task->title = $title;
         $task->description = $description;
         $task->priority = $priority;
-        $task->date_delivery = $date_delivery;
+        $task->date_ini = $date_ini . ' ' . $time_ini . ':00';
+        $task->date_delivery = $date_delivery . ' ' . $time_delivery . ':00';
         $task->brand_id = $brand;
         $task->user_assign = $user_assign;
         $task->status = 'TOSTART';

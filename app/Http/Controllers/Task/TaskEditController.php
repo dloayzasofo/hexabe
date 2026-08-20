@@ -21,6 +21,15 @@ class TaskEditController extends Controller {
  
     public function status(Request $request, Task $task) {
         $task->status = $request->status;
+
+        if( $task->status == 'FINALIZED' ){
+            $timeEstimate = Carbon::parse($task->date_delivery);
+            $timeCurrent = Carbon::now();
+            if( $timeCurrent->gt($timeEstimate) ){
+                $task->status = 'FINALIZED_DELAY';
+            }
+            $task->finalized_at = date('Y-m-d H:i:s');
+        }
         $task->save();
         $message = Str::limit($task->title, 50) . ": Estado de la tarea actualizado";
 
@@ -29,8 +38,25 @@ class TaskEditController extends Controller {
         $timeControl->user_id = Auth::user()->id;
         $timeControl->status = $task->status;
         $timeControl->save();
-        
-        return response()->json(['success' => true, 'data' => ["id"=> $task->id, "status"=> $task->status], 'message' => $message], 200);
+
+        $otherTrask = [];
+        if( $task->status == 'PROCESS' ){
+            $otherTasksInProcess = Task::where('user_id', $task->user_id)->where('status', 'PROCESS')->where('id', '!=', $task->id)->get();
+            
+            foreach( $otherTasksInProcess as $otherTask ){
+                $otherTask->status = 'PAUSED';
+                $otherTask->save();
+                $otherTrask[] = ['id' => $otherTask->id, 'status' => $otherTask->status];
+
+                $timeControl = new TimeControl();
+                $timeControl->task_id = $otherTask->id;
+                $timeControl->user_id = Auth::user()->id;
+                $timeControl->status = $otherTask->status;
+                $timeControl->save();
+            }
+        }
+
+        return response()->json(['success' => true, 'data' => ["id"=> $task->id, "status"=> $task->status, 'otherTrask' => $otherTrask], 'message' => $message], 200);
     }
 
     public function priority(Request $request, Task $task) {
@@ -94,11 +120,20 @@ class TaskEditController extends Controller {
     }
 
     public function date_delivery(Request $request, Task $task) {
-        $task->date_delivery = $request->date_delivery;
+        $task->date_delivery = $request->date_delivery . ' ' . $request->time_delivery;
         $task->save();
         return response()->json(['success' => true, 'data' => [
             "id"=> $task->id,
             "date_delivery"=> $task->date_delivery
+        ]], 200);
+    }
+
+    public function date_ini(Request $request, Task $task) {
+        $task->date_ini = $request->date_ini . ' ' . $request->time_ini;
+        $task->save();
+        return response()->json(['success' => true, 'data' => [
+            "id"=> $task->id,
+            "date_ini"=> $task->date_ini
         ]], 200);
     }
 

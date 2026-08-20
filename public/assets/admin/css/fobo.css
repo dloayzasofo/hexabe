@@ -48,6 +48,9 @@
     background: var(--back-purple);
     color: var(--color-purple);
 }
+.bg-label-success_delay{
+    color: peru;
+}
 .bg-menu-theme .menu-link:hover{
     color: #f1f1f1 !important;
 }
@@ -82,6 +85,26 @@
 }
 .calendar-item{
     padding: 4px;
+    width: 100%;
+}
+.calendar-item{
+    border: 1px solid #eaeaea;
+}
+.calendar-item.finalized,
+.calendar-item.finalized_delay{
+    background: #f0fdf4;
+}
+.calendar-item.process{
+    background: #eff6ff;
+}
+.calendar-item.paused{
+    background: #fff2d6;
+}
+.calendar-item.delay{
+    background: #ffe0db;
+}
+.calendar-item.tostart{
+    background: #DBEAFE;
 }
 .calendar-item>div:first-child{
     display: flex;
@@ -104,6 +127,12 @@
     height: 30px;
     width: 30px;
     object-fit: cover;
+}
+.calendar-item-hours{
+    display: block;
+    text-align: right;
+    font-size: 11px;
+    margin-top: 5px;
 }
 .card-badget-top-right{
     position: absolute;
@@ -226,6 +255,13 @@
 .ct-select.FINALIZED .ct-select-view::after{
     border-color: var(--color-green);
 }
+.ct-select.FINALIZED_DELAY .ct-select-view{
+    background: var(--back-red);
+    color: var(--color-red);
+}
+.ct-select.FINALIZED_DELAY .ct-select-view::after{
+    border-color: var(--color-red);
+}
 .ct-select.high .ct-select-view{
     background: var(--back-red);
     color: var(--color-red);
@@ -294,6 +330,10 @@
     background: var(--back-green);
     color: var(--color-green);
 }
+.ct-select .list-items .FINALIZED_DELAY:hover{
+    background: var(--back-red);
+    color: var(--color-red);
+}
 .ct-select .list-items .medium:hover{
     background: var(--back-orange);
     color: var(--color-orange);
@@ -331,6 +371,9 @@
 }
 .fc-daygrid-event-harness .fc-event{
     text-wrap: auto !important;
+}
+.fc-daygrid-dot-event.fc-event-mirror, .fc-daygrid-dot-event:hover{
+    background: transparent !important;
 }
 .fobo-datatable label,
 .fobo-datatable .dataTables_info{

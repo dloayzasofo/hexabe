@@ -76,7 +76,8 @@
         "PROCESS": [],
         "DELAY": [],
         "PAUSED": [],
-        "FINALIZED": []
+        "FINALIZED": [],
+        "FINALIZEDDELAY": []
     }
 	{{--
     @foreach($tasks as $task)
@@ -196,7 +197,7 @@
 			id: "{{ $task->id }}",
 			title: "{{ $task->title }}",
 			brand: { name: "{{ $task->brand->name }}", image: "{{ $task->brand->image }}" },
-			priority: getPriorityColor("{{ $task->priority }}"),
+			//priority: getPriorityColor("{{ $task->priority }}"),
 			register_at: "{{ $task->register_at }}",
 			assign: { 
 				name: "{{ $task->assign->name }}", 
@@ -230,7 +231,7 @@
 			id: "{{ $task->id }}",
 			title: "{{ $task->title }}",
 			brand: { name: "{{ $task->brand->name }}", image: "{{ $task->brand->image }}" },
-			priority: getPriorityColor("{{ $task->priority }}"),
+			//priority: getPriorityColor("{{ $task->priority }}"),
 			register_at: "{{ $task->register_at }}",
 			assign: { 
 				name: "{{ $task->assign->name }}", 
@@ -264,7 +265,7 @@
 			id: "{{ $task->id }}",
 			title: "{{ $task->title }}",
 			brand: { name: "{{ $task->brand->name }}", image: "{{ $task->brand->image }}" },
-			priority: getPriorityColor("{{ $task->priority }}"),
+			//priority: getPriorityColor("{{ $task->priority }}"),
 			register_at: "{{ $task->register_at }}",
 			assign: { 
 				name: "{{ $task->assign->name }}", 
@@ -292,13 +293,47 @@
 		
 		boards['FINALIZED'].push(createItemKanban(data));
     @endforeach
+
+	@foreach($taskFinalizedDelay as $task)
+		data = {
+			id: "{{ $task->id }}",
+			title: "{{ $task->title }}",
+			brand: { name: "{{ $task->brand->name }}", image: "{{ $task->brand->image }}" },
+			//priority: getPriorityColor("{{ $task->priority }}"),
+			register_at: "{{ $task->register_at }}",
+			assign: { 
+				name: "{{ $task->assign->name }}", 
+				image: "{{ $task->assign->image }}",
+				nameInitial: "{{ $task->assign->nameInitial }}"
+			},
+			collaborators: [
+				@foreach($task->collaborators as $collaborator)
+				{
+					user: {
+						name: "{{ $collaborator->user->name }}",
+						image: "{{ $collaborator->user->image }}",
+						nameInitial: "{{ $collaborator->user->nameInitial }}"
+					}
+				},
+				@endforeach
+			],
+			childs_count: "{{ $task->childs_count }}",
+			childs_done: "{{ $task->childs_done }}",
+			progress: "{{ $task->progress }}",
+			medias_count: "{{ $task->medias_count }}",
+			comments_count: "{{ $task->comments_count }}",
+			url: "{{ route('task.view', $task->id) }}"
+		};
+		
+		boards['FINALIZEDDELAY'].push(createItemKanban(data));
+    @endforeach
 	
 	@foreach($taskDelay as $task)
 		data = {
 			id: "{{ $task->id }}",
 			title: "{{ $task->title }}",
 			brand: { name: "{{ $task->brand->name }}", image: "{{ $task->brand->image }}" },
-			priority: getPriorityColor("{{ $task->priority }}"),
+			//priority: getPriorityColor("{{ $task->priority }}"),
 			register_at: "{{ $task->register_at }}",
 			assign: { 
 				name: "{{ $task->assign->name }}", 
@@ -332,7 +367,7 @@
 			id: "{{ $task->id }}",
 			title: "{{ $task->title }}",
 			brand: { name: "{{ $task->brand->name }}", image: "{{ $task->brand->image }}" },
-			priority: getPriorityColor("{{ $task->priority }}"),
+			//priority: getPriorityColor("{{ $task->priority }}"),
 			register_at: "{{ $task->register_at }}",
 			assign: { 
 				name: "{{ $task->assign->name }}", 
@@ -360,7 +395,8 @@
 		
 		boards['PAUSED'].push(createItemKanban(data));
     @endforeach
-	
+
+	/*
 	function getPriorityColor(priority){
 		let className = '';
 		let name = ''; 
@@ -380,9 +416,9 @@
 			break;
 		}
 
-		return { class: className, name: name };
-		
+		return { class: className, name: name };	
 	}
+	*/
 
 	function createItemKanban(data){
 		let medias_html = '';
@@ -467,7 +503,6 @@
 							<small class="fw-bold">${ data.brand.name }</small>
 						</div>
 						<div>
-						<small class="badge rounded-pill ${ data.priority.class }"> ${ data.priority.name } </small>
 						</div>
 					</div>
 					<div>
@@ -501,10 +536,6 @@
 	}
 
     var KanbanTest = new jKanban({
-        //dragBoards: false, // evita mover columnas
-        //dragItems: false ,// evita mover items 
-
-
         element: "#myKanban",
         gutter: "10px",
         widthBoard: "280px",
@@ -552,6 +583,12 @@
             title: "Finalizado",
             class: "success",
             item: boards.FINALIZED
+          },
+          {
+            id: "FINALIZEDDELAY",
+            title: "Finalizado",
+            class: "success",
+            item: boards.FINALIZEDDELAY
           }
         ],
         dropEl : function (el, target, source, sibling) {

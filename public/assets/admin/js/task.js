@@ -360,8 +360,10 @@ function handleCreateTask(){
     let token = document.getElementsByName("_token")[0];
     let name = document.querySelector('#name');
     let description = document.querySelector('#description');
-    let priority = document.querySelector('#priority');
+    let time_delivery = document.querySelector('#time_delivery');
     let date_delivery = document.querySelector('#date_delivery');
+    let date_ini = document.querySelector('#date_ini');
+    let time_ini = document.querySelector('#time_ini');
     let brand = document.querySelector('#brand');
     let user_assign = document.querySelector('#user_assign');
 
@@ -369,8 +371,10 @@ function handleCreateTask(){
     data.append('_token', token.value);
     data.append('name', name.value);
     data.append('description', description ? description.value : '');
-    data.append('priority', priority.value);
+    data.append('time_delivery', time_delivery.value);
     data.append('date_delivery', date_delivery.value);
+    data.append('time_ini', time_ini.value);
+    data.append('date_ini', date_ini.value);
     data.append('brand', brand.value);
     data.append('user_assign', user_assign.value);
 
@@ -421,9 +425,11 @@ function validateFormTaskCreate(){
     clearTaskErrors();
 
     let name = document.querySelector('#name');
-    let priority = document.querySelector('#priority');
     let brand = document.querySelector('#brand');
     let date_delivery = document.querySelector('#date_delivery');
+    let time_delivery = document.querySelector('#time_delivery');
+    let date_ini = document.querySelector('#date_ini');
+    let time_ini = document.querySelector('#time_ini');
     let user_assign = document.querySelector('#user_assign');
 
     let isOk = true;
@@ -433,18 +439,28 @@ function validateFormTaskCreate(){
         isOk = false;
     }
 
-    if( !priority.value ){
-        showTaskError('priority', 'El campo es requerido');
-        isOk = false;
-    }
-
     if( !brand.value ){
         showTaskError('brand', 'El campo es requerido');
         isOk = false;
     }
 
+    if( !time_delivery.value ){
+        showTaskError('time_delivery', 'El tiempo es requerido');
+        isOk = false;
+    }
+
     if( !date_delivery.value ){
-        showTaskError('date_delivery', 'El campo es requerido');
+        showTaskError('date_delivery', 'La fecha es requerido');
+        isOk = false;
+    }
+
+    if( !time_ini.value ){
+        showTaskError('time_ini', 'El tiempo es requerido');
+        isOk = false;
+    }
+
+    if( !date_ini.value ){
+        showTaskError('date_ini', 'La fecha es requerido');
         isOk = false;
     }
 
@@ -473,7 +489,16 @@ function clearTaskErrors(){
  * Mostrar errores en el formulario de tarea
  */
 function showTaskError(elementName, error){
-    const el = document.querySelector('#' + elementName);
+    let el = document.querySelector('#' + elementName);
+    if( el && 
+        (
+            el.getAttribute('id') == 'date_ini' || el.getAttribute('id') == 'date_delivery' ||
+            el.getAttribute('id') == 'time_ini' || el.getAttribute('id') == 'time_delivery'
+        )
+    ){
+        el.classList.add('is-invalid');
+        el = el.parentNode;
+    }
     if (el) el.classList.add('is-invalid');
     const label = elementName.charAt(0).toUpperCase() + elementName.slice(1);
     const err = document.querySelector('#error' + label);

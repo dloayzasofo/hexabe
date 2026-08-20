@@ -154,7 +154,7 @@
     background: #fff;
     border-radius: 12px;
     box-sizing: border-box;
-    flex: 0 0 13%;
+    flex: 0 0 11%;
     display: flex;
     flex-direction: column;
     padding: 20px 20px 40px 20px;
@@ -261,15 +261,15 @@ a.table-link{
 
 .task-list-item.brands > div:nth-child(1),
 .task-list-item.teams > div:nth-child(1){
-    flex: 0 0 21%;
+    flex: 0 0 19%;
 }
 .task-list-item.brands > div:nth-child(2),
 .task-list-item.teams > div:nth-child(2){
-    flex: 0 0 17%;
+    flex: 0 0 15%;
 }
 .task-list-item.brands > div:nth-child(3),
 .task-list-item.teams > div:nth-child(3){
-    flex: 0 0 8%;
+    flex: 0 0 6%;
 }
 .task-list-item.brands > div:nth-child(4),
 .task-list-item.teams > div:nth-child(4){
@@ -293,7 +293,11 @@ a.table-link{
 }
 .task-list-item.brands > div:nth-child(9),
 .task-list-item.teams > div:nth-child(9){
-    flex: 0 0 8%;    
+    flex: 0 0 7%;    
+}
+.task-list-item.brands > div:nth-child(10),
+.task-list-item.teams > div:nth-child(10){
+    flex: 0 0 7%;    
 }
 .tab-filter-footer{
     cursor: pointer;

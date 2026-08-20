@@ -86,6 +86,7 @@
 </div>
 
 <div class="row">
+    {{--
     <div class="col-md-6">
         <div class="mb-3">
             <label for="priority" class="form-label">Prioridad *</label>
@@ -97,11 +98,27 @@
             <div id="errorPriority" class="error invalid-feedback"></div>
         </div>
     </div>
-    <div class="col-md-6">
+    --}}
+    <div class="col-md-12">
+        <div class="mb-3">
+            <label for="date_ini" class="form-label">Fecha de inicio *</label>
+            <div class="d-flex">
+            <input type="date" class="form-control" id="date_ini" name="date_ini" value="{{ $model->date_ini ? $model->date_ini->format('Y-m-d') : \Carbon\Carbon::now()->format('Y-m-d') }}">
+            <input type="time" class="form-control" id="time_ini" name="time_ini" value="{{ $model->date_ini ? $model->date_ini->format('H:i') : \Carbon\Carbon::now()->format('H:i') }}">
+            </div>
+            <div id="errorDate_ini" class="error invalid-feedback"></div>
+            <div id="errorTime_ini" class="error invalid-feedback"></div>
+        </div>
+    </div>
+    <div class="col-md-12">
         <div class="mb-3">
             <label for="date_delivery" class="form-label">Fecha de entrega *</label>
-            <input type="date" class="form-control" id="date_delivery" name="date_delivery" placeholder="Ej: Equipo de Diseño UX" value="{{ $model->date_delivery ? $model->date_delivery->format('Y-m-d') : \Carbon\Carbon::now()->format('Y-m-d') }}">
+            <div class="d-flex">
+            <input type="date" class="form-control" id="date_delivery" name="date_delivery" value="{{ $model->date_delivery ? $model->date_delivery->format('Y-m-d') : \Carbon\Carbon::now()->format('Y-m-d') }}">
+            <input type="time" class="form-control" id="time_delivery" name="time_delivery" value="{{ $model->date_delivery ? $model->date_delivery->format('H:i') : \Carbon\Carbon::now()->format('H:i') }}">
+            </div>
             <div id="errorDate_delivery" class="error invalid-feedback"></div>
+            <div id="errorTime_delivery" class="error invalid-feedback"></div>
         </div>
     </div>
 </div>
