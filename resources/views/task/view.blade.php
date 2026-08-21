@@ -244,8 +244,8 @@
 <script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
 {{-- --}} 
 <script>let urlCreate = "{{ route('task.subtask', ['task' => $task->id]) }}";</script>
-<script src="{{asset('/assets/admin/js/task.js')}}"></script>
-<script src="{{ asset('/assets/admin/js/fobo_select.js') }}"></script>
+<script src="{{asset('/assets/admin/js/task.js')}}?v=1.1.13"></script>
+<script src="{{ asset('/assets/admin/js/fobo_select.js') }}?v=1.1.13"></script>
 
 {{-- COMMENTS --}}
 <link href="{{ asset('/assets/admin/js/quilljsmention/quillmention.min.css') }}" rel="stylesheet">

@@ -29,13 +29,13 @@
 
 <script>
     document.querySelector('#btnDateSave').addEventListener('click', handleTitleSave);
-    let urlUpdateDate = "{{ route('task.api.edit.date', ['task' => $task->id]) }}";
+    let urlUpdateDateEnd = "{{ route('task.api.edit.date', ['task' => $task->id]) }}";
     function handleTitleSave(){
         document.querySelector('#btnDateSave').disabled = true;
         let updateDate = document.querySelector('#updateDate').value;
         let updateTime = document.querySelector('#updateTime').value;
 
-        fetch(urlUpdateDate, {
+        fetch(urlUpdateDateEnd, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

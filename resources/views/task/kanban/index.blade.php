@@ -65,7 +65,7 @@
 	<script src="{{asset('/assets/admin/js/mieditor.js')}}"></script>
 	<script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
 	<script>let urlCreate = "{{ route('task.create') }}";</script>
-	<script src="{{asset('/assets/admin/js/task.js')}}"></script>
+	<script src="{{asset('/assets/admin/js/task.js')}}?v=1.1.13"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/jkanban@1.3.1/dist/jkanban.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/jkanban@1.3.1/dist/jkanban.min.css" rel="stylesheet">

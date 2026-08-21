@@ -626,13 +626,14 @@
         let percentDelay = data.stats.total != 0 ? data.stats.delay * 100 / data.stats.total : 0;
         let percentPaused = data.stats.total != 0 ? data.stats.paused * 100 / data.stats.total : 0;
         let percentFinalized = data.stats.total != 0 ? data.stats.finalized * 100 / data.stats.total : 0;
+        let percentFinalizedDelay = data.stats.total != 0 ? data.stats.finalized_delay * 100 / data.stats.total : 0;
 
         document.querySelector('#resumeTostartPercent').innerHTML = (Math.round(percentTostart) == percentTostart) ? percentTostart : percentTostart.toFixed(2);
         document.querySelector('#resumeProcessPercent').innerHTML = (Math.round(percentProcess) == percentProcess) ? percentProcess : percentProcess.toFixed   (2);
         document.querySelector('#resumeDelayPercent').innerHTML = (Math.round(percentDelay) == percentDelay) ? percentDelay : percentDelay.toFixed (2);
         document.querySelector('#resumePausedPercent').innerHTML = (Math.round(percentPaused) == percentPaused) ? percentPaused : percentPaused.toFixed(2);
         document.querySelector('#resumeFinalizedPercent').innerHTML = (Math.round(percentFinalized) == percentFinalized) ? percentFinalized : percentFinalized.toFixed (2);
-        document.querySelector('#resumeFinalizedDelayPercent').innerHTML = (Math.round(percentFinalized) == percentFinalized) ? percentFinalized : percentFinalized.toFixed (2);
+        document.querySelector('#resumeFinalizedDelayPercent').innerHTML = (Math.round(percentFinalizedDelay) == percentFinalizedDelay) ? percentFinalizedDelay : percentFinalizedDelay.toFixed (2);
         document.querySelector('#resumeTostart').innerHTML = data.stats.tostart.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         document.querySelector('#resumeProcess').innerHTML = data.stats.process.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         document.querySelector('#resumeDelay').innerHTML = data.stats.delay.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
