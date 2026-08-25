@@ -175,7 +175,7 @@
             </div>
         </div>
        
-        <div> {{ $task->register_at }} </div>
+        <div> {{ Carbon\Carbon::parse($task->delivery_at)->format('d/m/Y H:i') }} </div>
         
         <div>
             <div class="d-flex align-items-center justify-content-center">
