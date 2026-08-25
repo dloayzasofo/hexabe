@@ -26,6 +26,7 @@ class TaskUserController extends Controller {
             "TOSTART" => Task::where('user_assign', $user->id)->where('status', 'TOSTART')->count(),
             "PROCESS" => Task::where('user_assign', $user->id)->where('status', 'PROCESS')->count(),
             "FINALIZED" => Task::where('user_assign', $user->id)->where('status', 'FINALIZED')->count(),
+            "FINALIZED_DELAY" => Task::where('user_assign', $user->id)->where('status', 'FINALIZED_DELAY')->count(),
             "DELAY" => Task::where('user_assign', $user->id)->where('status', 'DELAY')->count(),
             "PAUSED" => Task::where('user_assign', $user->id)->where('status', 'PAUSED')->count(),
         ];

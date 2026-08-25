@@ -23,7 +23,7 @@
                 @if( isset($child->assign) == false ) @continue @endif
                 <div class="d-flex align-items-center border-primary py-1 px-2 border rounded mt-2" style="border-color:#F1F5F9 !important;">
                     <div class="me-3">
-                        @if( $child->status != 'FINALIZED' )
+                        @if( $child->status != 'FINALIZED' AND $child->status != 'FINALIZED_DELAY' )
                         <button id="taskStatus-{{ $child->id }}" type="button" 
                             data-bs-toggle="tooltip" 
                             data-href="{{ $child->id }}" 
@@ -46,7 +46,7 @@
                         <div class="me-3">
                             <div>
                                 <a href="{{ route('task.view', $child->id) }}" class="mb-0 text-heading" 
-                                    @if( $child->status == 'FINALIZED' ) style="text-decoration: line-through;" @endif>
+                                    @if( $child->status == 'FINALIZED' OR $child->status == 'FINALIZED_DELAY' ) style="text-decoration: line-through;" @endif>
                                     {{ $child->title }} <br>
                                 </a>
                                 <small class="mt-auto mb-1 text-heading"> {{ $child->register_at }} </small>

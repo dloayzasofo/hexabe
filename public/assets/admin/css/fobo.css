@@ -134,6 +134,12 @@
     font-size: 11px;
     margin-top: 5px;
 }
+.calendar-item-resume{
+    color: #313131;
+    font-size: 12px;
+    position: absolute;
+    top: -27px;
+}
 .card-badget-top-right{
     position: absolute;
     top: 10px;
@@ -588,6 +594,10 @@
 }
 .hoverEdit:hover .btnTaskEdit{
     opacity: 1;
+}
+.graphPie{
+    max-width: 640px;
+    margin: auto;
 }
 input,
 select,

@@ -2,7 +2,10 @@ let mode = null;
 let myDropzone = null;
 
 window.addEventListener('load', () => {
-    document.querySelector('#btnCreate').addEventListener('click', handleBtnCreate);
+    let btnCreate = document.querySelector('#btnCreate')
+    if( btnCreate ){
+        btnCreate.addEventListener('click', handleBtnCreate);
+    }
 });
 
 /**

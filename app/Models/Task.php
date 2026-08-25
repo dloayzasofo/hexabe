@@ -104,7 +104,7 @@ class Task extends Model
         if ($total == 0) {
             return -1;
         }
-        $finalized = $this->childs()->where('status', 'FINALIZED')->count();
+        $finalized = $this->childs()->whereIn('status', ['FINALIZED', 'FINALIZED_DELAY'])->count();
         return round(($finalized / $total) * 100);
     }
 
@@ -114,7 +114,7 @@ class Task extends Model
      */
     public function getChildsDoneAttribute()
     {
-        return $this->childs()->where('status', 'FINALIZED')->count();
+        return $this->childs()->whereIn('status', ['FINALIZED', 'FINALIZED_DELAY'])->count();
     }
 
     public static function getTaskCountByStatus($status, $user){
@@ -190,7 +190,7 @@ class Task extends Model
                 $checkIfFirstStatusIsProcess = Carbon::parse($time->created_at);
             }
             if( $checkIfFirstStatusIsProcess != null ){
-                if($time->status == 'FINALIZED' AND Carbon::parse($time->created_at)->isAfter($checkIfFirstStatusIsProcess) ){
+                if( in_array($time->status, ['FINALIZED', 'FINALIZED_DELAY']) AND Carbon::parse($time->created_at)->isAfter($checkIfFirstStatusIsProcess) ){
                     $finalizedArray[] = [
                         'status' => $time->status,
                         'hours' => $time->created_at

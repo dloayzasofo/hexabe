@@ -70,7 +70,8 @@
         "PROCESS": [],
         "DELAY": [],
         "PAUSED": [],
-        "FINALIZED": []
+        "FINALIZED": [],
+        "FINALIZED_DELAY": []
       }
 
       @foreach($tasks as $task)

@@ -11,4 +11,7 @@ Route::middleware(['auth'])->prefix('report/calendar')->group(function () {
     Route::post('/list', [ReportCalendarController::class, 'list'])
         ->middleware(RoleMiddleware::using('ADMIN'))
         ->name('report.calendar.list');
+    Route::post('/pie', [ReportCalendarController::class, 'pie'])
+        ->middleware(RoleMiddleware::using('ADMIN'))
+        ->name('report.calendar.pie');
 });
