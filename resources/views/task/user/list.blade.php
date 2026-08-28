@@ -98,9 +98,6 @@
             Estado
         </div>
         <div>
-            Prioridad
-        </div>
-        <div>
             Progreso
         </div>
         <div>
@@ -110,7 +107,7 @@
             Acciones
         </div>
     </div>
-    @foreach($tasks as $task)
+    @forelse($tasks as $task)
     <div id="task-{{ $task->id }}" class="task-list-item d-flex no-wrap">
         <div>
             <div class="d-flex flex-column">
@@ -148,25 +145,32 @@
         </div>
 
         <div class="d-flex justify-content-center">
-            <div class="ct-select" data-value="{{ $task->status }}" data-task="{{ $task->id }}" data-type="status">
-                <div class="ct-select-view"></div>
+            <div class="ct-select {{ $task->status }}" data-value="{{ $task->status }}" data-task="{{ $task->id }}" data-type="status">
+                <div class="ct-select-view">
+                    @switch($task->status)
+                        @case('TOSTART')
+                            Sin empezar
+                            @break
+                        @case('PROCESS')
+                            En proceso
+                            @break
+                        @case('DELAY')
+                            Retraso
+                            @break
+                        @case('PAUSED')
+                            Pausado
+                            @break
+                        @case('FINALIZED')
+                            Finalizado
+                            @break
+                        @case('FINALIZED_DELAY')
+                            Finalizado
+                            @break
+                    @endswitch
+                </div>
                 <ul class="list-items">
-                    <li class="list-items-item TOSTART" data-id="{{ $task->id }}" data-value="TOSTART"> Sin empezar </li>
                     <li class="list-items-item PROCESS" data-id="{{ $task->id }}" data-value="PROCESS"> En proceso </li>
-                    <li class="list-items-item DELAY" data-id="{{ $task->id }}" data-value="DELAY"> Retraso </li>
-                    <li class="list-items-item PAUSED" data-id="{{ $task->id }}" data-value="PAUSED"> Pausado </li>
                     <li class="list-items-item FINALIZED" data-id="{{ $task->id }}" data-value="FINALIZED"> Finalizado </li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="d-flex justify-content-center">
-            <div class="ct-select" data-value="{{ $task->priority }}" data-task="{{ $task->id }}" data-type="priority">
-                <div class="ct-select-view"></div>
-                <ul class="list-items">
-                    <li class="list-items-item high" data-id="{{ $task->id }}" data-value="high"> ALTA </li>
-                    <li class="list-items-item medium" data-id="{{ $task->id }}" data-value="medium"> MEDIA </li>
-                    <li class="list-items-item low" data-id="{{ $task->id }}" data-value="low"> BAJA </li>
                 </ul>
             </div>
         </div>
@@ -198,7 +202,7 @@
             </div>
         </div>
 
-        <div> {{ Carbon\Carbon::parse($task->delivery_at)->format('d/m/Y H:i') }} </div>
+        <div> {{ Carbon\Carbon::parse($task->date_delivery)->format('d/m/Y H:i') }} </div>
 
         <div>
             <div class="d-flex align-items-center justify-content-end">
@@ -235,7 +239,13 @@
             </div>
         </div>
     </div>
-    @endforeach
+    @empty
+    <div class="task-list-item empty d-flex no-wrap">
+        <div>
+            Sin datos
+        </div>
+    </div>
+    @endforelse
 
     <div class="modal fade " id="modalCenter" tabindex="-1" aria-modal="true" role="dialog" data-bs-keyboard="false" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered" role="document">

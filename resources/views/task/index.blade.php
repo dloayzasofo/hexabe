@@ -111,7 +111,7 @@
             Acciones
         </div>
     </div>
-    @foreach($tasks as $task)
+    @forelse($tasks as $task)
     <div id="task-{{ $task->id }}" class="task-list-item d-flex no-wrap">
         <div>
             <div class="d-flex flex-column">
@@ -221,7 +221,7 @@
             </div>
         </div>
 
-        <div> {{ Carbon\Carbon::parse($task->delivery_at)->format('d/m/Y H:i') }} </div>
+        <div> {{ Carbon\Carbon::parse($task->date_delivery)->format('d/m/Y H:i') }} </div>
 
         <div>
             <div class="d-flex align-items-center justify-content-end">
@@ -258,7 +258,13 @@
             </div>
         </div>
     </div>
-    @endforeach
+    @empty
+    <div class="task-list-item empty d-flex no-wrap">
+        <div>
+            Sin datos
+        </div>
+    </div>
+    @endforelse
 
     <div class="modal fade " id="modalCenter" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" aria-modal="true" role="dialog">
         <div class="modal-dialog modal-dialog-centered" role="document">

@@ -22,8 +22,8 @@ class NotificationController extends Controller {
             ->whereDate('created_at', '<', now()->toDateString())
             //->whereNull('read_at')
             ->orderBy('created_at', 'desc')
-            ->limit(15)
-            ->get();
+            //->limit(15)
+            ->paginate(15);
 
         $params = [
             'notificationsToday' => $notificationsToday,

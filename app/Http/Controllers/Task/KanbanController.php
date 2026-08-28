@@ -21,26 +21,7 @@ class KanbanController extends Controller {
  
     public function index() {
         $user = Auth::user();
-        /*
-        $tasks = Task::with('brand', 'assign', 'collaborators')
-            ->withCount('medias')
-            ->withCount('childs')
-            ->where(function($query)use($user){
-                $query->where('user_assign', $user->id)
-                      ->orWhere('user_id', $user->id);
-            })
-            //->where('user_assign', $user->id)
-            ->orderBy('position', 'asc')
-            ->get();
 
-        $query = Task::with('brand', 'assign', 'collaborators')
-            ->withCount('medias')
-            ->withCount('childs')
-            ->where(function($query)use($user){
-                $query->where('tasks.user_assign', $user->id)
-                      ->orWhere('tasks.user_id', $user->id);
-            });
-        */
         $query = Task::with('brand', 'assign', 'collaborators')
             ->withCount('medias')
             ->withCount('childs')
@@ -60,7 +41,6 @@ class KanbanController extends Controller {
         $taskPaused = (clone $query)->where('status', 'PAUSED')->orderBy('task_order_users.position', 'asc')->get();
 
         $params = [
-            //'tasks' => $tasks,
             'taskToStart' => $taskToStart,
             'taskProcess' => $taskProcess,
             'taskFinalized' => $taskFinalized,
@@ -101,7 +81,10 @@ class KanbanController extends Controller {
 
             $otherTrask = [];
             if( $task->status == 'PROCESS' ){
-                $otherTasksInProcess = Task::where('user_id', $task->user_id)->where('status', 'PROCESS')->where('id', '!=', $task->id)->get();
+                $otherTasksInProcess = Task::where('user_assign', $task->user_assign)
+                    ->where('status', 'PROCESS')
+                    ->where('id', '!=', $task->id)
+                    ->get();
                 
                 foreach( $otherTasksInProcess as $otherTask ){
                     $otherTask->status = 'PAUSED';
@@ -125,6 +108,9 @@ class KanbanController extends Controller {
                     $status = "En proceso";
                     break;
                 case 'FINALIZED':
+                    $status = "Finalizada";
+                    break;
+                case 'FINALIZED_DELAY':
                     $status = "Finalizada";
                     break;
                 case 'DELAY':
@@ -162,8 +148,6 @@ class KanbanController extends Controller {
             'success' => true,
             'message' => $message
         ];
-        //var_dump($taskId, $newStatus, $position, $order);exit();
-
         return response()->json($result);
     }
 }

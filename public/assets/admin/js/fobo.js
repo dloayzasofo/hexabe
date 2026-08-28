@@ -74,6 +74,7 @@ function setActiveToMenuByUrl(){
         'service': "menu-forms-service",
         'performance': "menu-performance",
         'resume': "menu-resume",
+        'calendar': "menu-calendar",
     };
 
     var keys = Object.keys(menu);

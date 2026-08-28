@@ -21,8 +21,12 @@ use Auth;
 class TaskEditController extends Controller {
  
     public function status(Request $request, Task $task) {
-        $task->status = $request->status;
+        if( $task->status == $request->status ){
+            $message = Str::limit($task->title, 50) . ": Estado de la tarea actualizado.";
+            return response()->json(['success' => true, 'data' => ["id"=> $task->id, "status"=> $task->status, 'otherTrask' => []], 'message' => $message], 200);
+        }
 
+        $task->status = $request->status;
         if( $task->status == 'FINALIZED' ){
             $timeEstimate = Carbon::parse($task->date_delivery);
             $timeCurrent = Carbon::now();
@@ -42,7 +46,10 @@ class TaskEditController extends Controller {
 
         $otherTrask = [];
         if( $task->status == 'PROCESS' ){
-            $otherTasksInProcess = Task::where('user_id', $task->user_id)->where('status', 'PROCESS')->where('id', '!=', $task->id)->get();
+            $otherTasksInProcess = Task::where('user_assign', $task->user_assign)
+            ->where('status', 'PROCESS')
+            ->where('id', '!=', $task->id)
+            ->get();
             
             foreach( $otherTasksInProcess as $otherTask ){
                 $otherTask->status = 'PAUSED';

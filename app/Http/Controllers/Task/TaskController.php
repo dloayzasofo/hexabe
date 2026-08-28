@@ -8,6 +8,7 @@ use App\Http\Helper\MediaHelper;
 use App\Http\Helper\NotificationHelper;
 use Illuminate\Support\Str;
 use App\Http\Helper\HistoryHelper;
+use App\Http\Requests\TaskRequest;
 use App\Models\Brand;
 use App\Models\Task;
 use App\Models\TaskMedia;
@@ -24,12 +25,13 @@ use Auth;
 class TaskController extends Controller {
  
     public function index(Request $request) {
+        $user = Auth::user();
         $status = $request->query('status');
+
         if( $status == null OR !in_array($status, ['TOSTART', 'PROCESS', 'FINALIZED', 'DELAY', 'PAUSED', 'FINALIZED_DELAY']) ){
             $status = 'TOSTART';
         }
 
-        $user = Auth::user();
         $counters = [
             "TOSTART" => Task::getTaskCountByStatus('TOSTART', $user),
             "PROCESS" => Task::getTaskCountByStatus('PROCESS', $user),
@@ -38,23 +40,13 @@ class TaskController extends Controller {
             "DELAY" => Task::getTaskCountByStatus('DELAY', $user),
             "PAUSED" => Task::getTaskCountByStatus('PAUSED', $user)
         ];
-        /*
-        $counters = [
-            "TOSTART" => Task::where(function($query)use($user){ $query->where('user_assign', $user->id)->orWhere('user_id', $user->id); })->where('status', 'TOSTART')->count(),
-            "PROCESS" => Task::where(function($query)use($user){ $query->where('user_assign', $user->id)->orWhere('user_id', $user->id); })->where('status', 'PROCESS')->count(),
-            "FINALIZED" => Task::where(function($query)use($user){ $query->where('user_assign', $user->id)->orWhere('user_id', $user->id); })->where('status', 'FINALIZED')->count(),
-            "DELAY" => Task::where(function($query)use($user){ $query->where('user_assign', $user->id)->orWhere('user_id', $user->id); })->where('status', 'DELAY')->count(),
-            "PAUSED" => Task::where(function($query)use($user){ $query->where('user_assign', $user->id)->orWhere('user_id', $user->id); })->where('status', 'PAUSED')->count(),
-        ];
-        */
 
         $tasks = Task::with('brand', 'assign', 'collaborators')
             ->withCount('medias')
             ->withCount('childs')
             ->withCount('comments')
             ->where(function($query)use($user){
-                $query->where('user_assign', $user->id)
-                      ->orWhere('user_id', $user->id);
+                $query->where('user_assign', $user->id)->orWhere('user_id', $user->id);
                       //->orWhereRaw('id in (SELECT task_id FROM task_collaborators WHERE user_id = ?)', [$user->id]);
             })
             ->where('status', $status)
@@ -72,8 +64,13 @@ class TaskController extends Controller {
     }
 
     public function create(Request $request) {
-        $brands = Brand::orderBy('name', 'asc')->get();
+        $user = Auth::user();
         $task = null;
+        $brands = Brand::where('business_id', $user->business_id)
+            ->where('status', 'ACTIVE')
+            ->orderBy('name', 'asc')
+            ->get();
+
         $params = [
             'model' => new Task(),
             'brands' => $brands,
@@ -84,9 +81,11 @@ class TaskController extends Controller {
     }
 
     public function finish(Request $request, Task $task) {
+        $user = Auth::user();
         $task->status = 'FINALIZED';
         $timeEstimate = Carbon::parse($task->date_delivery);
         $timeCurrent = Carbon::now();
+
         if( $timeCurrent->gt($timeEstimate) ){
             $task->status = 'FINALIZED_DELAY';
         }
@@ -95,11 +94,10 @@ class TaskController extends Controller {
 
         $timeControl = new TimeControl();
         $timeControl->task_id = $task->id;
-        $timeControl->user_id = Auth::user()->id;
+        $timeControl->user_id = $user->id;
         $timeControl->status = $task->status;
         $timeControl->save();
         
-        $user = Auth::user();
         $userNotify = $task->user;
         if($user->id == $task->user_id){
             $userNotify = $task->assign;
@@ -136,9 +134,11 @@ class TaskController extends Controller {
         return redirect()->route('task.view', ['task' => $task->id]);
     }
     public function apifinish(Request $request, Task $task) {
+        $user = Auth::user();
         $task->status = 'FINALIZED';
         $timeEstimate = Carbon::parse($task->date_delivery);
         $timeCurrent = Carbon::now();
+
         if( $timeCurrent->gt($timeEstimate) ){
             $task->status = 'FINALIZED_DELAY';
         }
@@ -147,11 +147,10 @@ class TaskController extends Controller {
 
         $timeControl = new TimeControl();
         $timeControl->task_id = $task->id;
-        $timeControl->user_id = Auth::user()->id;
+        $timeControl->user_id = $user->id;
         $timeControl->status = $task->status;
         $timeControl->save();
 
-        $user = Auth::user();
         $userNotify = $task->user;
         if($user->id == $task->user_id){
             $userNotify = $task->assign;
@@ -195,6 +194,7 @@ class TaskController extends Controller {
             ]
         ]);
     }
+
     public function apidelete(Request $request, Task $task) {
         $id = $task->id;
         $title = $task->title;
@@ -248,7 +248,7 @@ class TaskController extends Controller {
     }
     */
 
-    public function save(Request $request) {
+    public function save(TaskRequest $request) {
         $user = Auth::user();
 
         $title = $request->name;
@@ -331,6 +331,9 @@ class TaskController extends Controller {
         return response()->json(['success' => true, 'data' => $task]);
     }
 
+    /**
+     * SaveOrder guarda el orden de la tarea para el usuario, esto para ordenar las tareas en kanban
+     */
     public function saveOrder($task_id, $user_id){
         $position = Task::where('tasks.user_id', $user_id)
             ->where('status', 'TOSTART')

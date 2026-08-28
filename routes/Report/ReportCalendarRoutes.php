@@ -7,11 +7,14 @@ use \Spatie\Permission\Middleware\RoleMiddleware;
 Route::middleware(['auth'])->prefix('report/calendar')->group(function () {
     Route::get('/', [ReportCalendarController::class, 'index'])
         ->middleware(RoleMiddleware::using('ADMIN'))
-        ->name('report.calendar.index');
+        ->name('report.calendar');
     Route::post('/list', [ReportCalendarController::class, 'list'])
         ->middleware(RoleMiddleware::using('ADMIN'))
         ->name('report.calendar.list');
     Route::post('/pie', [ReportCalendarController::class, 'pie'])
         ->middleware(RoleMiddleware::using('ADMIN'))
         ->name('report.calendar.pie');
+    Route::post('/stats', [ReportCalendarController::class, 'stats'])
+        ->middleware(RoleMiddleware::using('ADMIN'))
+        ->name('report.calendar.stats');
 });

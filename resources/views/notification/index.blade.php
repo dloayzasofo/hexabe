@@ -115,6 +115,10 @@
                     </div>
                 </div>
             @endforeach
+
+            <div class="mt-4">
+                {{ $notificationsOld->links('pagination') }}
+            </div>
         </div>
         @endif
     </div>

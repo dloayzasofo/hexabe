@@ -1018,31 +1018,28 @@ textarea{
 }
 .task-list-item>div:nth-child(1){
     border-radius: 8px 0 0 8px;
-    flex: 0 0 18.5%;
+    flex: 0 0 25%;
     padding-left: 10px;
 }
 .task-list-item>div:nth-child(2){
-    flex: 0 0 13%;
+    flex: 0 0 15%;
 }
 .task-list-item>div:nth-child(3){
     flex: 0 0 10%;
 }
 .task-list-item>div:nth-child(4){
-    flex: 0 0 12%;
+    flex: 0 0 10%;
+    text-align: center;
 }
 .task-list-item>div:nth-child(5){
-    flex: 0 0 10%;
+    flex: 0 0 15%;
     text-align: center;
 }
 .task-list-item>div:nth-child(6){
-    flex: 0 0 13%;
+    flex: 0 0 12%;
     text-align: center;
 }
 .task-list-item>div:nth-child(7){
-    flex: 0 0 10%;
-    text-align: center;
-}
-.task-list-item>div:nth-child(8){
     border-radius: 0px 8px 8px 0px;
     flex: 0 0 10%;
     text-align: center;
@@ -1057,6 +1054,11 @@ textarea{
     padding: 7px 5px;
     text-align: center;
     font-weight: bold;
+}
+.task-list-item.empty>div:nth-child(1){
+    flex: 0 0 100%;
+    text-align: center;
+    padding: 14px 5px;
 }
 .text-negro{
     color: #000000;

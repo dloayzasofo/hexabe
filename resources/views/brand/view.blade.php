@@ -2,8 +2,8 @@
 
 @section('main')
     <div class="btn-add-task"> 
-        <button id="btnCreate" class="btn rounded-pill btn-icon btn-primary" title="Crear nueva tarea">
-            <span><i class="bx bx-plus"></i></span>
+        <button id="btnCreate" class="btn btn-primary" title="Crear nueva tarea">
+            <span><i class="bx bx-plus"></i></span> Crear tarea
         </button> 
     </div>
 

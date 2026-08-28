@@ -131,7 +131,7 @@ class ReportCalendarController extends Controller {
         //va sumando los intervalos
         $lastDateToExeptionCalc = null;
         foreach( $timeControls as $timeControl ){
-            if( $timeControl->status == 'PROCESS' ){
+            if( $timeControl->status == 'PROCESS' AND $flagSum == false ){
                 $flagSum = true;
                 $lastDate = Carbon::parse($timeControl->created_at);
 
@@ -388,13 +388,64 @@ class ReportCalendarController extends Controller {
         $result = [];
         foreach($brands as $brand){
             $queryClone = clone $query;
-            $result[] = [
-                "id"=> $brand->id,
-                "name"=> $brand->name,
-                "count"=> $queryClone->where('brand_id', $brand->id)->count()
-            ];
+            $count = $queryClone->where('brand_id', $brand->id)->count();
+
+            if( $count != 0 ){
+                $result[] = [
+                    "id"=> $brand->id,
+                    "name"=> $brand->name,
+                    "count"=> $queryClone->where('brand_id', $brand->id)->count()
+                ];
+            }
         }
 
         return response()->json(['success' => true, 'data' => $result], 200);
+    }
+    public function stats(Request $request){
+        $user = Auth::user();
+        $dateIni = Carbon::parse($request->input('date_ini'));
+        $dateEnd = Carbon::parse($request->input('date_end'));
+        $userId = $request->input('user');
+        $brandId = $request->input('brand');
+
+        $query = Task::with('brand', 'assign', 'collaborators')
+            ->orWhere(function($query) use ($dateIni, $dateEnd) {
+                $query->whereBetween('date_ini', [$dateIni->format('Y-m-d'), $dateEnd->format('Y-m-d')])
+                ->orWhereBetween('date_delivery', [$dateIni->format('Y-m-d'), $dateEnd->format('Y-m-d')]);
+            });
+
+        if( $userId != 'all' ){
+            $query = $query->where('user_assign', $userId);
+        }
+        if( $brandId != 'all' ){
+            $query = $query->where('brand_id', $brandId);
+        }
+
+        $queryStatusTostart = clone $query;
+        $queryStatusProcess = clone $query;
+        $queryStatusFinalized = clone $query;
+        $queryStatusFinalizedDelay = clone $query;
+        $queryStatusDelay = clone $query;
+        $queryStatusPaused = clone $query;
+
+        $queryTostart = $queryStatusTostart->where('status', 'TOSTART')->count();
+        $queryProcess = $queryStatusProcess->where('status', 'PROCESS')->count();
+        $queryFinalized = $queryStatusFinalized->where('status', 'FINALIZED')->count();
+        $queryFinalizedDelay = $queryStatusFinalizedDelay->where('status', 'FINALIZED_DELAY')->count();
+        $queryDelay = $queryStatusDelay->where('status', 'DELAY')->count();
+        $queryPaused = $queryStatusPaused->where('status', 'PAUSED')->count();
+        $queryTotal = $queryTostart + $queryProcess + $queryFinalized + $queryFinalizedDelay + $queryDelay + $queryPaused;
+
+        $params = [
+            "total" => $queryTotal,
+            "tostart" => $queryTostart,
+            "process" => $queryProcess,
+            "delay" => $queryDelay,
+            "paused" => $queryPaused,
+            "finalized" => $queryFinalized,
+            "finalized_delay" => $queryFinalizedDelay
+        ];
+
+        return response()->json(["success"=> true, "data"=> $params]);
     }
 }

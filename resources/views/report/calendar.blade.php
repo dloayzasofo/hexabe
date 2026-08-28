@@ -1,5 +1,15 @@
 @extends('layout')
 
+@section('header')
+<style>
+    .table-quick-read{
+        width: 100%;
+    }
+    .table-quick-read td{
+        padding: 10px 5px !important;
+    }
+</style>
+@endsection
 @section('main')
 	<div class="wrap-toast"></div>
 
@@ -48,11 +58,85 @@
         <div id="calendar"></div>
     </div>
 
-    
-    <div class="mt-4">
-        <h4> Marcas </h4>
-        <div class="graphPie">
-            <canvas id="chartPie" ></canvas>
+    <div class="mt-4 row">
+        <div class="col-md-7">
+            <div class="card" style="height:100%;">
+                <div class="card-body">
+                    <h5 class="fw-bold">Lectura rápida</h5>
+                    <table class="table-quick-read">
+                        <tr>
+                            <td>
+                                <span class="badge badge-dot text-bg-primary me-1" style="background-color:#3C8AEC !important;">&nbsp;</span> Sin empezar
+                            </td>
+                            <td align="right" style="text-align: right;">
+                                <b>
+                                    <span id="resumeTostartPercent"></span>% (<span id="resumeTostart"></span>)
+                                </b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="badge badge-dot text-bg-primary me-1" style="background-color:#6338E0 !important;">&nbsp;</span> En proceso
+                            </td>
+                            <td align="right" style="text-align: right;">
+                                <b>
+                                    <span id="resumeProcessPercent"></span>% (<span id="resumeProcess"></span>)
+                                </b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="badge badge-dot text-bg-primary me-1" style="background-color:#C00939 !important;">&nbsp;</span> Retrasado
+                            </td>
+                            <td align="right" style="text-align: right;">
+                                <b>
+                                    <span id="resumeDelayPercent"></span>% (<span id="resumeDelay"></span>)
+                                </b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="badge badge-dot text-bg-primary me-1" style="background-color:#F75620 !important;">&nbsp;</span> Pausado
+                            </td>
+                            <td align="right" style="text-align: right;">
+                                <b>
+                                    <span id="resumePausedPercent"></span>% (<span id="resumePaused"></span>)
+                                </b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="badge badge-dot text-bg-primary me-1" style="background-color:#16A34A !important;">&nbsp;</span> Finalizado
+                            </td>
+                            <td align="right" style="text-align: right;">
+                                <b>
+                                    <span id="resumeFinalizedPercent"></span>% (<span id="resumeFinalized"></span>)
+                                </b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="badge badge-dot text-bg-primary me-1" style="background-color:#16A34A !important;">&nbsp;</span> Fin. retraso
+                            </td>
+                            <td align="right" style="text-align: right;">
+                                <b>
+                                    <span id="resumeFinalizedDelayPercent"></span>% (<span id="resumeFinalizedDelay"></span>)
+                                </b>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="fw-bold"> Marcas </h5>
+                    <div class="graphPie mt-4">
+                        <canvas id="chartPie" ></canvas>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -123,6 +207,7 @@
         dateEnd = date_end;
         serverGetStats();
         serverPie();
+        serverResumenStat();
     }
 
     function serverGetStats(){
@@ -250,7 +335,8 @@
                         ${htmlHours}
                     </div>
                 </div>`,
-                start: task.date_delivery,
+                //start: task.date_delivery,
+                start: task.date,
                 color: color,
                 textColor: '#313131',
                 borderColor: '#eaeaea',
@@ -273,7 +359,6 @@
         Chart.defaults.plugins.tooltip.callbacks.title = function (context) {
             return context.label;
         };
-        serverPie();
     });
 
     function serverPie(){
@@ -375,5 +460,47 @@
         });
     }
     
+</script>
+
+<script>
+    function serverResumenStat(){
+        let url = "{{ route('report.calendar.stats') }}";
+        let user = document.querySelector('#selectUser');
+        let brand = document.querySelector('#selectBrand');
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                date_ini: dateIni,
+                date_end: dateEnd,
+                user: user.value,
+                brand: brand.value
+            })
+        }).then(response => response.json())
+        .then(data => {
+            if( data.success){
+                renderResumeStat(data.data);
+            }
+        });
+    }
+
+    function renderResumeStat(data){
+        document.querySelector('#resumeTostart').innerHTML = data.tostart;
+        document.querySelector('#resumeProcess').innerHTML = data.process;
+        document.querySelector('#resumeDelay').innerHTML = data.delay;
+        document.querySelector('#resumePaused').innerHTML = data.paused;
+        document.querySelector('#resumeFinalized').innerHTML = data.finalized;
+        document.querySelector('#resumeFinalizedDelay').innerHTML = data.finalized_delay;
+
+        document.querySelector('#resumeTostartPercent').innerHTML = ((data.tostart * 100) / data.total).toFixed(1);
+        document.querySelector('#resumeProcessPercent').innerHTML = ((data.process * 100) / data.total).toFixed(1);
+        document.querySelector('#resumeDelayPercent').innerHTML = ((data.delay * 100) / data.total).toFixed(1);
+        document.querySelector('#resumePausedPercent').innerHTML = ((data.paused * 100) / data.total).toFixed(1);
+        document.querySelector('#resumeFinalizedPercent').innerHTML = ((data.finalized * 100) / data.total).toFixed(1);
+        document.querySelector('#resumeFinalizedDelayPercent').innerHTML = ((data.finalized_delay * 100) / data.total).toFixed(1);
+    }
 </script>
 @endsection

@@ -64,7 +64,7 @@ class ReportGroupController extends Controller {
 
     public function filter_team($team_id, $date){
         $users = TeamUser::where('team_id', $team_id)->pluck('user_id');
-        $tasks = Task::whereIn('user_assign', $users)->where('date_delivery', $date)->get();
+        $tasks = Task::whereIn('user_assign', $users)->whereDate('date_delivery', $date)->get();
 
         $result = [];
         foreach( $tasks as $item ){
@@ -79,7 +79,6 @@ class ReportGroupController extends Controller {
                 'title' => $item->title,
                 'date_delivery' => Carbon::parse($item->date_delivery)->format('d/m/Y'),
                 'status' => $item->status,
-                'priority' => $item->priority,
                 'brand' => [
                     'name' => $item->brand->name,
                     'image' => $item->brand->image
@@ -107,7 +106,7 @@ class ReportGroupController extends Controller {
     public function filter_user($user_id, $date){
         $tasks = Task::with('brand','user','assign')
             ->where('user_assign', $user_id)
-            ->where('date_delivery', $date)
+            ->whereDate('date_delivery', $date)
             ->get();
 
         $result = [];
@@ -123,7 +122,6 @@ class ReportGroupController extends Controller {
                 'title' => $item->title,
                 'date_delivery' => Carbon::parse($item->date_delivery)->format('d/m/Y'),
                 'status' => $item->status,
-                'priority' => $item->priority,
                 'brand' => [
                     'name' => $item->brand->name,
                     'image' => $item->brand->image

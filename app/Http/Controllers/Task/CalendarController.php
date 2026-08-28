@@ -30,9 +30,7 @@ class CalendarController extends Controller {
         $tasks = Task::with('brand', 'assign', 'collaborators')
             ->whereBetween('date_delivery', [$dateIni, $dateEnd])
             ->where(function($query)use($user){
-                $query->where('user_assign', $user->id)
-                      ->orWhere('user_id', $user->id);
-                      //->orWhereRaw('id in (SELECT task_id FROM task_collaborators WHERE user_id = ?)', [$user->id]);
+                $query->where('user_assign', $user->id)->orWhere('user_id', $user->id);
             })
             ->orderBy('position', 'asc')
             ->get();
@@ -153,7 +151,6 @@ class CalendarController extends Controller {
     }
 
     public function getHoursWorkedLiteralAttribute($countHours){
-        
         $countHours = round($countHours, 2);
         $hour = floor($countHours);
 

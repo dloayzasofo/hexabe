@@ -74,9 +74,6 @@
                 TAREAS
             </div>
             <div>
-                PRIORIDAD
-            </div>
-            <div>
                 EQUIPO
             </div>
             <div>
@@ -93,7 +90,9 @@
             <div>
                 FECHA
             </div>
-            <div></div>
+            <div>
+                ACCIÓN
+            </div>
         </div>
         <div class="wrap-result">
             <div class="d-flex justify-content-center pt-4">
@@ -170,18 +169,7 @@
             let item = data.tasks[i];
             let userImage = '';
             let assignImage = '';
-            let priority = '';
             let status = '';
-
-            if( item.priority == 'high' ){
-                priority = '<span class="badge rounded-pill bg-label-danger">ALTA</span>';
-            }
-            else if( item.priority == 'medium' ){
-                priority = '<span class="badge rounded-pill bg-label-warning">MEDIA</span>';
-            }
-            else if( item.priority == 'low' ){
-                priority = '<span class="badge rounded-pill bg-label-primary">BAJA</span>';
-            }
 
             if( item.status == 'TOSTART' ){
                 status = '<span class="badge rounded-pill bg-label-secondary">Sin empezar</span>';
@@ -232,9 +220,6 @@
                         </a>
                         <small>${item.brand.name}</small>
                     </div>
-                </div>
-                <div>
-                    ${priority}
                 </div>
                 <div>
                     ${teams}

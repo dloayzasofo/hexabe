@@ -99,6 +99,11 @@
 							<div class="text-truncate">Reportes</div>
 						</a>
 						<ul class="menu-sub">
+							<li id="menu-calendar" class="menu-item">
+								<a href="{{ route('report.calendar') }}" class="menu-link">
+									Calendario
+								</a>
+							</li>
 							<li id="menu-resume" class="menu-item">
 								<a href="{{ route('report.resume') }}" class="menu-link">
 									Resumen
@@ -280,7 +285,7 @@
 	</div>
     <!-- / Layout wrapper -->
 
-	<link rel="stylesheet" href="{{asset('/assets/admin/css/fobo.css')}}?v=1.1.13">
+	<link rel="stylesheet" href="{{asset('/assets/admin/css/fobo.css')}}?v=1.2.15">
 
     <script src="{{asset('/assets/admin/vendor/libs/jquery/jquery.js')}}"></script>
     <script src="{{asset('/assets/admin/vendor/js/bootstrap.js')}}"></script>
@@ -289,7 +294,7 @@
 
     <!-- Main JS -->
     <script src="{{asset('/assets/admin/js/main.js')}}"></script>
-    <script src="{{asset('/assets/admin/js/fobo.js')}}?v=1.3.7"></script>
+    <script src="{{asset('/assets/admin/js/fobo.js')}}?v=1.2.15"></script>
     <!-- Place this tag in your head or just before your close body tag. -->
     <!-- <script async defer src="https://buttons.github.io/buttons.js"></script> -->
     @yield('script')
