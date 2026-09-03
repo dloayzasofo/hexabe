@@ -349,6 +349,8 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
 <script>
     let chartPie = null;
+    let barColors = ["#2563EB","#16A34A","#DC2626","#EA580C","#9333EA","#EAB308","#DB2777","#0891B2","#92400E","#65A30D","#4F46E5","#F97316","#A855F7","#0284C7","#E11D48","#059669","#CA8A04","#C026D3","#64748B","#78716C"];
+
     window.addEventListener('load', () => {
         Chart.defaults.plugins.tooltip.callbacks.label = function (context) {
             const total = context.dataset.data.reduce((x, y) => x + y, 0);
@@ -406,7 +408,7 @@
             data: {
                 labels: labels,
                 datasets: [{
-                    //backgroundColor: barColors,
+                    backgroundColor: barColors,
                     data: values
                 }]
             },

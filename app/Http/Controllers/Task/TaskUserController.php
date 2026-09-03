@@ -18,7 +18,7 @@ class TaskUserController extends Controller {
  
     public function list(Request $request, User $user) {
         $status = $request->query('status');
-        if( $status == null OR !in_array($status, ['TOSTART', 'PROCESS', 'FINALIZED', 'DELAY', 'PAUSED']) ){
+        if( $status == null OR !in_array($status, ['TOSTART', 'PROCESS', 'FINALIZED', 'FINALIZED_DELAY', 'DELAY', 'PAUSED']) ){
             $status = 'TOSTART';
         }
 
@@ -32,13 +32,22 @@ class TaskUserController extends Controller {
         ];
 
 
-        $tasks = Task::with('brand', 'assign', 'collaborators')
+        $query = Task::with('brand', 'assign', 'collaborators')
             ->withCount('medias')
             ->withCount('childs')
-            ->where('user_assign', $user->id)
-            ->where('status', $status)
-            ->get();
-        
+            ->where(function($query)use($user){
+                $query->where('user_assign', $user->id)->orWhere('user_id', $user->id);
+                      //->orWhereRaw('id in (SELECT task_id FROM task_collaborators WHERE user_id = ?)', [$user->id]);
+            })
+            ->where('status', $status);
+
+        if( $status == 'TOSTART' ){
+            $query->orderBy('date_delivery', 'asc');
+        }else{
+            $query->orderBy('date_delivery', 'desc');
+        }
+
+        $tasks = $query->get();
         $params = [
             'user' => $user,
             'tasks' => $tasks,

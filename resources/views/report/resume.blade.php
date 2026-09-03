@@ -446,7 +446,7 @@
         }
         if( type == 'month' ){
             let months = ['ENERO', 'FEBREO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
-            labels = [months[month]];
+            labels = [months[month - 1]];
             
         }
         if( type == 'week' ){

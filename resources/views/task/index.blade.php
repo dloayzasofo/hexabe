@@ -76,7 +76,7 @@
             <li class="nav-item" role="presentation">
                 <a href="{{ route('task.index') }}?status=FINALIZED_DELAY" class="nav-link @if( $status == 'FINALIZED_DELAY') active @endif" aria-selected="true">
                 <span class="d-none d-sm-inline-flex align-items-center">
-                    Finalizado <span id="statusLabel-FINALIZED_DELAY" class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-danger ms-2">{{ $counters['FINALIZED_DELAY'] }}</span>
+                    Fin. retraso <span id="statusLabel-FINALIZED_DELAY" class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-danger ms-2">{{ $counters['FINALIZED_DELAY'] }}</span>
                 </span>
                 </a>
             </li>

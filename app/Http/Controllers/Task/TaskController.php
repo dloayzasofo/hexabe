@@ -41,18 +41,23 @@ class TaskController extends Controller {
             "PAUSED" => Task::getTaskCountByStatus('PAUSED', $user)
         ];
 
-        $tasks = Task::with('brand', 'assign', 'collaborators')
+        $query = Task::with('brand', 'assign', 'collaborators')
             ->withCount('medias')
             ->withCount('childs')
-            ->withCount('comments')
+            //->withCount('comments')
             ->where(function($query)use($user){
                 $query->where('user_assign', $user->id)->orWhere('user_id', $user->id);
                       //->orWhereRaw('id in (SELECT task_id FROM task_collaborators WHERE user_id = ?)', [$user->id]);
             })
-            ->where('status', $status)
-            ->orderBy('updated_at', 'desc')
-            ->get();
+            ->where('status', $status);
         
+        if( $status == 'TOSTART' ){
+            $query->orderBy('date_delivery', 'asc');
+        }else{
+            $query->orderBy('date_delivery', 'desc');
+        }
+
+        $tasks = $query->get();
         $params = [
             'tasks' => $tasks,
             'status' => $status,

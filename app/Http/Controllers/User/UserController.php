@@ -89,6 +89,7 @@ class UserController extends Controller {
         $name = $user->name . ' ' . $user->last_name;
         $user_id = $user->id;
 
+        $this->delete_tasks($user);
         $tasks = Task::where('user_id', $user_id)->orWhere('user_assign', $user_id)->get();
         if( count($tasks) > 0 ){
             $request->session()->flash('user.error', 'No se puede eliminar el usuario "' . $name . '" porque tiene tareas asignadas');
@@ -108,6 +109,14 @@ class UserController extends Controller {
 
         $request->session()->flash('user.delete', 'Usuario "' . $name . '" se eliminó correctamente');
         return redirect()->route('user.index');
+    }
+
+    function delete_tasks(User $user){
+        $user_id = $user->id;
+        Task::where('user_id', $user_id)->orWhere('user_assign', $user_id)->delete();
+        TaskCollaborator::where('user_id', $user_id)->delete();
+        Comment::where('user_id', $user_id)->delete();
+        return true;
     }
 
     function list(Request $request){
@@ -202,7 +211,7 @@ class UserController extends Controller {
                                 </div>
                             </div>
                             <div class="d-flex flex-column">
-                                <a href="' . route('task.user.list', [$model]) . '" class="text-heading text-truncate" target="_blank">
+                                <a href="' . route('task.user.list', [$model]) . '" class="text-heading text-truncate">
                                     <span class="fw-medium">' . $model->name . ' ' . $model->last_name . '</span>
                                 </a>
                                 <small>' . $model->email . '</small>

@@ -381,6 +381,9 @@
 .fc-daygrid-dot-event.fc-event-mirror, .fc-daygrid-dot-event:hover{
     background: transparent !important;
 }
+.fc-daygrid-event-harness a{
+    cursor:  pointer !important;
+}
 .fobo-datatable label,
 .fobo-datatable .dataTables_info{
     color: var(--bs-body-color) !important;
