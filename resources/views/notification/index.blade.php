@@ -58,7 +58,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    {{ $notification->created_at->diffForHumans() }}
+                                    {{ \Carbon\Carbon::parse($notification->created_at)->format('d/m/Y H:i') }}
                                 </div>
                             </div>
                         </div>
@@ -109,7 +109,7 @@
                                 </div>
                             </div>
                             <div>
-                                {{ $notification->created_at->diffForHumans() }}
+                                {{ \Carbon\Carbon::parse($notification->created_at)->format('d/m/Y H:i') }}
                             </div>
                         </div>
                     </div>

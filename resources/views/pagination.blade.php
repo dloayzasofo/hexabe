@@ -1,7 +1,13 @@
 @if ($paginator->hasPages())
 <div class="d-flex justify-content-between">
     <div>
-        <small>Ver del {{$paginator->firstItem()}} al {{ $paginator->lastItem() }}, <b>Total {{ $paginator->total()}}</b></small>
+        <small>Ver del 
+            <span class="pagination-first-item">{{$paginator->firstItem()}}</span> al 
+            <span class="pagination-last-item">{{ $paginator->lastItem() }}</span>, 
+            <b>Total 
+                <span class="pagination-total-item">{{ $paginator->total()}}</span>
+            </b>
+        </small>
         {{-- count: {{ $paginator->count() }} <br> --}}
     </div>
     <div>
@@ -27,9 +33,9 @@
                     @if (is_array($element))
                         @foreach ($element as $page => $url)
                             @if ($page == $paginator->currentPage())
-                                <li class="active"><span>{{ $page }}</span></li>
+                                <li class="pagination-item active"><span>{{ $page }}</span></li>
                             @else
-                                <li><a href="{{ $url }}">{{ $page }}</a></li>
+                                <li><a href="{{ $url }}" class="pagination-item">{{ $page }}</a></li>
                             @endif
                         @endforeach
                     @endif
@@ -49,4 +55,5 @@
             @endif
         </nav>
     </div>
+</div>
 @endif

@@ -85,11 +85,22 @@ class BrandController extends Controller {
     }
 
     public function view(Request $request, Brand $brand) {
-        $lastTasks = Task::where('brand_id', $brand->id)
-            ->whereNull('parent_id')
-            ->orderBy('created_at', 'desc')
-            ->take(5)
-            ->get();
+        $lastTasks = Task::with(['assign'])
+            ->where('brand_id', $brand->id)
+            //->whereNull('parent_id')
+            ->whereNotIn('status', ['FINALIZED', 'FINALIZED_DELAY'])
+            ->orderBy('date_ini', 'desc')
+            //->take(10)
+            ->paginate(7);
+        
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'tasks' => $lastTasks,
+                'pagination' => (string) $lastTasks->links('pagination')
+            ]);
+        }
+
         $members = $brand->members;
         $params = [
             'brand' => $brand,
