@@ -61,4 +61,48 @@ class TaskSearchController extends Controller {
 
         return response()->json($params);
     }
+
+    /**
+     * Retorna una lista de tareas de acuerdo a la tarea pasada
+     * Esta funcion se utiliza para hacer de una tarea una subtarea de otra
+     */
+    public function searchSubtasks(Request $request, Task $task) {
+        $user = Auth::user();
+        $search = $request->query('q');
+        $brandId = $task->brand_id;
+        
+        $tasks = Task::with('assign')->where('business_id', $user->business_id)
+            ->where('id', '!=', $task->id) 
+            ->where('brand_id', $brandId)
+            ->whereNotIn('status', ['FINALIZED', 'FINALIZED_DELAY'])
+            ->where(function ($query) use ($search) {
+                $query->where('title', 'LIKE', "%$search%")
+                      ->orWhere('description', 'LIKE', "%$search%");
+            })
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $results = $tasks->map(function ($task) {
+            return [
+                'id' => $task->id,
+                'title' => $task->title,
+                'date_ini' => Carbon::parse($task->date_ini)->format('d/m/Y H:i'),
+                'date_delivery' => Carbon::parse($task->date_delivery)->format('d/m/Y H:i'),
+                'status' => $task->status,
+                'user_assign' => [
+                    'id' => $task->assign->id,
+                    'nameInitial' => $task->assign->nameInitial,
+                    'image' => $task->assign->image
+                ]
+            ];
+        });
+
+        $params = [
+            'success' => true,
+            'data' => $results,
+            'results_count' => $results->count()
+        ];
+
+        return response()->json($params);
+    }
 }

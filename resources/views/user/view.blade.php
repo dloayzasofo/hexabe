@@ -60,6 +60,16 @@
                     </dl>
                 </div>
             </div>
+
+            <h5>Opciones</h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-3 fw-semibold mb-3"> Multiples tareas:</dt>
+                        <dt class="col-sm-9"> {{ $model->can_multiple_tasks ? 'Sí' : 'No' }}</dt>
+                    </dl>
+                </div>
+            </div>
         </div>
         
         <div class="card-footer text-end">

@@ -8,5 +8,7 @@ Route::middleware(['auth'])->prefix('task/api')->group(function () {
 
     Route::get('/search', [TaskSearchController::class, 'search'])
         ->name('task.api.search');
+    Route::get('/search/{task}', [TaskSearchController::class, 'searchSubtasks'])
+        ->name('task.api.search.subtasks');
 
 });

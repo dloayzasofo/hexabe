@@ -181,4 +181,20 @@ class TaskEditController extends Controller {
         return response()->json(['success' => false], 404);
     }
 
+    public function make_subtask(Request $request, Task $task) {
+        $subtask = Task::find($request->subtask);
+        if( $subtask == null ){
+            return response()->json(['success' => false, 'message' => 'Subtarea no encontrada'], 404);
+        }
+
+        $task->parent_id = $subtask->id;
+        $task->save();
+
+        $request->session()->flash('task.success', 'La tarea ha sido marcada como subtarea.');
+        return response()->json(['success' => true, 'data' => [
+            "id"=> $task->id,
+            "subtask_id"=> $subtask->id
+        ]], 200);
+    }
+
 }

@@ -147,6 +147,7 @@ CREATE TABLE `users` (
   foreign key(parent_id) references users(id) on delete cascade on update no action,
   foreign key(business_id) references business(id) on delete cascade on update no action
 );
+ALTER TABLE users ADD COLUMN `can_multiple_tasks` BOOLEAN DEFAULT FALSE AFTER `status`;
 
 CREATE TABLE medias(
 	`id` bigint(20) UNSIGNED PRIMARY KEY AUTO_INCREMENT,

@@ -98,6 +98,10 @@
             </div>
         </div>
         <div class="col-md-4 text-end">
+            <button id="btnmakeSubtask" class="btn rounded-pill btn-icon btn-outline-secondary me-2 btnTaskEdit" data-bs-toggle="modal" data-bs-target="#makeSubtaskModal"> 
+                <svg class="icon-substask-svg" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M25,20c-2.4,0-4.4,1.7-4.9,4H11c-3.9,0-7-3.1-7-7v-5h16.1c0.5,2.3,2.5,4,4.9,4c2.8,0,5-2.2,5-5s-2.2-5-5-5c-2.4,0-4.4,1.7-4.9,4H4V3c0-0.6-0.4-1-1-1S2,2.4,2,3v14c0,5,4,9,9,9h9.1c0.5,2.3,2.5,4,4.9,4c2.8,0,5-2.2,5-5S27.8,20,25,20z M25,8c1.7,0,3,1.3,3,3s-1.3,3-3,3s-3-1.3-3-3S23.3,8,25,8z M25,28c-1.7,0-3-1.3-3-3s1.3-3,3-3s3,1.3,3,3S26.7,28,25,28z"></path></svg>
+            </button>
+
             <button id="btnCreate" class="btn btn-primary" title="Crear subtarea">
                 <span><i class="bx bx-plus"></i></span> Crear subtarea
             </button>
@@ -232,6 +236,7 @@
     @include('task.view._user')
     @include('task.view._date_ini')
     @include('task.view._date')
+    @include('task.view._make_substask')
     @include('task._modal_delete')
 @endsection
 
