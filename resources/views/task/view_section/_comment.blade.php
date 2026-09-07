@@ -16,9 +16,9 @@
                         <div class="fw-bold">
                             {{ $comment->user->name }}
                         </div>
-                        <div>
-                            {{ $comment->created_at->diffForHumans() }}
-                        </div>
+                        <small>
+                            {{ \Carbon\Carbon::parse($comment->created_at)->format('d/m/Y H:i') }}
+                        </small>
                     </div>
                     <div class="mb-0 chat-message-content">
                         {!! $comment->description !!}

@@ -39,6 +39,10 @@ class UserController extends Controller {
         $model->phone_code = '591';
         $model->parent_id = $user->id;
         $this->_sanitizeInputs($model, $request);
+        $user->can_multiple_tasks = 0;
+        if( $request->has('can_multiple_tasks') ){
+            $user->can_multiple_tasks = 1;
+        }
         $model->save();
 
         $model->assignRole($model->role);
@@ -56,6 +60,10 @@ class UserController extends Controller {
     function update(Request $request, User $user){
         $oldRole = $user->role;
         $this->_sanitizeInputs($user, $request);
+        $user->can_multiple_tasks = 0;
+        if( $request->has('can_multiple_tasks') ){
+            $user->can_multiple_tasks = 1;
+        }
         $user->save();
                 
         if( $oldRole != $user->role ){

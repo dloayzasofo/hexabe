@@ -64,6 +64,34 @@
                 @error('password')<p class="error">{{ $message }}</p> @enderror
             </div>
         @endif
+        <h5 class="mt-5"> 
+            <span style="color:#FE752F;"><i class="menu-icon tf-icons bx bx-cube-alt" style="font-size:26px;"></i></span> Opciones
+        </h5>
+        <div class="card mt-3">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div><b>Múltiple tareas</b></div>
+                            <small>Puede tener muchas tareas en proceso.</small>
+                        </div>
+                        <div>
+                            <label class="switch switch-warning pe-3">
+                                <input id="can_multiple_tasks" type="checkbox" name="can_multiple_tasks" class="switch-input" @if( old('can_multiple_tasks', $model->can_multiple_tasks) ) checked @endif>
+                                <span class="switch-toggle-slider">
+                                    <span class="switch-on">
+                                        <i class="icon-base bx bx-check"></i>
+                                    </span>
+                                    <span class="switch-off">
+                                        <i class="icon-base bx bx-x"></i>
+                                    </span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
 <script>

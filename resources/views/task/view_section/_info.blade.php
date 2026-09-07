@@ -45,6 +45,27 @@
             </div>
         </div>
 
+        @if( count($taskCollaboratos) > 0 )
+        <div class="mb-2 mt-4"><small>COLABORADORES</small></div>
+        <div class="d-flex justify-content-between align-items-center hoverEdit">
+            <div class="d-flex flex-wrap align-items-center">
+                <ul class="list-unstyled users-list d-flex align-items-center avatar-group m-0 me-2">
+                    @foreach( $taskCollaboratos as $collaborator )
+                    <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar pull-up" aria-label="{{ $collaborator->user->name }}" data-bs-original-title="{{ $collaborator->user->name }}">
+                        <a href="{{ route('task.user.list', [$collaborator->user]) }}">
+                        @if( $collaborator->user->image != null )
+                            <img class="rounded-circle" src="{{ $collaborator->user->image }}" alt="Avatar">
+                        @else 
+                            <span class="avatar-initial rounded-circle bg-label-danger">{{ $collaborator->user->nameInitial }}</span>
+                        @endif
+                        </a>
+                    </li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+        @endif
+
         <div class="mb-2 mt-4"><small>FECHA CREACIÓN</small></div>
         <div class="d-flex justify-content-between hoverEdit">
             <div class="d-flex align-items-center">

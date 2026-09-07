@@ -361,7 +361,7 @@ class TaskController extends Controller {
         $user = Auth::user();
         $taskMedias = TaskMedia::with('media')->where('task_id', $task->id)->get();
         $taskLinks = TaskLink::where('task_id', $task->id)->get();
-        $taskCollaboratos = TaskCollaborator::where('task_id', $task->id)->get();
+        $taskCollaboratos = TaskCollaborator::with('user')->where('task_id', $task->id)->get();
         
         $childs = Task::where('parent_id', $task->id)->orderBy('date_delivery', 'asc')->get();
         $comments = $task->comments()->with('user')->with('commentmedias')->orderBy('created_at', 'desc')->get();

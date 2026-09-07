@@ -21,6 +21,7 @@ use Auth;
 class TaskEditController extends Controller {
  
     public function status(Request $request, Task $task) {
+        $user = Auth::user();
         if( $task->status == $request->status ){
             $message = Str::limit($task->title, 50) . ": Estado de la tarea actualizado.";
             return response()->json(['success' => true, 'data' => ["id"=> $task->id, "status"=> $task->status, 'otherTrask' => []], 'message' => $message], 200);
@@ -45,7 +46,7 @@ class TaskEditController extends Controller {
         $timeControl->save();
 
         $otherTrask = [];
-        if( $task->status == 'PROCESS' ){
+        if( $task->status == 'PROCESS' AND $user->can_multiple_tasks == false ){
             $otherTasksInProcess = Task::where('user_assign', $task->user_assign)
             ->where('status', 'PROCESS')
             ->where('id', '!=', $task->id)

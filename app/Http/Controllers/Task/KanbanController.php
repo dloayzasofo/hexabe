@@ -80,7 +80,7 @@ class KanbanController extends Controller {
             $timeControl->save();
 
             $otherTrask = [];
-            if( $task->status == 'PROCESS' ){
+            if( $task->status == 'PROCESS' AND $user->can_multiple_tasks == false ){
                 $otherTasksInProcess = Task::where('user_assign', $task->user_assign)
                     ->where('status', 'PROCESS')
                     ->where('id', '!=', $task->id)
