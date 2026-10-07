@@ -13,6 +13,7 @@ use App\Models\Task;
 use App\Models\User;
 use App\Models\Brand;
 use App\Models\Team;
+use App\Models\Popup;
 use App\Models\TeamUser;
 use Spatie\Permission\Models\Role;
 use Auth;
@@ -62,11 +63,22 @@ class DashboardController extends Controller {
             'FINALIZED' => Task::where('user_assign', $user->id)->where('status', 'FINALIZED')->count(),
         ];
 
+        $collaborations = Task::with('brand', 'assign', 'collaborators')
+            ->where('user_assign', '<>', $user->id)
+            ->whereNotIn('status', ['FINALIZED', 'FINALIZED_DELAY'])
+            ->whereRaw('id in (SELECT task_id FROM task_collaborators WHERE user_id = ?)', [$user->id])
+            ->orderBy('date_delivery', 'desc')
+            ->get();
+
+        $popup = Popup::where('active', true)->first();
+
         $params = [
             'tasks' => $tasks,
             'taskCategories' => $taskCategories,
             'brands' => $brands,
-            'teams' => $teams
+            'teams' => $teams,
+            'collaborations' => $collaborations,
+            'popup' => $popup
         ];
         
         HistoryHelper::save(Auth::user(), 'dashboard');

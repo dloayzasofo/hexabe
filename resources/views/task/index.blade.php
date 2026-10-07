@@ -139,9 +139,11 @@
                 <a href="{{ route('task.view', ['task'=> $task]) }}" class="text-heading">
                     <div class="avatar avatar-sm">
                         @if( isset($task->assign->image) )
-                            <img class="rounded-circle" src="{{ $task->assign->image }}" alt="{{ $task->assign->name }}">
+                            <img class="rounded-circle" src="{{ $task->assign->image }}" alt="{{ $task->assign->name }}" data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" aria-label="{{ $task->assign->name }}" data-bs-original-title="{{ $task->assign->name }}">
                         @else
-                            <span class="avatar-initial rounded-circle bg-label-primary">{{ $task->assign->nameInitial }}</span>
+                            <span class="avatar-initial rounded-circle bg-label-primary" data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" aria-label="{{ $task->assign->name }}" data-bs-original-title="{{ $task->assign->name }}">
+                                {{ $task->assign->nameInitial }}
+                            </span>
                         @endif
                     </div>
                 </a>
@@ -265,6 +267,161 @@
         </div>
     </div>
     @endforelse
+
+
+    @if( count($collaborations) > 0 )
+        <div class="separator mt-4">&nbsp;</div>
+        <hr>
+        <h5 class="mt-4">Colaboraciones</h5>
+
+        <div class="task-list-item task-list-header d-flex no-wrap">
+            <div>
+                Tarea
+            </div>
+            <div>
+                Marca
+            </div>
+            <div>
+                Responsable
+            </div>
+            <div>
+                Estado
+            </div>
+            <div>
+                Progreso
+            </div>
+            <div>
+                Fecha de entrega
+            </div>
+            <div>
+                Acciones
+            </div>
+        </div>
+        @forelse($collaborations as $task)
+        <div id="task-{{ $task->id }}" class="task-list-item d-flex no-wrap">
+            <div>
+                <div class="d-flex flex-column">
+                    <a href="{{ route('task.view', ['task'=> $task]) }}" class="text-heading">
+                        <span class="fw-medium">{{ $task->title }}</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-start align-items-center user-name">
+                <div class="avatar-wrapper">
+                    <div class="avatar avatar-sm me-2">
+                        <img src="{{ $task->brand->image }}" alt="Avatar" class="rounded">
+                    </div>
+                </div>
+                <div class="d-flex flex-column">
+                    <a href="{{ route('brand.view', ['brand'=> $task->brand->id]) }}" class="text-heading">
+                        <span class="fw-medium">{{ strtoupper($task->brand->name) }}</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-center align-items-center user-name">
+                <div class="avatar-wrapper">
+                    <a href="{{ route('task.view', ['task'=> $task]) }}" class="text-heading">
+                        <div class="avatar avatar-sm">
+                            @if( isset($task->assign->image) )
+                                <img class="rounded-circle" src="{{ $task->assign->image }}" alt="{{ $task->assign->name }}" data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" aria-label="{{ $task->assign->name }}" data-bs-original-title="{{ $task->assign->name }}">
+                            @else
+                                <span class="avatar-initial rounded-circle bg-label-primary" data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" aria-label="{{ $task->assign->name }}" data-bs-original-title="{{ $task->assign->name }}">
+                                    {{ $task->assign->nameInitial }}
+                                </span>
+                            @endif
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-center">
+                <div class="ct-select" data-value="{{ $task->status }}" data-task="{{ $task->id }}" data-type="status">
+                    <div class="ct-select-view readonly">
+                        @switch($task->status)
+                            @case('TOSTART')
+                                Sin empezar
+                                @break
+                            @case('PROCESS')
+                                En proceso
+                                @break
+                            @case('DELAY')
+                                Retraso
+                                @break
+                            @case('PAUSED')
+                                Pausado
+                                @break
+                            @case('FINALIZED')
+                                Finalizado
+                                @break
+                            @case('FINALIZED_DELAY')
+                                Finalizado
+                                @break
+                        @endswitch
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div>
+                    @if( $task->childs_count > 0 )
+                    <div class="d-flex justify-content-between mb-1">
+                        <div>
+                            Subtareas
+                        </div>
+                        <div class="text-primary fw-bold">
+                            {{ $task->childs_done }}/{{ $task->childs_count }}
+                        </div>
+                        
+                    </div>
+                    <div>
+                        <div class="progress" style="height: 16px;">
+                            <div class="progress-bar" role="progressbar" style="width: {{ $task->progress }}%;" aria-valuenow="{{ $task->progress }}" aria-valuemin="0" aria-valuemax="100">
+                                {{ $task->progress }}%
+                            </div>
+                        </div>
+                    </div>
+                    @else
+                    <div>
+                        Sin Subtareas
+                    </div>
+                    @endif
+                </div>
+            </div>
+            <div> {{ Carbon\Carbon::parse($task->date_delivery)->format('d/m/Y H:i') }} </div>
+            <div>
+                <div class="d-flex align-items-center justify-content-end">
+                    <a href="{{ route('task.view', [$task]) }}"
+                        data-bs-toggle="tooltip"
+                        class="btn btn-icon delete-record text-primary"
+                        data-bs-placement="top" 
+                        data-task="{{ $task->title }}"
+                        aria-label="Ver tarea"
+                        data-bs-original-title="Ver tarea">
+                        <i class="bx bx-chevron-right"></i>
+                    </a>
+
+                    <button data-href="{{ route('task.view', [$task]) }}" 
+                        data-bs-toggle="tooltip"
+                        class="btn btn-icon delete-record text-primary btnCopyLink"
+                        data-bs-placement="top" 
+                        data-task="{{ $task->title }}"
+                        aria-label="Copiar enlace"
+                        data-bs-original-title="Copiar enlace">
+                        <i class="icon-base bx bx-link icon-md"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        @empty
+        <div class="task-list-item empty d-flex no-wrap">
+            <div>
+                Sin datos
+            </div>
+        </div>
+        @endforelse
+    @endif
 
     <div class="modal fade " id="modalCenter" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" aria-modal="true" role="dialog">
         <div class="modal-dialog modal-dialog-centered" role="document">

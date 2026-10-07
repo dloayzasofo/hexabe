@@ -57,11 +57,19 @@ class TaskController extends Controller {
             $query->orderBy('date_delivery', 'desc');
         }
 
+        $collaborations = Task::with('brand', 'assign', 'collaborators')
+            ->where('user_assign', '<>', $user->id)
+            ->whereNotIn('status', ['FINALIZED', 'FINALIZED_DELAY'])
+            ->whereRaw('id in (SELECT task_id FROM task_collaborators WHERE user_id = ?)', [$user->id])
+            ->orderBy('date_delivery', 'desc')
+            ->get();
+
         $tasks = $query->get();
         $params = [
             'tasks' => $tasks,
             'status' => $status,
-            'counters' => $counters
+            'counters' => $counters,
+            'collaborations' => $collaborations
         ];
 
         HistoryHelper::save(Auth::user(), 'task');
