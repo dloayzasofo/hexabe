@@ -65,6 +65,7 @@ function setActiveToMenuByUrl(){
         'team': "menu-team",
         'task': "menu-task",
         'popup': "menu-popup",
+        'notification': "menu-notification",
         'brand': "menu-brand",
         'user': "menu-user",
         'report': "menu-report",

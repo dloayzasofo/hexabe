@@ -144,10 +144,21 @@ class KanbanController extends Controller {
             }
         }
 
+        $this->changeStatusParent($task);
         $result = [
             'success' => true,
             'message' => $message
         ];
         return response()->json($result);
+    }
+
+    public function changeStatusParent($child){
+        if( $child->parent_id == null ) return;
+
+        $parent = Task::find($child->parent_id);
+        if( $parent->status == 'TOSTART' AND $child->status !== 'DELAY' ){
+            $parent->status = 'PROCESS';
+            $parent->save();
+        }
     }
 }

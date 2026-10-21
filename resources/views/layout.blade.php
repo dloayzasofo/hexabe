@@ -122,7 +122,7 @@
 						</ul>
 					</li>
 					@endhasanyrole
-					<li id="menu-popup" class="menu-item">
+					<li id="menu-notification" class="menu-item">
 						<a href="{{ route('notification.index') }}" class="menu-link">
 							<svg class="menu-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20"  
 							fill="currentColor" viewBox="0 0 24 24" >
@@ -163,14 +163,12 @@
 							<div>Usuarios</div>
 						</a>
 					</li>
-					{{-- 
 					<li id="menu-popup" class="menu-item">
 						<a href="{{ route('popup.index') }}" class="menu-link">
 							<i class='menu-icon bx bx-copy'></i>
 							<div>Popup</div> 
 						</a>
 					</li>
-					--}}
 					@endhasanyrole
 					<li id="menu-logout" class="menu-item">
 						<a href="{{ route('login.exit') }}" class="menu-link" style="color:#ffd7b2;">
@@ -294,7 +292,7 @@
 
     <!-- Main JS -->
     <script src="{{asset('/assets/admin/js/main.js')}}"></script>
-    <script src="{{asset('/assets/admin/js/fobo.js')}}?v=1.2.15"></script>
+    <script src="{{asset('/assets/admin/js/fobo.js')}}?v=1.3.1"></script>
     <!-- Place this tag in your head or just before your close body tag. -->
     <!-- <script async defer src="https://buttons.github.io/buttons.js"></script> -->
     @yield('script')

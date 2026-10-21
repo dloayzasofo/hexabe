@@ -143,6 +143,7 @@ class TaskController extends Controller {
             );
         }
         
+        $this->changeStatusParent($task);
         $request->session()->flash('task.success', 'La tarea ha sido marcada como finalizada.');
         return redirect()->route('task.view', ['task' => $task->id]);
     }
@@ -196,6 +197,7 @@ class TaskController extends Controller {
             );
         }
 
+        $this->changeStatusParent($task);
         return response()->json([
             'status' => 'success',
             'data' => [
@@ -457,5 +459,15 @@ class TaskController extends Controller {
             ->get();
         //var_dump($tasks->toArray());exit();
         return response()->json(['success' => true, 'data' => $tasks], 200);
+    }
+
+    public function changeStatusParent($child){
+        if( $child->parent_id == null ) return;
+
+        $parent = Task::find($child->parent_id);
+        if( $parent->status == 'TOSTART' AND $child->status !== 'DELAY' ){
+            $parent->status = 'PROCESS';
+            $parent->save();
+        }
     }
 }

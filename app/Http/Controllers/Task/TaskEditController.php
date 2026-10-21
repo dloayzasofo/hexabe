@@ -64,7 +64,7 @@ class TaskEditController extends Controller {
                 $timeControl->save();
             }
         }
-
+        $this->changeStatusParent($task);
         return response()->json(['success' => true, 'data' => ["id"=> $task->id, "status"=> $task->status, 'otherTrask' => $otherTrask], 'message' => $message], 200);
     }
 
@@ -197,4 +197,13 @@ class TaskEditController extends Controller {
         ]], 200);
     }
 
+    public function changeStatusParent($child){
+        if( $child->parent_id == null ) return;
+
+        $parent = Task::find($child->parent_id);
+        if( $parent->status == 'TOSTART' AND $child->status !== 'DELAY' ){
+            $parent->status = 'PROCESS';
+            $parent->save();
+        }
+    }
 }
